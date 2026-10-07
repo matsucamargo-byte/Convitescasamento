@@ -1049,18 +1049,30 @@ body.tem-textura .faixa-escura{
   clip-path:polygon(0 var(--aba-apice,52%),100% var(--aba-apice,52%),100% 100%,0 100%)
 }
 
-/* a carta que sobe de dentro, atrás da frente do bolso */
+/* A carta sobe de dentro do bolso.
+
+   A conta importa: a frente do bolso cobre tudo abaixo do ápice (52%).
+   Para a carta começar ESCONDIDA, o topo dela precisa partir abaixo
+   dessa linha. Com topo em 26% e altura de 48% da tela, translateY(58%)
+   põe o topo em 26 + 0,58 x 48 = 53,8%, logo abaixo do ápice. Antes ela
+   começava em 34% e o topo nascia acima da linha: era o retângulo
+   aparecendo por cima. */
 .e3-carta{
   z-index:4;position:absolute;
-  inset:30% 23% 30% 23%;
-  display:grid;place-items:center;text-align:center;padding:1.2rem;
-  background:linear-gradient(168deg,var(--paper),var(--paper-2));
-  box-shadow:0 10px 30px -8px rgba(0,0,0,.45);
-  transform:translateY(34%) scale(.97);opacity:0;
-  transition:transform 1.6s cubic-bezier(.25,0,.2,1),opacity .35s ease
+  inset:26% 24% 26% 24%;
+  display:grid;place-items:center;text-align:center;padding:1.1rem;
+  background:linear-gradient(170deg,var(--paper),var(--paper-2));
+  border-radius:1px;
+  box-shadow:
+    0 2px 6px -1px rgba(0,0,0,.3),
+    0 14px 34px -12px rgba(0,0,0,.45);
+  transform:translateY(58%);opacity:1;
+  transition:transform 1.8s cubic-bezier(.22,.6,.2,1)
 }
-#cena.env3d.t4 .e3-carta{transform:translateY(-26%) scale(1);opacity:1}
-#cena.env3d.t5 .e3-carta{transform:translateY(-30%) scale(1.01);opacity:1}
+/* sai de dentro e para a meia altura, como carta de verdade no envelope */
+#cena.env3d.t4 .e3-carta{transform:translateY(-8%)}
+#cena.env3d.t5 .e3-carta{transform:translateY(-13%)}
+
 .e3-carta .mono{
   font-family:var(--f-display),serif;font-size:1.5rem;letter-spacing:.08em;
   color:var(--accent);margin:0 0 .5rem

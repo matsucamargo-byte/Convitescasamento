@@ -44,6 +44,31 @@ button.primario{background:var(--ac);color:#191307;border-color:var(--ac);font-w
 button.primario:hover{filter:brightness(1.12);color:#191307}
 
 fieldset{border:0;border-top:1px solid var(--li);margin:0;padding:1.4rem 1.6rem}
+
+.guia{border-top:1px solid var(--li);margin:0}
+.guia summary{
+  padding:1.1rem 1.6rem;cursor:pointer;list-style:none;
+  font-size:.84rem;color:var(--ac);
+  display:flex;align-items:center;gap:.5rem;min-height:44px
+}
+.guia summary::-webkit-details-marker{display:none}
+.guia summary::before{content:'›';transition:transform .2s;font-size:1.1rem;line-height:1}
+.guia[open] summary::before{transform:rotate(90deg)}
+.guia summary:hover{color:var(--txt)}
+.guia-corpo{padding:0 1.6rem 1.6rem;font-size:.86rem;line-height:1.75;color:var(--txt2)}
+.guia-corpo h2{
+  font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ac);margin:1.7rem 0 .6rem;font-weight:400
+}
+.guia-corpo h2:first-child{margin-top:0}
+.guia-corpo p{margin:0 0 .7rem}
+.guia-corpo b{color:var(--txt);font-weight:400}
+.guia-corpo code{
+  background:var(--bg3);padding:.08em .4em;border-radius:3px;font-size:.92em;color:var(--txt)
+}
+.passos,.perguntas{margin:0 0 .4rem;padding-left:1.3rem}
+.passos li,.perguntas li{margin-bottom:.5rem}
+.perguntas li{margin-bottom:.75rem}
 legend{
   font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
   color:var(--ac);padding:0 .5rem 0 0
@@ -61,6 +86,12 @@ input,textarea,select{
 input:focus,textarea:focus,select:focus{border-color:var(--ac)}
 textarea{resize:vertical;min-height:76px;line-height:1.6}
 .dupla{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+ .guia-sec{
+  margin:.2rem 0 .3rem!important;opacity:1!important;
+  font-size:.8rem!important;line-height:1.7;color:var(--txt2);
+  border-left:1px solid var(--li);padding-left:.8rem
+}
+.guia-sec b{color:var(--txt);font-weight:400}
 .dica{font-size:.78rem;color:var(--txt2);margin:.3rem 0 0;opacity:.8}
 
 /* ---- seletor de template ---- */
@@ -148,8 +179,60 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <div id="aviso"></div>
   </div>
 
+  <details class="guia" id="guia">
+    <summary>Como criar um convite · abra antes de começar</summary>
+    <div class="guia-corpo">
+
+      <h2>Os quatro passos</h2>
+      <ol class="passos">
+        <li><b>Escolha o template</b> pela paleta do casamento, não pelo que você acha bonito.</li>
+        <li><b>Preencha os campos.</b> O que ficar vazio simplesmente não aparece no convite.</li>
+        <li><b>Teste a abertura</b> clicando no envelope da prévia à direita.</li>
+        <li><b>Gerar site do convite</b> baixa um arquivo <code>index.html</code>. Arraste ele em
+            <b>app.netlify.com/drop</b> e o link está no ar.</li>
+      </ol>
+
+      <h2>O que perguntar para a noiva</h2>
+      <p>É isso que separa um convite personalizado de um template preenchido.
+         Mande estas perguntas no WhatsApp e você tem tudo o que precisa:</p>
+      <ol class="perguntas">
+        <li><b>Qual a paleta do casamento?</b> Se ela não souber dizer, pergunte a cor
+            do vestido das madrinhas. É a resposta mais confiável e define o template.</li>
+        <li><b>Como vocês dois querem os nomes escritos?</b> Primeiro nome, nome e
+            sobrenome, apelido. Nunca assuma o nome de documento.</li>
+        <li><b>Os pais entram no convite?</b> Nomes completos, e avise que dá para
+            escrever "(em memória)" se for o caso.</li>
+        <li><b>Tem versículo, frase ou música que significa algo para vocês?</b>
+            Essa é a pergunta que faz a noiva se emocionar com o resultado.</li>
+        <li><b>Como foi que vocês se conheceram?</b> Peça em duas ou três frases.
+            Vai virar a seção Nossa História.</li>
+        <li><b>Qual a programação do dia?</b> Cerimônia, jantar, valsa, pista.
+            Ninguém pergunta isso e é a seção que o convidado mais lê.</li>
+        <li><b>Tem alguma regra?</b> Sem crianças, sem branco, confirmação até tal dia.
+            Melhor estar escrito do que ser cobrado depois.</li>
+      </ol>
+
+      <h2>Três coisas que mudam o resultado</h2>
+      <p><b>Os nomes.</b> O convite inteiro gira em torno deles. "Rebeca e Newley" fica
+         diferente de "Rebeca Muniz e Newley Santos" — pergunte, não escolha por ela.</p>
+      <p><b>A foto do envelope.</b> Já vem preenchida com a arte do template. É ela que
+         abre na animação. Só troque se tiver arte própria daquele casamento.</p>
+      <p><b>O WhatsApp.</b> Sem ele a seção de confirmação some. Use o número do casal,
+         com 55 na frente e sem espaços nem traços.</p>
+
+      <h2>Antes de entregar</h2>
+      <p>Abra o arquivo gerado no celular e passe por ele inteiro, como o convidado vai
+         passar. Confira os nomes letra por letra: erro de nome é a reclamação número um
+         do setor, e a sua vantagem é poder corrigir em cinco minutos e reenviar o
+         mesmo link.</p>
+      <p>Use <b>Salvar projeto</b> ao terminar. Quando a noiva pedir alteração, você
+         abre o arquivo salvo, muda e gera de novo, em vez de preencher tudo outra vez.</p>
+    </div>
+  </details>
+
   <fieldset>
     <legend>Template</legend>
+    <p class="dica guia-sec">A paleta decide, não o gosto. Pergunte a cor do vestido das madrinhas: é a resposta mais confiável que a noiva consegue dar. A miniatura mostra o envelope que vai abrir na animação.</p>
     <div class="tpls" id="tpls"></div>
     <label><span>Ornamento próprio (URL de PNG ou SVG) — opcional</span><input id="ornamentoUrl" placeholder="https://.../floral-aquarela.png"></label>
     <p class="dica">Preenchido, substitui o desenho vetorial do envelope pela sua arte. É o caminho para sair do genérico. Veja o README.</p>
@@ -157,6 +240,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Mídia</legend>
+    <p class="dica guia-sec">Já vem preenchido com a arte do template escolhido. Só mexa aqui se tiver foto ou vídeo feito para aquele casamento específico. Trocar o template troca a foto de volta.</p>
     <label><span>Foto do envelope (abre o convite)</span><input id="envelopeImagem" placeholder="https://.../envelope.jpg"></label>
     <p class="dica">Preenchida, a foto substitui o envelope desenhado em CSS. Foto boa e vetor brigando na mesma tela é pior que qualquer um sozinho.</p>
     <label><span>Cena ilustrada (abertura premium)</span><input id="cenaIlustracao" placeholder="https://.../villa-aquarela.jpg"></label>
@@ -177,6 +261,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>O casal</legend>
+    <p class="dica guia-sec">Os nomes como <b>eles</b> querem ler, não como está no documento. A data monta a contagem regressiva sozinha. O versículo é opcional e é o que costuma emocionar: pergunte se existe uma frase, oração ou música que significa algo para os dois.</p>
     <div class="dupla">
       <label><span>Nome dela</span><input id="noiva" value="Larissa"></label>
       <label><span>Nome dele</span><input id="noivo" value="André"></label>
@@ -190,6 +275,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Abertura</legend>
+    <p class="dica guia-sec">O texto do envelope é a primeira coisa que o convidado lê. O título do convite é a frase que anuncia o casamento, e o texto abaixo é onde cabe a voz do casal: formal, leve, religiosa. Copie o jeito que a noiva escreve no WhatsApp.</p>
     <label><span>Texto do envelope</span><input id="textoAbrir" value="Toque para abrir o convite"></label>
     <label><span>Sobretítulo (rótulo pequeno acima do título)</span><input id="sobretitulo" placeholder="Com a bênção de Deus"></label>
     <label><span>Título do convite</span><input id="tituloConvite" value="Com alegria, convidamos você"></label>
@@ -211,6 +297,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Nossa história</legend>
+    <p class="dica guia-sec">Peça à noiva duas ou três frases sobre como se conheceram. Não escreva por ela: o texto dela sempre soa melhor que o seu. A foto aparece sangrando na borda, então escolha uma na vertical com os dois no centro.</p>
     <label><span>Título</span><input id="tituloHistoria" value="Como tudo começou"></label>
     <label><span>Texto</span><textarea id="historia">O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar, agora com vocês por perto.</textarea></label>
     <label><span>Foto de destaque</span><input type="file" id="fotoHistoria" accept="image/*"></label>
@@ -219,6 +306,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Cerimônia</legend>
+    <p class="dica guia-sec">O link do Maps vira o botão "Como chegar". Abra o Google Maps, busque o local, Compartilhar, Copiar link. Sem ele o botão não aparece e o convidado vai ter que procurar.</p>
     <label><span>Local</span><input id="localCerimonia" value="Capela Nossa Senhora"></label>
     <label><span>Endereço</span><input id="enderecoCerimonia" value="Av. das Hortênsias, 1200 · Capivari"></label>
     <div class="dupla">
@@ -229,6 +317,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Recepção</legend>
+    <p class="dica guia-sec">Se a festa for no mesmo lugar da cerimônia, deixe vazio: a seção some e o convite não fica repetindo endereço.</p>
     <label><span>Local</span><input id="localFesta" value="Villa Toscana Eventos"></label>
     <label><span>Endereço</span><input id="enderecoFesta" value="Estrada do Vale, km 4 · Campos do Jordão"></label>
     <div class="dupla">
@@ -246,6 +335,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Traje</legend>
+    <p class="dica guia-sec">Escreva como as pessoas falam: "Passeio completo", "Esporte fino", "Traje de praia". A observação é o lugar de pedir para evitarem branco, sem soar ríspido.</p>
     <div class="dupla">
       <label><span>Dress code</span><input id="dressCode" value="Traje social completo"></label>
       <label><span>Observação</span><input id="dressCodeObs" placeholder="Pedimos gentilmente que evitem branco e off-white."></label>
@@ -254,6 +344,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Galeria</legend>
+    <p class="dica guia-sec">De quatro a seis fotos verticais. Mais que isso ninguém olha e o arquivo pesa. Elas entram embutidas, então o convite funciona mesmo sem internet depois de aberto.</p>
     <label><span>Fotos do casal (pode selecionar várias)</span><input type="file" id="galeria" accept="image/*" multiple></label>
     <div class="fotos" id="previewGaleria"></div>
     <p class="dica">Dica: 2, 4 ou 6 fotos verticais ficam melhor. Elas são embutidas no arquivo final.</p>
@@ -261,6 +352,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Confirmação de presença</legend>
+    <p class="dica guia-sec">O WhatsApp é obrigatório para essa seção existir: use 55, DDD e número, sem espaços nem traços. O convidado preenche um formulário na própria página e o envio chega no seu WhatsApp já formatado, com nome, se vem, quantas pessoas e restrição alimentar.</p>
     <div class="dupla">
       <label><span>WhatsApp (com DDI e DDD)</span><input id="whatsapp" value="5512983187315"></label>
       <label><span>Prazo</span><input id="prazoRsvp" value="30 de julho"></label>
@@ -272,6 +364,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Presentes</legend>
+    <p class="dica guia-sec">A chave PIX ganha botão de copiar. Se o casal tiver lista em loja, cole o link: os dois podem conviver. Se não quiser nada disso, deixe vazio e a seção some.</p>
     <label><span>Título</span><input id="tituloPresentes" value="Se quiser nos presentear"></label>
     <label><span>Texto</span><textarea id="textoPresentes">Sua presença já é o maior presente. Mas se quiser fazer parte do começo da nossa história de outro jeito, deixamos as opções abaixo.</textarea></label>
     <label><span>Link da lista de presentes</span><input id="listaPresentes" placeholder="https://..."></label>
@@ -283,6 +376,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Recado final (opcional)</legend>
+    <p class="dica guia-sec">O lugar das regras difíceis: sem crianças, cerimônia pontual, estacionamento. Escrito no convite, ninguém se ofende; cobrado depois, alguém se ofende.</p>
     <label><span>Título</span><input id="tituloRecado" value="Um recado"></label>
     <label><span>Texto</span><textarea id="recado" placeholder="Ex.: Pensando no conforto de todos, nossa celebração será sem crianças."></textarea></label>
   </fieldset>
@@ -312,6 +406,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Prévia no WhatsApp</legend>
+    <p class="dica guia-sec">É o cartão que aparece quando o link é colado numa conversa, e é a primeira impressão do convite. A imagem precisa estar hospedada na internet, 1200 por 630 pixels, com URL completa começando em https.</p>
     <label><span>Título do card</span><input id="ogTitulo" placeholder="Larissa &amp; André | Casamento"></label>
     <label><span>Descrição do card</span><input id="ogDesc" placeholder="Junte-se a nós para celebrar o casamento de Larissa e André."></label>
     <label><span>URL da imagem do card (1200×630)</span><input id="ogImg" placeholder="https://seudominio.com/capa.jpg"></label>
@@ -320,6 +415,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Sua marca</legend>
+    <p class="dica guia-sec">Assina o rodapé discretamente. O nome do arquivo vira o endereço do convite, então use os dois primeiros nomes em minúsculas separados por hífen, como rebeca-newley.</p>
     <div class="dupla">
       <label><span>Assinatura no rodapé</span><input id="marca" value="Nutti Convites"></label>
       <label><span>Link da marca</span><input id="marcaUrl" value="https://nutticonvites.com"></label>
