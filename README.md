@@ -61,6 +61,28 @@ propósito. Cada uma também troca o par tipográfico.
 | Cobalto | cobalto e creme | EB Garamond + Tangerine | envelope |
 | Bruma | prata, cromo, fumaça | Marcellus + Parisienne | envelope |
 
+## Mídia — o que separa caro de barato
+
+A análise do código dos concorrentes premium mostrou o seguinte: cada convite
+carrega de 4 a 24 arquivos de mídia. Dois dos vídeos têm nome de arquivo
+começando com `kling_` — são gerados no **Kling AI**, não animados em CSS.
+
+Quer dizer: a abertura do envelope deles é um **vídeo gerado por IA**, não
+código. É por isso que parece cinema e tipografia sobre cor chapada não parece.
+
+O estúdio tem três campos para isso:
+
+| Campo | O que faz |
+|---|---|
+| Vídeo de abertura (cortina) | Vira a abertura. O envelope em CSS sai de cena |
+| Imagem ou vídeo de fundo da capa | Entra atrás do nome do casal, com véu por cima |
+| Textura de fundo da página | Aquarela ou linho atrás do convite inteiro |
+
+O véu é o que mantém o texto legível sobre foto. Foto clara pede véu mais forte.
+
+Sem nenhum desses campos o convite continua funcionando — abre com o envelope
+em CSS e fica bonito. Mas é com eles que ele fica caro.
+
 ## Trocar o ornamento — o que mais sobe o nível
 
 Os florais do envelope são vetores autorais. Funcionam, mas não competem com

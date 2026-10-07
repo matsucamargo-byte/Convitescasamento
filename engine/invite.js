@@ -48,6 +48,18 @@
     return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + ICO[k] + '</svg>';
   }
 
+  /* Camada de mídia: imagem ou vídeo em tela cheia, com véu por cima.
+     É o que falta num convite que parece "tipografia sobre cor chapada". */
+  function camadaMidia(url, veu) {
+    if (!tem(url)) return '';
+    var ehVideo = /\.(mp4|webm|mov)(\?|$)/i.test(url);
+    var media = ehVideo
+      ? '<video src="' + esc(url) + '" autoplay muted loop playsinline preload="metadata"></video>'
+      : '<img src="' + esc(url) + '" alt="" loading="lazy">';
+    return '<div class="midia">' + media + '</div>' +
+           '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
+  }
+
   /* ---------- envelope ---------- */
   var motivo = (window.MOTIVOS || {})[T.motivo] || { tipo: 'relevo', svg: '' };
   var ornamento = tem(C.ornamentoUrl)
@@ -77,8 +89,19 @@
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
-  var cena =
-    '<div id="cena">' +
+  var temCortina = tem(C.cortinaVideo);
+  var cena = temCortina
+    ? '<div id="cena" class="cortina">' +
+        '<div class="cortina-midia">' +
+          '<video id="cortina" playsinline preload="auto" ' +
+            (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '" ' : '') +
+            'src="' + esc(C.cortinaVideo) + '"></video>' +
+        '</div>' +
+        '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : '<div id="cena">' +
       '<div class="env' + (ehPeel ? ' peel' : '') + '" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
         '<div class="env-corpo"></div>' + dentro +
         '<div class="lacre"><div class="lacre-disco"><span class="lacre-mono">' + mono + '</span></div></div>' +
@@ -94,7 +117,8 @@
 
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
-    '<header class="capa-hero">' +
+    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
+      camadaMidia(C.heroMidia, C.heroVeu) +
       '<div class="moldura"></div>' +
       '<p class="mono-grande">' + mono + '</p>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
@@ -262,6 +286,11 @@
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
+  if (tem(C.textura)) {
+    root.style.setProperty('--textura', 'url("' + C.textura + '")');
+    document.body.classList.add('tem-textura');
+  }
+
   document.body.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
     '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
@@ -294,16 +323,33 @@
       if (btnSom) btnSom.classList.add('vis');
     }
 
+    if (temCortina) {
+      // A cortina é um vídeo: ele mesmo é a animação de abertura.
+      // Revela quando o vídeo acaba — com teto de tempo, porque um
+      // vídeo que não carrega não pode prender o convidado na tela.
+      cenaEl.classList.add('tocou');
+      var vid = document.getElementById('cortina');
+      var revelou = false;
+      var revela = function () { if (!revelou) { revelou = true; revelar(); } };
+      vid.addEventListener('ended', revela);
+      vid.addEventListener('error', revela);
+      var pv = vid.play();
+      if (pv && pv.catch) pv.catch(revela);
+      setTimeout(revela, 14000);
+      return;
+    }
+
     [[0, 'selo-sai'], [420, 'abrindo'], [1220, 'carta-sai'], [2250, 'indo']]
       .forEach(function (p) { setTimeout(function () { env.classList.add(p[1]); }, p[0]); });
+    setTimeout(revelar, 2750);
+  }
 
-    setTimeout(function () {
-      cenaEl.classList.add('foi');
-      document.body.classList.remove('locked');
-      window.scrollTo(0, 0);
-      var pet = document.getElementById('petalas');
-      if (pet) pet.classList.add('on');
-    }, 2750);
+  function revelar() {
+    cenaEl.classList.add('foi');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    var pet = document.getElementById('petalas');
+    if (pet) pet.classList.add('on');
   }
 
   env.addEventListener('click', abrir);

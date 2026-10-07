@@ -156,6 +156,17 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   </fieldset>
 
   <fieldset>
+    <legend>Mídia — é o que tira o convite do básico</legend>
+    <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
+    <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
+    <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
+    <label><span>Imagem ou vídeo de fundo da capa</span><input id="heroMidia" placeholder="https://.../capa.jpg"></label>
+    <label><span>Força do véu sobre a capa (0 a 100)</span><input id="heroVeu" type="number" min="0" max="100" value="55"></label>
+    <p class="dica">O véu é o que mantém o nome legível sobre a foto. Foto clara pede véu mais forte.</p>
+    <label><span>Textura de fundo da página inteira</span><input id="textura" placeholder="https://.../aquarela.jpg"></label>
+  </fieldset>
+
+  <fieldset>
     <legend>O casal</legend>
     <div class="dupla">
       <label><span>Nome dela</span><input id="noiva" value="Larissa"></label>
@@ -814,6 +825,68 @@ footer .data-fim{
 }
 .relevo svg{fill:currentColor}
 .relevo:not(.foil) svg [stroke]{stroke:currentColor}
+
+/* =============================================================
+   CAMADAS DE MÍDIA
+   O que separa um convite caro de um barato não é o CSS: é haver
+   imagem e vídeo de verdade no lugar de tipografia sobre cor chapada.
+   Os concorrentes premium carregam de 4 a 24 arquivos de mídia por
+   convite. Estas camadas existem para receber esses arquivos.
+   ============================================================= */
+.midia{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--paper-2)}
+.midia img,.midia video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.04)            /* evita borda branca no parallax leve */
+}
+/* véu: sem ele a tipografia some sobre foto clara */
+.veu{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1%),transparent) 0%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * .62%),transparent) 42%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1.25%),transparent) 100%)
+}
+/* tudo que não é mídia sobe acima do véu */
+.com-midia > *:not(.midia):not(.veu){position:relative;z-index:2}
+
+/* textura de fundo da página inteira — aquarela, linho, papel */
+body.tem-textura{
+  background-image:var(--textura);
+  background-size:cover;background-attachment:fixed;background-position:center
+}
+body.tem-textura .faixa-clara{
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+body.tem-textura .faixa-escura{
+  background:color-mix(in srgb,var(--paper-2) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+
+/* sobre foto, a tipografia precisa de mais ar e de sombra */
+.com-midia .nomes,
+.com-midia .mono-grande{text-shadow:0 2px 24px color-mix(in srgb,var(--paper-2) 70%,transparent)}
+.com-midia .moldura{border-color:color-mix(in srgb,var(--ink) 26%,transparent)}
+
+/* =============================================================
+   CORTINA EM VÍDEO — a abertura dos concorrentes premium
+   ============================================================= */
+#cena.cortina{background:#000;perspective:none}
+.cortina-midia{position:absolute;inset:0;z-index:1}
+.cortina-midia video{width:100%;height:100%;object-fit:cover;display:block}
+.cortina-toque{
+  position:absolute;inset:0;z-index:3;display:grid;place-items:end center;
+  padding-bottom:max(8vh,calc(env(safe-area-inset-bottom) + 2rem));
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.45) 100%)
+}
+.cortina-toque p{
+  margin:0;color:#fff;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+  animation:respira 2.6s var(--ease-in-out) infinite
+}
+#cena.cortina.tocou .cortina-toque{opacity:0;transition:opacity .5s var(--ease-out);pointer-events:none}
 </script>
 <script type="text/template" id="src-js">/* =============================================================
    Renderizador. Lê window.__CONVITE__ e monta o convite.
@@ -865,6 +938,18 @@ footer .data-fim{
     return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + ICO[k] + '</svg>';
   }
 
+  /* Camada de mídia: imagem ou vídeo em tela cheia, com véu por cima.
+     É o que falta num convite que parece "tipografia sobre cor chapada". */
+  function camadaMidia(url, veu) {
+    if (!tem(url)) return '';
+    var ehVideo = /\.(mp4|webm|mov)(\?|$)/i.test(url);
+    var media = ehVideo
+      ? '<video src="' + esc(url) + '" autoplay muted loop playsinline preload="metadata"></video>'
+      : '<img src="' + esc(url) + '" alt="" loading="lazy">';
+    return '<div class="midia">' + media + '</div>' +
+           '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
+  }
+
   /* ---------- envelope ---------- */
   var motivo = (window.MOTIVOS || {})[T.motivo] || { tipo: 'relevo', svg: '' };
   var ornamento = tem(C.ornamentoUrl)
@@ -894,8 +979,19 @@ footer .data-fim{
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
-  var cena =
-    '<div id="cena">' +
+  var temCortina = tem(C.cortinaVideo);
+  var cena = temCortina
+    ? '<div id="cena" class="cortina">' +
+        '<div class="cortina-midia">' +
+          '<video id="cortina" playsinline preload="auto" ' +
+            (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '" ' : '') +
+            'src="' + esc(C.cortinaVideo) + '"></video>' +
+        '</div>' +
+        '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : '<div id="cena">' +
       '<div class="env' + (ehPeel ? ' peel' : '') + '" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
         '<div class="env-corpo"></div>' + dentro +
         '<div class="lacre"><div class="lacre-disco"><span class="lacre-mono">' + mono + '</span></div></div>' +
@@ -911,7 +1007,8 @@ footer .data-fim{
 
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
-    '<header class="capa-hero">' +
+    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
+      camadaMidia(C.heroMidia, C.heroVeu) +
       '<div class="moldura"></div>' +
       '<p class="mono-grande">' + mono + '</p>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
@@ -1079,6 +1176,11 @@ footer .data-fim{
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
+  if (tem(C.textura)) {
+    root.style.setProperty('--textura', 'url("' + C.textura + '")');
+    document.body.classList.add('tem-textura');
+  }
+
   document.body.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
     '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
@@ -1111,16 +1213,33 @@ footer .data-fim{
       if (btnSom) btnSom.classList.add('vis');
     }
 
+    if (temCortina) {
+      // A cortina é um vídeo: ele mesmo é a animação de abertura.
+      // Revela quando o vídeo acaba — com teto de tempo, porque um
+      // vídeo que não carrega não pode prender o convidado na tela.
+      cenaEl.classList.add('tocou');
+      var vid = document.getElementById('cortina');
+      var revelou = false;
+      var revela = function () { if (!revelou) { revelou = true; revelar(); } };
+      vid.addEventListener('ended', revela);
+      vid.addEventListener('error', revela);
+      var pv = vid.play();
+      if (pv && pv.catch) pv.catch(revela);
+      setTimeout(revela, 14000);
+      return;
+    }
+
     [[0, 'selo-sai'], [420, 'abrindo'], [1220, 'carta-sai'], [2250, 'indo']]
       .forEach(function (p) { setTimeout(function () { env.classList.add(p[1]); }, p[0]); });
+    setTimeout(revelar, 2750);
+  }
 
-    setTimeout(function () {
-      cenaEl.classList.add('foi');
-      document.body.classList.remove('locked');
-      window.scrollTo(0, 0);
-      var pet = document.getElementById('petalas');
-      if (pet) pet.classList.add('on');
-    }, 2750);
+  function revelar() {
+    cenaEl.classList.add('foi');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    var pet = document.getElementById('petalas');
+    if (pet) pet.classList.add('on');
   }
 
   env.addEventListener('click', abrir);
@@ -1434,7 +1553,7 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',

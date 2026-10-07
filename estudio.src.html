@@ -156,6 +156,17 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   </fieldset>
 
   <fieldset>
+    <legend>Mídia — é o que tira o convite do básico</legend>
+    <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
+    <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
+    <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
+    <label><span>Imagem ou vídeo de fundo da capa</span><input id="heroMidia" placeholder="https://.../capa.jpg"></label>
+    <label><span>Força do véu sobre a capa (0 a 100)</span><input id="heroVeu" type="number" min="0" max="100" value="55"></label>
+    <p class="dica">O véu é o que mantém o nome legível sobre a foto. Foto clara pede véu mais forte.</p>
+    <label><span>Textura de fundo da página inteira</span><input id="textura" placeholder="https://.../aquarela.jpg"></label>
+  </fieldset>
+
+  <fieldset>
     <legend>O casal</legend>
     <div class="dupla">
       <label><span>Nome dela</span><input id="noiva" value="Larissa"></label>
@@ -308,7 +319,7 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',

@@ -535,7 +535,69 @@ footer .data-fim{
 }
 .relevo svg{fill:currentColor}
 .relevo:not(.foil) svg [stroke]{stroke:currentColor}
-</style></head><body><script>window.__CONVITE__={"noiva":"Rebeca","noivo":"Newley","dataISO":"2026-12-05","cidade":"São José dos Campos · SP","versiculo":"Grandes coisas fez o Senhor por nós · Salmos 126:3","textoAbrir":"Toque para abrir o convite","ornamentoUrl":"","tituloConvite":"Com a bênção de Deus e de nossos pais","textoConvite":"Convidamos você para testemunhar o nosso amor e celebrar o início de uma nova história.","tituloHistoria":"Como tudo começou","historia":"O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar — agora com vocês por perto.","localCerimonia":"Igreja Batista Central","enderecoCerimonia":"R. Rubião Júnior, 240 · Centro","horaCerimonia":"19:00","mapaCerimonia":"","localFesta":"Espaço Jardim das Acácias","enderecoFesta":"Rod. dos Tamoios, km 12","horaFesta":"21:00","mapaFesta":"","dressCode":"Passeio completo","dressCodeObs":"Pedimos gentilmente que evitem branco e off-white.","whatsapp":"5512983187315","prazoRsvp":"10 de novembro","textoRsvp":"Confirme até 10 de novembro para garantirmos seu lugar à mesa.","msgRsvp":"","tituloPresentes":"Se quiser nos presentear","textoPresentes":"Sua presença já é o maior presente. Mas se quiser fazer parte do começo da nossa história de outro jeito, deixamos as opções abaixo.","listaPresentes":"","pixChave":"","pixNome":"","tituloRecado":"Um recado","recado":"","musica":"","ogTitulo":"","ogDesc":"","ogImg":"","marca":"Nutti Convites","marcaUrl":"https://nutticonvites.com","slug":"rebeca-newley","fotoHistoria":"","galeria":[],"_tpl":{"id":"marfim","nome":"Marfim","familia":"Marfim e ouro","tagline":"A convenção da papelaria clássica. Vende sozinho.","envelope":"flap","seal":"wax","motivo":"peonia","fonts":{"display":"Cormorant Garamond","body":"Jost","script":"Pinyon Script"},"vars":{"--paper":"#f6f1e7","--paper-2":"#ece3d2","--ink":"#403a31","--ink-soft":"#847868","--accent":"#a8823f","--accent-2":"#ddc79a","--seal":"#b8913f","--seal-ink":"#4a3912","--glow":"#ffe9b8","--emboss-lo":"rgba(118,96,58,.40)","--emboss-hi":"rgba(255,255,255,.95)","--sombra":"rgba(84,66,38,.26)"}}}</script><script>/* =============================================================
+
+/* =============================================================
+   CAMADAS DE MÍDIA
+   O que separa um convite caro de um barato não é o CSS: é haver
+   imagem e vídeo de verdade no lugar de tipografia sobre cor chapada.
+   Os concorrentes premium carregam de 4 a 24 arquivos de mídia por
+   convite. Estas camadas existem para receber esses arquivos.
+   ============================================================= */
+.midia{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--paper-2)}
+.midia img,.midia video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.04)            /* evita borda branca no parallax leve */
+}
+/* véu: sem ele a tipografia some sobre foto clara */
+.veu{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1%),transparent) 0%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * .62%),transparent) 42%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1.25%),transparent) 100%)
+}
+/* tudo que não é mídia sobe acima do véu */
+.com-midia > *:not(.midia):not(.veu){position:relative;z-index:2}
+
+/* textura de fundo da página inteira — aquarela, linho, papel */
+body.tem-textura{
+  background-image:var(--textura);
+  background-size:cover;background-attachment:fixed;background-position:center
+}
+body.tem-textura .faixa-clara{
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+body.tem-textura .faixa-escura{
+  background:color-mix(in srgb,var(--paper-2) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+
+/* sobre foto, a tipografia precisa de mais ar e de sombra */
+.com-midia .nomes,
+.com-midia .mono-grande{text-shadow:0 2px 24px color-mix(in srgb,var(--paper-2) 70%,transparent)}
+.com-midia .moldura{border-color:color-mix(in srgb,var(--ink) 26%,transparent)}
+
+/* =============================================================
+   CORTINA EM VÍDEO — a abertura dos concorrentes premium
+   ============================================================= */
+#cena.cortina{background:#000;perspective:none}
+.cortina-midia{position:absolute;inset:0;z-index:1}
+.cortina-midia video{width:100%;height:100%;object-fit:cover;display:block}
+.cortina-toque{
+  position:absolute;inset:0;z-index:3;display:grid;place-items:end center;
+  padding-bottom:max(8vh,calc(env(safe-area-inset-bottom) + 2rem));
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.45) 100%)
+}
+.cortina-toque p{
+  margin:0;color:#fff;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+  animation:respira 2.6s var(--ease-in-out) infinite
+}
+#cena.cortina.tocou .cortina-toque{opacity:0;transition:opacity .5s var(--ease-out);pointer-events:none}
+</style></head><body><script>window.__CONVITE__={"noiva":"Rebeca","noivo":"Newley","dataISO":"2026-12-05","cidade":"São José dos Campos · SP","versiculo":"Grandes coisas fez o Senhor por nós · Salmos 126:3","textoAbrir":"Toque para abrir o convite","ornamentoUrl":"","cortinaVideo":"","cortinaPoster":"","heroMidia":"","heroVeu":"55","textura":"","tituloConvite":"Com a bênção de Deus e de nossos pais","textoConvite":"Convidamos você para testemunhar o nosso amor e celebrar o início de uma nova história.","tituloHistoria":"Como tudo começou","historia":"O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar — agora com vocês por perto.","localCerimonia":"Igreja Batista Central","enderecoCerimonia":"R. Rubião Júnior, 240 · Centro","horaCerimonia":"19:00","mapaCerimonia":"","localFesta":"Espaço Jardim das Acácias","enderecoFesta":"Rod. dos Tamoios, km 12","horaFesta":"21:00","mapaFesta":"","dressCode":"Passeio completo","dressCodeObs":"Pedimos gentilmente que evitem branco e off-white.","whatsapp":"5512983187315","prazoRsvp":"10 de novembro","textoRsvp":"Confirme até 10 de novembro para garantirmos seu lugar à mesa.","msgRsvp":"","tituloPresentes":"Se quiser nos presentear","textoPresentes":"Sua presença já é o maior presente. Mas se quiser fazer parte do começo da nossa história de outro jeito, deixamos as opções abaixo.","listaPresentes":"","pixChave":"","pixNome":"","tituloRecado":"Um recado","recado":"","musica":"","ogTitulo":"","ogDesc":"","ogImg":"","marca":"Nutti Convites","marcaUrl":"https://nutticonvites.com","slug":"rebeca-newley","fotoHistoria":"","galeria":[],"_tpl":{"id":"marfim","nome":"Marfim","familia":"Marfim e ouro","tagline":"A convenção da papelaria clássica. Vende sozinho.","envelope":"flap","seal":"wax","motivo":"peonia","fonts":{"display":"Cormorant Garamond","body":"Jost","script":"Pinyon Script"},"vars":{"--paper":"#f6f1e7","--paper-2":"#ece3d2","--ink":"#403a31","--ink-soft":"#847868","--accent":"#a8823f","--accent-2":"#ddc79a","--seal":"#b8913f","--seal-ink":"#4a3912","--glow":"#ffe9b8","--emboss-lo":"rgba(118,96,58,.40)","--emboss-hi":"rgba(255,255,255,.95)","--sombra":"rgba(84,66,38,.26)"}}}</script><script>/* =============================================================
    Catálogo de templates.
 
    Seis FAMÍLIAS de paleta distintas, não seis variações da mesma.
@@ -776,6 +838,18 @@ window.MOTIVOS = {
     return '<svg class="ico ' + (cls || '') + '" viewBox="0 0 24 24" aria-hidden="true">' + ICO[k] + '</svg>';
   }
 
+  /* Camada de mídia: imagem ou vídeo em tela cheia, com véu por cima.
+     É o que falta num convite que parece "tipografia sobre cor chapada". */
+  function camadaMidia(url, veu) {
+    if (!tem(url)) return '';
+    var ehVideo = /\.(mp4|webm|mov)(\?|$)/i.test(url);
+    var media = ehVideo
+      ? '<video src="' + esc(url) + '" autoplay muted loop playsinline preload="metadata"></video>'
+      : '<img src="' + esc(url) + '" alt="" loading="lazy">';
+    return '<div class="midia">' + media + '</div>' +
+           '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
+  }
+
   /* ---------- envelope ---------- */
   var motivo = (window.MOTIVOS || {})[T.motivo] || { tipo: 'relevo', svg: '' };
   var ornamento = tem(C.ornamentoUrl)
@@ -805,8 +879,19 @@ window.MOTIVOS = {
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
-  var cena =
-    '<div id="cena">' +
+  var temCortina = tem(C.cortinaVideo);
+  var cena = temCortina
+    ? '<div id="cena" class="cortina">' +
+        '<div class="cortina-midia">' +
+          '<video id="cortina" playsinline preload="auto" ' +
+            (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '" ' : '') +
+            'src="' + esc(C.cortinaVideo) + '"></video>' +
+        '</div>' +
+        '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : '<div id="cena">' +
       '<div class="env' + (ehPeel ? ' peel' : '') + '" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
         '<div class="env-corpo"></div>' + dentro +
         '<div class="lacre"><div class="lacre-disco"><span class="lacre-mono">' + mono + '</span></div></div>' +
@@ -822,7 +907,8 @@ window.MOTIVOS = {
 
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
-    '<header class="capa-hero">' +
+    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
+      camadaMidia(C.heroMidia, C.heroVeu) +
       '<div class="moldura"></div>' +
       '<p class="mono-grande">' + mono + '</p>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
@@ -990,6 +1076,11 @@ window.MOTIVOS = {
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
+  if (tem(C.textura)) {
+    root.style.setProperty('--textura', 'url("' + C.textura + '")');
+    document.body.classList.add('tem-textura');
+  }
+
   document.body.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
     '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
@@ -1022,16 +1113,33 @@ window.MOTIVOS = {
       if (btnSom) btnSom.classList.add('vis');
     }
 
+    if (temCortina) {
+      // A cortina é um vídeo: ele mesmo é a animação de abertura.
+      // Revela quando o vídeo acaba — com teto de tempo, porque um
+      // vídeo que não carrega não pode prender o convidado na tela.
+      cenaEl.classList.add('tocou');
+      var vid = document.getElementById('cortina');
+      var revelou = false;
+      var revela = function () { if (!revelou) { revelou = true; revelar(); } };
+      vid.addEventListener('ended', revela);
+      vid.addEventListener('error', revela);
+      var pv = vid.play();
+      if (pv && pv.catch) pv.catch(revela);
+      setTimeout(revela, 14000);
+      return;
+    }
+
     [[0, 'selo-sai'], [420, 'abrindo'], [1220, 'carta-sai'], [2250, 'indo']]
       .forEach(function (p) { setTimeout(function () { env.classList.add(p[1]); }, p[0]); });
+    setTimeout(revelar, 2750);
+  }
 
-    setTimeout(function () {
-      cenaEl.classList.add('foi');
-      document.body.classList.remove('locked');
-      window.scrollTo(0, 0);
-      var pet = document.getElementById('petalas');
-      if (pet) pet.classList.add('on');
-    }, 2750);
+  function revelar() {
+    cenaEl.classList.add('foi');
+    document.body.classList.remove('locked');
+    window.scrollTo(0, 0);
+    var pet = document.getElementById('petalas');
+    if (pet) pet.classList.add('on');
   }
 
   env.addEventListener('click', abrir);

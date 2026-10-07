@@ -535,3 +535,65 @@ footer .data-fim{
 }
 .relevo svg{fill:currentColor}
 .relevo:not(.foil) svg [stroke]{stroke:currentColor}
+
+/* =============================================================
+   CAMADAS DE MÍDIA
+   O que separa um convite caro de um barato não é o CSS: é haver
+   imagem e vídeo de verdade no lugar de tipografia sobre cor chapada.
+   Os concorrentes premium carregam de 4 a 24 arquivos de mídia por
+   convite. Estas camadas existem para receber esses arquivos.
+   ============================================================= */
+.midia{position:absolute;inset:0;z-index:0;overflow:hidden;background:var(--paper-2)}
+.midia img,.midia video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.04)            /* evita borda branca no parallax leve */
+}
+/* véu: sem ele a tipografia some sobre foto clara */
+.veu{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1%),transparent) 0%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * .62%),transparent) 42%,
+      color-mix(in srgb,var(--paper-2) calc(var(--veu,55) * 1.25%),transparent) 100%)
+}
+/* tudo que não é mídia sobe acima do véu */
+.com-midia > *:not(.midia):not(.veu){position:relative;z-index:2}
+
+/* textura de fundo da página inteira — aquarela, linho, papel */
+body.tem-textura{
+  background-image:var(--textura);
+  background-size:cover;background-attachment:fixed;background-position:center
+}
+body.tem-textura .faixa-clara{
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+body.tem-textura .faixa-escura{
+  background:color-mix(in srgb,var(--paper-2) 88%,transparent);
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)
+}
+
+/* sobre foto, a tipografia precisa de mais ar e de sombra */
+.com-midia .nomes,
+.com-midia .mono-grande{text-shadow:0 2px 24px color-mix(in srgb,var(--paper-2) 70%,transparent)}
+.com-midia .moldura{border-color:color-mix(in srgb,var(--ink) 26%,transparent)}
+
+/* =============================================================
+   CORTINA EM VÍDEO — a abertura dos concorrentes premium
+   ============================================================= */
+#cena.cortina{background:#000;perspective:none}
+.cortina-midia{position:absolute;inset:0;z-index:1}
+.cortina-midia video{width:100%;height:100%;object-fit:cover;display:block}
+.cortina-toque{
+  position:absolute;inset:0;z-index:3;display:grid;place-items:end center;
+  padding-bottom:max(8vh,calc(env(safe-area-inset-bottom) + 2rem));
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.45) 100%)
+}
+.cortina-toque p{
+  margin:0;color:#fff;font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+  animation:respira 2.6s var(--ease-in-out) infinite
+}
+#cena.cortina.tocou .cortina-toque{opacity:0;transition:opacity .5s var(--ease-out);pointer-events:none}
