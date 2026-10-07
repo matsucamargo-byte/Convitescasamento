@@ -1458,7 +1458,15 @@ body.tem-textura .faixa-escura{
    faz a carta sair de DENTRO em vez de aparecer por cima do envelope. */
 .e3-frente{
   z-index:5;
-  clip-path:polygon(0 var(--aba-apice,52%),100% var(--aba-apice,52%),100% 100%,0 100%)
+  clip-path:polygon(0 var(--aba-apice,52%),100% var(--aba-apice,52%),100% 100%,0 100%);
+  /* O lacre fica em cima da costura, então metade dele cai dentro deste
+     recorte e continuava na tela depois de o selo se romper. A máscara
+     vaza o círculo do lacre daqui: quem mostra o selo é só a camada
+     .e3-lacre, que sai de cena. */
+  -webkit-mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
+    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%);
+  mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
+    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%)
 }
 
 /* A carta sobe de dentro do bolso.
@@ -1528,40 +1536,55 @@ body.tem-textura .faixa-escura{
   clip-path:circle(var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%))
 }
 /* o brilho que corre por cima do lacre */
-/* O recorte fica no invólucro e o brilho corre por dentro dele. Juntos,
-   o recorte viajava com o brilho e o clarão saía de cima do lacre. */
+/* BRILHO DO LACRE
+   Era uma barra diagonal recortada num círculo: lia como um raio e as
+   bordas duras viravam bloco quadrado. Agora é luz irradiando do lacre
+   para fora, sem recorte e sem borda — um halo que floresce. */
 .e3-brilho{
-  position:absolute;inset:0;overflow:hidden;
-  clip-path:circle(var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%))
+  position:absolute;inset:0;pointer-events:none;
+  display:grid;place-items:center
 }
 .e3-brilho i{
-  position:absolute;inset:-20% -40%;display:block;
-  background:linear-gradient(104deg,
-    transparent 38%,
-    rgba(255,255,255,.12) 45%,
-    rgba(255,255,255,.8) 50%,
-    rgba(255,255,255,.12) 55%,
-    transparent 62%);
+  position:absolute;
+  left:50%;top:var(--lacre-y,51.5%);
+  width:calc(var(--lacre-r,8.5%) * 8.4);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%) scale(.72);
+  border-radius:50%;
+  /* anel, não disco: o centro vazado deixa o lacre visível e a luz
+     irradia em volta dele, que é o pedido */
+  background:radial-gradient(circle closest-side,
+    transparent 0%,
+    transparent 13%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 74%,transparent) 20%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 40%,transparent) 32%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 14%,transparent) 50%,
+    transparent 72%);
   mix-blend-mode:screen;
-  transform:translateX(-120%);opacity:0
+  opacity:0;filter:blur(5px)
 }
 #cena.env3d.t1 .e3-brilho i{
-  animation:correBrilho 1s cubic-bezier(.4,0,.3,1) forwards
+  animation:floresce 1.15s cubic-bezier(.22,.7,.3,1) forwards
 }
-@keyframes correBrilho{
-  0%  {transform:translateX(-120%);opacity:0}
-  18% {opacity:1}
-  82% {opacity:1}
-  100%{transform:translateX(120%);opacity:0}
+@keyframes floresce{
+  0%  {opacity:0;  transform:translate(-50%,-50%) scale(.6)}
+  30% {opacity:1;  transform:translate(-50%,-50%) scale(.92)}
+  64% {opacity:.6; transform:translate(-50%,-50%) scale(1.2)}
+  100%{opacity:0;  transform:translate(-50%,-50%) scale(1.5)}
 }
+
 /* halo pulsando antes do toque, para o lacre pedir o clique */
 .e3-halo{
   position:absolute;inset:0;z-index:8;pointer-events:none;
-  background:radial-gradient(circle var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%),
-    color-mix(in srgb,var(--glow,#fff) 42%,transparent) 0%,transparent 70%);
-  animation:halo 2.6s ease-in-out infinite
+  background:radial-gradient(circle calc(var(--lacre-r,8.5%) * 3) at 50% var(--lacre-y,51.5%),
+    transparent 0%,transparent 28%,
+    color-mix(in srgb,var(--glow,#fff) 30%,transparent) 42%,
+    color-mix(in srgb,var(--glow,#fff) 10%,transparent) 62%,
+    transparent 82%);
+  mix-blend-mode:screen;
+  animation:halo 3s ease-in-out infinite
 }
-@keyframes halo{0%,100%{opacity:.18}50%{opacity:.62}}
+@keyframes halo{0%,100%{opacity:.3;transform:scale(.96)}50%{opacity:.85;transform:scale(1.05)}}
 #cena.env3d.t1 .e3-halo{opacity:0;transition:opacity .4s}
 
 /* o aviso de toque */
