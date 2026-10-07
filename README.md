@@ -165,3 +165,10 @@ embutida). Hospede o JPG 1200×630 junto do convite e cole o endereço completo.
 
 **RSVP.** Um botão só, levando ao WhatsApp. É proposital: a reclamação mais
 comum de convidado é não saber por onde confirmar.
+
+---
+
+## Só quero ver os convites
+
+Abra `convites/index.html`. Lista os doze, clique para abrir.
+Não precisa do estúdio para isso — o estúdio é para criar um convite novo.
