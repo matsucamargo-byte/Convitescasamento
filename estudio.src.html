@@ -182,8 +182,22 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   <fieldset>
     <legend>Abertura</legend>
     <label><span>Texto do envelope</span><input id="textoAbrir" value="Toque para abrir o convite"></label>
+    <label><span>Sobretítulo (rótulo pequeno acima do título)</span><input id="sobretitulo" placeholder="Com a bênção de Deus"></label>
     <label><span>Título do convite</span><input id="tituloConvite" value="Com alegria, convidamos você"></label>
     <label><span>Texto do convite</span><textarea id="textoConvite">Depois de tanto caminho lado a lado, chegou o dia de dizer sim diante de quem a gente ama. Sua presença é o presente que falta.</textarea></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Pais dos noivos</legend>
+    <div class="dupla">
+      <label><span>Pais dela (um por linha)</span><textarea id="paisNoiva" placeholder="Mônica Vitor Muniz&#10;Reginaldo Cássio Muniz"></textarea></label>
+      <label><span>Pais dele (um por linha)</span><textarea id="paisNoivo" placeholder="Sandra dos Santos&#10;Vitor Muniz (em memória)"></textarea></label>
+    </div>
+    <div class="dupla">
+      <label><span>Rótulo da coluna dela</span><input id="rotuloPaisNoiva" value="Pais da noiva"></label>
+      <label><span>Rótulo da coluna dele</span><input id="rotuloPaisNoivo" value="Pais do noivo"></label>
+    </div>
+    <p class="dica">No convite brasileiro isso é quase obrigatório. Deixe vazio e o bloco some.</p>
   </fieldset>
 
   <fieldset>
@@ -336,7 +350,7 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
@@ -543,8 +557,10 @@ document.getElementById('btnExemplo').addEventListener('click', function(){
   var ex = {
     noiva:'Rebeca', noivo:'Newley', dataISO:'2026-12-05', cidade:'São José dos Campos · SP',
     versiculo:'Grandes coisas fez o Senhor por nós · Salmos 126:3',
-    tituloConvite:'Com a bênção de Deus e de nossos pais',
-    textoConvite:'Convidamos você para testemunhar o nosso amor e celebrar o início de uma nova história.',
+    sobretitulo:'Com a bênção de Deus', tituloConvite:'Convidamos você para celebrar',
+    paisNoiva:'Mônica Vitor Muniz\nReginaldo Cássio Muniz',
+    paisNoivo:'Sandra dos Santos\nVitor Muniz (em memória)',
+    textoConvite:'Diante de Deus e de quem a gente ama, queremos dizer sim. Sua presença é o que falta para o dia ficar inteiro.',
     localCerimonia:'Igreja Batista Central', enderecoCerimonia:'R. Rubião Júnior, 240 · Centro',
     horaCerimonia:'19:00', localFesta:'Espaço Jardim das Acácias',
     enderecoFesta:'Rod. dos Tamoios, km 12', horaFesta:'21:00',

@@ -18,6 +18,11 @@
       .map(function (p) { return '<p class="sec-texto">' + esc(p.trim()) + '</p>'; }).join('');
   };
   var tem = function (v) { return v != null && String(v).trim() !== ''; };
+  // quebra em linhas, escapando cada uma (não escapar antes de dividir)
+  var linhas = function (v) {
+    return String(v || '').split(/\n+/).filter(function (l) { return l.trim(); })
+      .map(function (l) { return esc(l.trim()); }).join('<br>');
+  };
 
   /* ---------- template ---------- */
   var root = document.documentElement;
@@ -59,6 +64,8 @@
     return '<div class="midia">' + media + '</div>' +
            '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
   }
+
+  var COROA = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M46.7 84.8 A32.0 32.0 0 0 1 38.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M46.7 84.8 Q42.4 79.2, 46.7 72.3 Q51.0 79.2, 46.7 84.8 Z" transform="rotate(200.0 46.7 84.8)"/><path d="M36.5 82.0 Q32.4 76.7, 36.5 70.1 Q40.6 76.7, 36.5 82.0 Z" transform="rotate(219.0 36.5 82.0)"/><path d="M27.8 76.0 Q23.9 71.0, 27.8 64.8 Q31.7 71.0, 27.8 76.0 Z" transform="rotate(238.0 27.8 76.0)"/><path d="M21.5 67.5 Q17.8 62.7, 21.5 56.9 Q25.2 62.7, 21.5 67.5 Z" transform="rotate(257.0 21.5 67.5)"/><path d="M18.3 57.5 Q14.8 53.0, 18.3 47.5 Q21.8 53.0, 18.3 57.5 Z" transform="rotate(276.0 18.3 57.5)"/><path d="M18.6 46.9 Q15.3 42.7, 18.6 37.5 Q21.9 42.7, 18.6 46.9 Z" transform="rotate(295.0 18.6 46.9)"/><path d="M22.3 37.0 Q19.2 33.1, 22.3 28.2 Q25.4 33.1, 22.3 37.0 Z" transform="rotate(314.0 22.3 37.0)"/><path d="M29.0 28.8 Q26.1 25.2, 29.0 20.7 Q31.9 25.2, 29.0 28.8 Z" transform="rotate(333.0 29.0 28.8)"/><path d="M38.0 23.3 Q35.3 20.0, 38.0 15.8 Q40.7 20.0, 38.0 23.3 Z" transform="rotate(352.0 38.0 23.3)"/><path d="M53.3 84.8 A32.0 32.0 0 0 0 62.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M53.3 84.8 Q49.0 79.2, 53.3 72.3 Q57.6 79.2, 53.3 84.8 Z" transform="rotate(160.0 53.3 84.8)"/><path d="M63.5 82.0 Q59.4 76.7, 63.5 70.1 Q67.6 76.7, 63.5 82.0 Z" transform="rotate(141.0 63.5 82.0)"/><path d="M72.2 76.0 Q68.3 71.0, 72.2 64.8 Q76.1 71.0, 72.2 76.0 Z" transform="rotate(122.0 72.2 76.0)"/><path d="M78.5 67.5 Q74.8 62.7, 78.5 56.9 Q82.2 62.7, 78.5 67.5 Z" transform="rotate(103.0 78.5 67.5)"/><path d="M81.7 57.5 Q78.2 53.0, 81.7 47.5 Q85.2 53.0, 81.7 57.5 Z" transform="rotate(84.0 81.7 57.5)"/><path d="M81.4 46.9 Q78.1 42.7, 81.4 37.5 Q84.7 42.7, 81.4 46.9 Z" transform="rotate(65.0 81.4 46.9)"/><path d="M77.7 37.0 Q74.6 33.1, 77.7 28.2 Q80.8 33.1, 77.7 37.0 Z" transform="rotate(46.0 77.7 37.0)"/><path d="M71.0 28.8 Q68.1 25.2, 71.0 20.7 Q73.9 25.2, 71.0 28.8 Z" transform="rotate(27.0 71.0 28.8)"/><path d="M62.0 23.3 Q59.3 20.0, 62.0 15.8 Q64.7 20.0, 62.0 23.3 Z" transform="rotate(8.0 62.0 23.3)"/><circle cx="50.0" cy="85" r="2"/></svg>';
 
   /* ---------- envelope ---------- */
   var motivo = (window.MOTIVOS || {})[T.motivo] || { tipo: 'relevo', svg: '' };
@@ -120,20 +127,29 @@
     '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
       camadaMidia(C.heroMidia, C.heroVeu) +
       '<div class="moldura"></div>' +
-      '<p class="mono-grande">' + mono + '</p>' +
+      '<div class="coroa">' + COROA + '<span class="mono">' + mono + '</span></div>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
       '<h1 class="nomes script">' + esc(C.noiva) + '<span class="e-comercial">&amp;</span>' + esc(C.noivo) + '</h1>' +
-      '<div class="rule"></div>' +
+      '<div class="rule"><i class="fim"></i></div>' +
       '<p class="data-capa">' + esc(dataCurta) + '</p>' +
       '<div class="seta"></div>' +
     '</header>'
   );
 
   // convite
+  var temPais = tem(C.paisNoiva) || tem(C.paisNoivo);
   S.push(
     '<section class="centro faixa-clara">' +
-      '<h2 class="sec-titulo">' + esc(C.tituloConvite || 'Com alegria, convidamos você') + '</h2>' +
-      '<div class="rule"></div>' +
+      (tem(C.sobretitulo) ? '<p class="sobretitulo">' + esc(C.sobretitulo) + '</p>' : '') +
+      (temPais
+        ? '<div class="pais">' +
+            (tem(C.paisNoiva) ? '<div><p class="pais-rot">' + esc(C.rotuloPaisNoiva || 'Pais da noiva') + '</p>' +
+              '<p class="pais-nome">' + linhas(C.paisNoiva) + '</p></div>' : '') +
+            (tem(C.paisNoivo) ? '<div><p class="pais-rot">' + esc(C.rotuloPaisNoivo || 'Pais do noivo') + '</p>' +
+              '<p class="pais-nome">' + linhas(C.paisNoivo) + '</p></div>' : '') +
+          '</div>' : '') +
+      '<h2 class="sec-titulo' + (temPais ? ' apos-pais' : '') + '">' + esc(C.tituloConvite || 'Com alegria, convidamos você') + '</h2>' +
+      '<div class="rule"><i class="fim"></i></div>' +
       par(C.textoConvite) +
     '</section>'
   );
@@ -205,7 +221,7 @@
     S.push(
       '<section class="centro faixa-clara traje">' +
         '<p class="valor">' + esc(C.dressCode) + '</p>' +
-        '<div class="rule"></div>' +
+        '<div class="rule"><i class="fim"></i></div>' +
         (tem(C.dressCodeObs) ? '<p class="sec-texto">' + esc(C.dressCodeObs) + '</p>' : '') +
       '</section>'
     );
@@ -232,7 +248,7 @@
     S.push(
       '<section class="faixa-invertida">' +
         '<h2 class="sec-titulo">Você vem?</h2>' +
-        '<div class="rule"></div>' +
+        '<div class="rule"><i class="fim"></i></div>' +
         par(C.textoRsvp) +
         '<a class="btn cheio btn-bloco" target="_blank" rel="noopener" href="https://wa.me/' + esc(zap) + '?text=' + msg + '">Confirmar presença</a>' +
       '</section>'
@@ -244,7 +260,7 @@
     S.push(
       '<section class="centro faixa-clara">' +
         '<h2 class="sec-titulo">' + esc(C.tituloPresentes || 'Se quiser nos presentear') + '</h2>' +
-        '<div class="rule"></div>' +
+        '<div class="rule"><i class="fim"></i></div>' +
         par(C.textoPresentes) +
         (tem(C.listaPresentes) ? '<a class="btn btn-bloco" target="_blank" rel="noopener" href="' + esc(C.listaPresentes) + '">Ver lista de presentes</a>' : '') +
         (tem(C.pixChave)
@@ -262,7 +278,7 @@
     S.push(
       '<section class="centro faixa-escura">' +
         '<h2 class="sec-titulo">' + esc(C.tituloRecado || 'Um recado') + '</h2>' +
-        '<div class="rule"></div>' + par(C.recado) +
+        '<div class="rule"><i class="fim"></i></div>' + par(C.recado) +
       '</section>'
     );
   }

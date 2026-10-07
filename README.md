@@ -69,6 +69,28 @@ doze convites virarem um.
 ![Templates 1 a 6](exemplos/cartela-01-06.jpg)
 ![Templates 7 a 12](exemplos/cartela-07-12.jpg)
 
+## Acabamento
+
+Detalhes que separam papelaria de texto de site:
+
+- **Pais dos noivos** em duas colunas com filete, acima da linha de convite.
+  No convite brasileiro é quase obrigatório e vinha faltando. Empilha
+  sozinho em tela estreita para o nome não quebrar no meio.
+- **Coroa de louros** em volta do monograma da capa.
+- **Filete com losango** ao centro, não dois pontos.
+- **Algarismos antigos** nas datas (numeral que sobe e desce acompanha a
+  serifada) e tabulares na contagem, onde a largura precisa ser fixa.
+- **Ligaduras e kerning** ativados nas serifadas.
+- **Quebra equilibrada** nos títulos: sem última linha com uma palavra só.
+- **Letterpress** no monograma: afundado no papel, não impresso em cima.
+- **Borda deckle** na carta, por deslocamento com ruído.
+- **Contorno de sombra** nas pétalas. Sem ele as camadas viram uma massa só,
+  porque o relevo cego contorna apenas a silhueta externa.
+- **Sobretítulo** opcional. A skill de design bane o rótulo acima do título
+  em absoluto, mas na papelaria de casamento é convenção do gênero
+  (*TOGETHER WITH THEIR FAMILIES*, *KINDLY RSVP*). Usado com parcimônia,
+  não em toda seção.
+
 ## Mídia — o que separa caro de barato
 
 A análise do código dos concorrentes premium mostrou o seguinte: cada convite
