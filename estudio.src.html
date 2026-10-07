@@ -254,6 +254,8 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
     <label><span>Imagem ou vídeo de fundo da capa</span><input id="heroMidia" placeholder="https://.../capa.jpg"></label>
+    <label><span>Moldura ilustrada da capa (PNG transparente)</span><input id="heroMoldura" placeholder="https://.../moldura-arco.png"></label>
+    <p class="dica">Entra por cima da capa e os nomes ficam dentro dela. É o recurso que dá ao convite o ar ilustrado das referências. Precisa ser PNG vertical 9:16 com o miolo vazado.</p>
     <label><span>Força do véu sobre a capa (0 a 100)</span><input id="heroVeu" type="number" min="0" max="100" value="55"></label>
     <p class="dica">O véu é o que mantém o nome legível sobre a foto. Foto clara pede véu mais forte.</p>
     <label><span>Textura de fundo da página inteira</span><input id="textura" placeholder="https://.../aquarela.jpg"></label>
@@ -469,7 +471,7 @@ var ARTE_MINI = {"cloud": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2w
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [], arteManual: false };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','tituloRsvp','prazoRsvp','textoRsvp',

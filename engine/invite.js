@@ -189,9 +189,12 @@ window.renderConvite = function (C, raiz) {
 
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
-    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
+    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') +
+      (tem(C.heroMoldura) ? ' com-moldura' : '') + '">' +
       camadaMidia(C.heroMidia, C.heroVeu) +
-      '<div class="moldura"></div>' +
+      (tem(C.heroMoldura)
+        ? '<img class="moldura-arte" src="' + esc(C.heroMoldura) + '" alt="">'
+        : '<div class="moldura"></div>') +
       '<div class="coroa">' + COROA + '<span class="mono">' + mono + '</span></div>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
       '<h1 class="nomes script">' + esc(C.noiva) + '<span class="e-comercial">&amp;</span>' + esc(C.noivo) + '</h1>' +

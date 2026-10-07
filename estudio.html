@@ -254,6 +254,8 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
     <label><span>Imagem ou vídeo de fundo da capa</span><input id="heroMidia" placeholder="https://.../capa.jpg"></label>
+    <label><span>Moldura ilustrada da capa (PNG transparente)</span><input id="heroMoldura" placeholder="https://.../moldura-arco.png"></label>
+    <p class="dica">Entra por cima da capa e os nomes ficam dentro dela. É o recurso que dá ao convite o ar ilustrado das referências. Precisa ser PNG vertical 9:16 com o miolo vazado.</p>
     <label><span>Força do véu sobre a capa (0 a 100)</span><input id="heroVeu" type="number" min="0" max="100" value="55"></label>
     <p class="dica">O véu é o que mantém o nome legível sobre a foto. Foto clara pede véu mais forte.</p>
     <label><span>Textura de fundo da página inteira</span><input id="textura" placeholder="https://.../aquarela.jpg"></label>
@@ -1463,10 +1465,12 @@ body.tem-textura .faixa-escura{
      recorte e continuava na tela depois de o selo se romper. A máscara
      vaza o círculo do lacre daqui: quem mostra o selo é só a camada
      .e3-lacre, que sai de cena. */
-  -webkit-mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
-    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%);
-  mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
-    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%)
+  /* a transição do vazado precisa ser suave: em 96%-100% a borda reta
+     aparecia como um risco claro cruzando o lacre */
+  -webkit-mask-image:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 1.06)
+    at 50% var(--lacre-y,51.5%),transparent 86%,#000 100%);
+  mask-image:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 1.06)
+    at 50% var(--lacre-y,51.5%),transparent 86%,#000 100%)
 }
 
 /* A carta sobe de dentro do bolso.
@@ -1486,7 +1490,7 @@ body.tem-textura .faixa-escura{
   box-shadow:
     0 2px 6px -1px rgba(0,0,0,.3),
     0 14px 34px -12px rgba(0,0,0,.45);
-  transform:translateY(58%);opacity:1;
+  transform:translateY(68%);opacity:1;
   transition:transform 1.8s cubic-bezier(.22,.6,.2,1)
 }
 /* sai de dentro e para a meia altura, como carta de verdade no envelope */
@@ -1575,24 +1579,30 @@ body.tem-textura .faixa-escura{
   width:260vmax;aspect-ratio:1;z-index:6;pointer-events:none;
   transform:translate(-50%,-50%) scale(.04) rotate(0deg);
   opacity:0;mix-blend-mode:screen;
+  /* Borda dura vira adesivo de sol. O desfoque pesado e o degradê
+     largo entre os raios transformam o leque em luz estourada. */
+  filter:blur(10px);
   background:
     repeating-conic-gradient(from 0deg,
-      color-mix(in srgb,var(--glow,#ffe9b8) 90%,transparent) 0deg 1.1deg,
-      transparent 1.1deg 7.5deg),
-    repeating-conic-gradient(from 3.2deg,
-      color-mix(in srgb,var(--glow,#ffe9b8) 55%,transparent) 0deg .6deg,
-      transparent .6deg 4.2deg);
+      color-mix(in srgb,var(--glow,#ffe9b8) 62%,transparent) 0deg 2.2deg,
+      transparent 2.6deg 11deg),
+    repeating-conic-gradient(from 5.5deg,
+      color-mix(in srgb,var(--glow,#ffe9b8) 30%,transparent) 0deg 1.2deg,
+      transparent 1.8deg 6.5deg),
+    radial-gradient(circle closest-side,
+      color-mix(in srgb,var(--glow,#ffe9b8) 85%,transparent) 0%,
+      transparent 18%);
   -webkit-mask-image:radial-gradient(circle closest-side,
-    #000 4%,rgba(0,0,0,.85) 22%,rgba(0,0,0,.35) 46%,transparent 68%);
+    #000 2%,rgba(0,0,0,.7) 14%,rgba(0,0,0,.28) 34%,rgba(0,0,0,.08) 52%,transparent 66%);
   mask-image:radial-gradient(circle closest-side,
-    #000 4%,rgba(0,0,0,.85) 22%,rgba(0,0,0,.35) 46%,transparent 68%)
+    #000 2%,rgba(0,0,0,.7) 14%,rgba(0,0,0,.28) 34%,rgba(0,0,0,.08) 52%,transparent 66%)
 }
 #cena.env3d.t3 .e3-raios{animation:irradia 2.6s cubic-bezier(.3,.1,.2,1) forwards}
 @keyframes irradia{
-  0%  {opacity:0;  transform:translate(-50%,-50%) scale(.04) rotate(0deg)}
-  22% {opacity:.9; transform:translate(-50%,-50%) scale(.3)  rotate(5deg)}
-  60% {opacity:1;  transform:translate(-50%,-50%) scale(.82) rotate(13deg)}
-  100%{opacity:.55;transform:translate(-50%,-50%) scale(1.5) rotate(22deg)}
+  0%  {opacity:0;  transform:translate(-50%,-50%) scale(.05) rotate(0deg)}
+  26% {opacity:.78; transform:translate(-50%,-50%) scale(.3)  rotate(4deg)}
+  62% {opacity:.95; transform:translate(-50%,-50%) scale(.78) rotate(11deg)}
+  100%{opacity:.5;  transform:translate(-50%,-50%) scale(1.45) rotate(19deg)}
 }
 
 /* FAÍSCAS douradas em volta do lacre */
@@ -1625,7 +1635,7 @@ body.tem-textura .faixa-escura{
 /* halo pulsando antes do toque, para o lacre pedir o clique */
 .e3-halo{
   position:absolute;inset:0;z-index:8;pointer-events:none;
-  background:radial-gradient(circle calc(var(--lacre-r,8.5%) * 3) at 50% var(--lacre-y,51.5%),
+  background:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 3) at 50% var(--lacre-y,51.5%),
     transparent 0%,transparent 28%,
     color-mix(in srgb,var(--glow,#fff) 30%,transparent) 42%,
     color-mix(in srgb,var(--glow,#fff) 10%,transparent) 62%,
@@ -1661,6 +1671,31 @@ body.tem-textura .faixa-escura{
   .e3-palco,.e3-aba,.e3-lacre,.e3-carta,.e3-luz{transition-duration:.25s!important}
   .e3-brilho,.e3-halo{animation:none}
   #cena.env3d.t3 .e3-aba{transform:rotateX(168deg)}
+}
+
+/* =============================================================
+   MOLDURA ILUSTRADA NA CAPA
+   Na referência cada seção vive dentro de uma moldura desenhada.
+   Aqui a moldura é um PNG com fundo transparente sobre a capa, e o
+   conteúdo recua para caber dentro da abertura dela.
+   ============================================================= */
+.moldura-arte{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  pointer-events:none
+}
+.capa-hero.com-moldura{padding:5rem 3.2rem}
+.capa-hero.com-moldura > *:not(.midia):not(.veu):not(.moldura-arte){
+  position:relative;z-index:2
+}
+/* dentro de moldura o texto precisa de medida mais estreita */
+.capa-hero.com-moldura .nomes{font-size:clamp(2.1rem,10.5vw,3.4rem)}
+.capa-hero.com-moldura .versiculo{max-width:24ch;font-size:.76rem}
+.capa-hero.com-moldura .coroa{width:92px;height:92px;margin-bottom:.9rem}
+.capa-hero.com-moldura .mono-grande{font-size:2.1rem;margin-bottom:1rem}
+
+@media (max-width:380px){
+  .capa-hero.com-moldura{padding:4rem 2.4rem}
 }
 </script>
 <script type="text/template" id="src-js">/* =============================================================
@@ -1793,7 +1828,10 @@ window.renderConvite = function (C, raiz) {
     '--aba-dir:' + (g.abaDir || 85) + '%;' +
     '--aba-apice:' + (g.abaApice || 52) + '%;' +
     '--lacre-y:' + (g.lacreY || 51.5) + '%;' +
-    '--lacre-r:' + (g.lacreR || 8.5) + '%';
+    '--lacre-r:' + (g.lacreR || 8.5) + '%;' +
+    // circle() em clip-path aceita porcentagem; radial-gradient(circle ...)
+    // não — exige comprimento. Daí a mesma medida também em vw.
+    '--lacre-rv:' + (g.lacreR || 8.5) + 'vw';
 
   var foto = esc(C.envelopeImagem);
   var cena = abreEmFenda
@@ -1851,9 +1889,12 @@ window.renderConvite = function (C, raiz) {
 
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
-    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') + '">' +
+    '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') +
+      (tem(C.heroMoldura) ? ' com-moldura' : '') + '">' +
       camadaMidia(C.heroMidia, C.heroVeu) +
-      '<div class="moldura"></div>' +
+      (tem(C.heroMoldura)
+        ? '<img class="moldura-arte" src="' + esc(C.heroMoldura) + '" alt="">'
+        : '<div class="moldura"></div>') +
       '<div class="coroa">' + COROA + '<span class="mono">' + mono + '</span></div>' +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
       '<h1 class="nomes script">' + esc(C.noiva) + '<span class="e-comercial">&amp;</span>' + esc(C.noivo) + '</h1>' +
@@ -2574,7 +2615,7 @@ var ARTE_MINI = {"cloud": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2w
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [], arteManual: false };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','tituloRsvp','prazoRsvp','textoRsvp',

@@ -1236,3 +1236,28 @@ body.tem-textura .faixa-escura{
   .e3-brilho,.e3-halo{animation:none}
   #cena.env3d.t3 .e3-aba{transform:rotateX(168deg)}
 }
+
+/* =============================================================
+   MOLDURA ILUSTRADA NA CAPA
+   Na referência cada seção vive dentro de uma moldura desenhada.
+   Aqui a moldura é um PNG com fundo transparente sobre a capa, e o
+   conteúdo recua para caber dentro da abertura dela.
+   ============================================================= */
+.moldura-arte{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;object-fit:cover;object-position:center;
+  pointer-events:none
+}
+.capa-hero.com-moldura{padding:5rem 3.2rem}
+.capa-hero.com-moldura > *:not(.midia):not(.veu):not(.moldura-arte){
+  position:relative;z-index:2
+}
+/* dentro de moldura o texto precisa de medida mais estreita */
+.capa-hero.com-moldura .nomes{font-size:clamp(2.1rem,10.5vw,3.4rem)}
+.capa-hero.com-moldura .versiculo{max-width:24ch;font-size:.76rem}
+.capa-hero.com-moldura .coroa{width:92px;height:92px;margin-bottom:.9rem}
+.capa-hero.com-moldura .mono-grande{font-size:2.1rem;margin-bottom:1rem}
+
+@media (max-width:380px){
+  .capa-hero.com-moldura{padding:4rem 2.4rem}
+}
