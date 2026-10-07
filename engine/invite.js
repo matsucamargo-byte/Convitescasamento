@@ -329,8 +329,9 @@ window.renderConvite = function (C, raiz) {
         '<div class="okForm" id="okRsvp" hidden>' +
           '<svg class="tick" viewBox="0 0 48 48" aria-hidden="true">' +
             '<circle cx="24" cy="24" r="21"/><path d="M15 24.5l6.5 6.5L33 19"/></svg>' +
-          '<p class="okT">Obrigado</p>' +
-          '<p class="sec-texto">Sua confirmação foi registrada. Até lá.</p>' +
+          '<p class="okT">Quase lá</p>' +
+          '<p class="sec-texto">Toque no botão abaixo para enviar sua confirmação.</p>' +
+          '<a class="btn cheio enviar" target="_blank" rel="noopener" href="#">Enviar</a>' +
         '</div>' +
       '</section>'
     );
@@ -538,10 +539,15 @@ window.renderConvite = function (C, raiz) {
       var url = 'https://wa.me/' + zap + '?text=' + encodeURIComponent(linhasMsg.join('\n'));
 
       form.hidden = true;
-      raiz.querySelector('#okRsvp').hidden = false;
-      // a aba só abre depois do sucesso aparecer, senão o convidado
-      // volta e acha que nada aconteceu
-      setTimeout(function () { window.open(url, '_blank', 'noopener'); }, 650);
+      var ok = raiz.querySelector('#okRsvp');
+      // link de verdade, não window.open: numa página publicada o
+      // window.open é bloqueado para boa parte dos visitantes e o
+      // convidado ficaria achando que confirmou sem ter confirmado
+      var env = ok.querySelector('.enviar');
+      env.setAttribute('href', url);
+      env.textContent = 'Enviar para ' + C.noiva + ' e ' + C.noivo;
+      ok.hidden = false;
+      ok.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 
