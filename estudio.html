@@ -1880,8 +1880,11 @@ window.renderConvite = function (C, raiz) {
     ? '<div id="cena" class="cortina">' +
         '<div class="cortina-midia">' +
           '<video id="cortina" playsinline preload="auto" ' +
-            (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '" ' : '') +
-            'src="' + esc(C.cortinaVideo) + '"></video>' +
+            (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '"' : '') + '>' +
+            (tem(C.cortinaVideoWebm)
+              ? '<source src="' + esc(C.cortinaVideoWebm) + '" type="video/webm">' : '') +
+            '<source src="' + esc(C.cortinaVideo) + '" type="video/mp4">' +
+          '</video>' +
         '</div>' +
         '<div class="cortina-fim"></div>' +
         '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +

@@ -92,11 +92,29 @@ def main():
     # O lacre ocupa fração maior da largura nova: 8,5/70 = 12,1%.
     GEO_CHEIO = dict(abaTopo=2.5, abaEsq=2.5, abaDir=97.5,
                      abaApice=54.5, lacreY=53.5, lacreR=11.8)
+    VIDEO = RAIZ / 'video'
+
+    def uri_mp4(p):
+        import base64 as b64
+        return 'data:video/mp4;base64,' + b64.b64encode(p.read_bytes()).decode()
+
     cfgs = {}
     for id_, *_ in MODELOS:
         c = dict(BASE)
         c['envelopeImagem'] = uri(ARTE / 'cheio' / (id_ + '.jpg'))
         c['geo'] = GEO_CHEIO
+        # vídeo de abertura quando existe: substitui a abertura em CSS
+        mp4 = VIDEO / (id_ + '.mp4')
+        if mp4.exists():
+            c['cortinaVideo'] = uri_mp4(mp4)
+            webm = VIDEO / (id_ + '.webm')
+            if webm.exists():
+                import base64 as b64
+                c['cortinaVideoWebm'] = ('data:video/webm;base64,'
+                                         + b64.b64encode(webm.read_bytes()).decode())
+            pst = VIDEO / (id_ + '-poster.jpg')
+            if pst.exists():
+                c['cortinaPoster'] = uri(pst)
         cfgs[id_] = c
 
     cartoes = []
