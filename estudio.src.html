@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estúdio de Convites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&family=Pinyon+Script&family=Italianno&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#17161a; --bg2:#1f1e24; --bg3:#2a2930;
+  --txt:#ece9e4; --txt2:#9b968e; --ac:#c9a24a; --ok:#6fbf8b; --li:#38363f;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--txt);
+  font:14px/1.5 'Jost',system-ui,sans-serif;
+  display:grid;grid-template-columns:minmax(380px,1fr) minmax(400px,560px);
+  height:100vh;overflow:hidden
+}
+@media(max-width:900px){body{grid-template-columns:1fr;height:auto;overflow:auto}}
+
+/* ---- coluna esquerda: formulário ---- */
+.painel{overflow-y:auto;padding:0 0 4rem}
+.topo{
+  position:sticky;top:0;z-index:5;background:var(--bg);
+  padding:1.3rem 1.6rem 1rem;border-bottom:1px solid var(--li)
+}
+.topo h1{
+  margin:0;font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:1.5rem;letter-spacing:.02em
+}
+.topo p{margin:.25rem 0 0;color:var(--txt2);font-size:.78rem}
+.acoes{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap}
+
+button,.falsoBtn{
+  font:inherit;font-size:.76rem;padding:.55rem 1rem;cursor:pointer;
+  background:var(--bg3);color:var(--txt);border:1px solid var(--li);
+  border-radius:6px;transition:.15s
+}
+button:hover,.falsoBtn:hover{border-color:var(--ac);color:var(--ac)}
+button.primario{background:var(--ac);color:#191307;border-color:var(--ac);font-weight:400}
+button.primario:hover{filter:brightness(1.12);color:#191307}
+
+fieldset{border:0;border-top:1px solid var(--li);margin:0;padding:1.4rem 1.6rem}
+legend{
+  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ac);padding:0 .5rem 0 0
+}
+label{display:block;margin:.85rem 0 0}
+label > span{
+  display:block;font-size:.68rem;color:var(--txt2);
+  margin-bottom:.3rem;letter-spacing:.04em
+}
+input,textarea,select{
+  width:100%;font:inherit;font-size:.84rem;padding:.55rem .7rem;
+  background:var(--bg2);color:var(--txt);border:1px solid var(--li);
+  border-radius:6px;outline:0
+}
+input:focus,textarea:focus,select:focus{border-color:var(--ac)}
+textarea{resize:vertical;min-height:76px;line-height:1.6}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.dica{font-size:.66rem;color:var(--txt2);margin:.3rem 0 0;opacity:.8}
+
+/* ---- seletor de template ---- */
+.tpls{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:.9rem}
+.tpl{
+  border:1px solid var(--li);border-radius:8px;overflow:hidden;cursor:pointer;
+  background:var(--bg2);transition:.15s;text-align:center;padding-bottom:.5rem
+}
+.tpl:hover{border-color:var(--txt2)}
+.tpl.sel{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.tpl .mini{
+  height:94px;display:grid;place-items:center;position:relative;overflow:hidden
+}
+.tpl .mini .env{
+  width:46px;height:70px;border-radius:2px;position:relative;
+  box-shadow:0 3px 8px rgba(0,0,0,.4)
+}
+.tpl .mini .env::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  clip-path:polygon(0 0,100% 0,50% 100%)
+}
+.tpl .mini .s{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:16px;height:16px;border-radius:50%;z-index:2
+}
+.tpl b{display:block;font-size:.74rem;font-weight:400;margin-top:.45rem}
+.tpl i{display:block;font-size:.58rem;color:var(--txt2);font-style:normal;padding:0 .3rem;line-height:1.35}
+
+/* ---- fotos ---- */
+.fotos{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.6rem}
+.fotos figure{position:relative;margin:0;width:62px;height:78px}
+.fotos img{width:100%;height:100%;object-fit:cover;border-radius:4px}
+.fotos button{
+  position:absolute;top:-6px;right:-6px;width:20px;height:20px;padding:0;
+  border-radius:50%;line-height:1;font-size:.7rem;background:#000;border-color:#555
+}
+input[type=file]{padding:.4rem;font-size:.72rem}
+
+/* ---- coluna direita: preview ---- */
+.preview{
+  background:
+    radial-gradient(ellipse at 50% 0%,#24222a,transparent 70%),
+    var(--bg2);
+  border-left:1px solid var(--li);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1rem;padding:1.6rem;position:sticky;top:0;height:100vh
+}
+@media(max-width:900px){.preview{position:static;height:auto;min-height:80vh}}
+.fone{
+  width:330px;max-width:100%;height:min(690px,78vh);
+  border:11px solid #0b0b0d;border-radius:42px;
+  box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px #3a3a40;
+  overflow:hidden;position:relative;background:#000;flex:0 0 auto
+}
+.fone::before{
+  content:'';position:absolute;top:9px;left:50%;transform:translateX(-50%);
+  width:84px;height:20px;background:#0b0b0d;border-radius:12px;z-index:3
+}
+.fone iframe{width:100%;height:100%;border:0;display:block}
+.legenda{font-size:.7rem;color:var(--txt2);text-align:center;max-width:330px}
+.legenda b{color:var(--ac);font-weight:400}
+
+.aviso{
+  margin:1rem 1.6rem 0;padding:.75rem .9rem;border-radius:8px;font-size:.72rem;
+  background:rgba(111,191,139,.1);border:1px solid rgba(111,191,139,.3);color:#a8dcbd
+}
+.aviso.erro{background:rgba(220,110,110,.1);border-color:rgba(220,110,110,.35);color:#eab2b2}
+</style>
+</head>
+<body>
+
+<!-- =================== PAINEL =================== -->
+<div class="painel">
+  <div class="topo">
+    <h1>Estúdio de Convites</h1>
+    <p>Preencha, veja ao vivo, exporte o site pronto. Sem código, sem IA, sem custo por convite.</p>
+    <div class="acoes">
+      <button class="primario" id="btnGerar">⬇ Gerar site do convite</button>
+      <button id="btnSalvar">Salvar projeto</button>
+      <label class="falsoBtn" style="margin:0">Abrir projeto
+        <input type="file" id="fileProjeto" accept="application/json" hidden>
+      </label>
+      <button id="btnExemplo">Preencher exemplo</button>
+    </div>
+    <div id="aviso"></div>
+  </div>
+
+  <fieldset>
+    <legend>Template</legend>
+    <div class="tpls" id="tpls"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>O casal</legend>
+    <div class="dupla">
+      <label><span>Nome dela</span><input id="noiva" value="Larissa"></label>
+      <label><span>Nome dele</span><input id="noivo" value="André"></label>
+    </div>
+    <div class="dupla">
+      <label><span>Data</span><input id="dataISO" type="date" value="2027-09-28"></label>
+      <label><span>Cidade</span><input id="cidade" value="Campos do Jordão · SP"></label>
+    </div>
+    <label><span>Tipo de evento (aparece pequeno no topo)</span><input id="tipoEvento" value="Nosso casamento"></label>
+    <label><span>Versículo ou frase de abertura (opcional)</span><input id="versiculo" placeholder="Grandes coisas fez o Senhor por nós · Salmos 126:3"></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Abertura</legend>
+    <label><span>Texto do envelope</span><input id="textoAbrir" value="Toque para abrir o convite"></label>
+    <label><span>Título do convite</span><input id="tituloConvite" value="Com alegria, convidamos você"></label>
+    <label><span>Texto do convite</span><textarea id="textoConvite">Depois de tanto caminho lado a lado, chegou o dia de dizer sim diante de quem a gente ama. Sua presença é o presente que falta.</textarea></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Nossa história</legend>
+    <label><span>Título</span><input id="tituloHistoria" value="Como tudo começou"></label>
+    <label><span>Texto</span><textarea id="historia">O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar — agora com vocês por perto.</textarea></label>
+    <label><span>Foto de destaque</span><input type="file" id="fotoHistoria" accept="image/*"></label>
+    <div class="fotos" id="previewHistoria"></div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Cerimônia</legend>
+    <label><span>Local</span><input id="localCerimonia" value="Capela Nossa Senhora"></label>
+    <label><span>Endereço</span><input id="enderecoCerimonia" value="Av. das Hortênsias, 1200 · Capivari"></label>
+    <div class="dupla">
+      <label><span>Horário</span><input id="horaCerimonia" type="time" value="16:00"></label>
+      <label><span>Link do Google Maps</span><input id="mapaCerimonia" placeholder="https://maps.app.goo.gl/..."></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Recepção</legend>
+    <label><span>Local</span><input id="localFesta" value="Villa Toscana Eventos"></label>
+    <label><span>Endereço</span><input id="enderecoFesta" value="Estrada do Vale, km 4 · Campos do Jordão"></label>
+    <div class="dupla">
+      <label><span>Horário</span><input id="horaFesta" type="time" value="18:30"></label>
+      <label><span>Link do Google Maps</span><input id="mapaFesta" placeholder="https://maps.app.goo.gl/..."></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Traje</legend>
+    <div class="dupla">
+      <label><span>Dress code</span><input id="dressCode" value="Traje social completo"></label>
+      <label><span>Observação</span><input id="dressCodeObs" placeholder="Pedimos gentilmente que evitem branco e off-white."></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Galeria</legend>
+    <label><span>Fotos do casal (pode selecionar várias)</span><input type="file" id="galeria" accept="image/*" multiple></label>
+    <div class="fotos" id="previewGaleria"></div>
+    <p class="dica">Dica: 2, 4 ou 6 fotos verticais ficam melhor. Elas são embutidas no arquivo final.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Confirmação de presença</legend>
+    <div class="dupla">
+      <label><span>WhatsApp (com DDI e DDD)</span><input id="whatsapp" value="5512983187315"></label>
+      <label><span>Prazo</span><input id="prazoRsvp" value="30 de julho"></label>
+    </div>
+    <label><span>Texto</span><textarea id="textoRsvp">Confirme até 30 de julho para garantirmos seu lugar à mesa.</textarea></label>
+    <label><span>Mensagem que o convidado envia</span><input id="msgRsvp" placeholder="Gerada automática se deixar vazio"></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Presentes</legend>
+    <label><span>Título</span><input id="tituloPresentes" value="Se quiser nos presentear"></label>
+    <label><span>Texto</span><textarea id="textoPresentes">Sua presença já é o maior presente. Mas se quiser fazer parte do começo da nossa história de outro jeito, deixamos as opções abaixo.</textarea></label>
+    <label><span>Link da lista de presentes</span><input id="listaPresentes" placeholder="https://..."></label>
+    <div class="dupla">
+      <label><span>Chave PIX</span><input id="pixChave" placeholder="email@exemplo.com"></label>
+      <label><span>Nome do titular</span><input id="pixNome" placeholder="Larissa M. Souza"></label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Recado final (opcional)</legend>
+    <label><span>Título</span><input id="tituloRecado" value="Um recado"></label>
+    <label><span>Texto</span><textarea id="recado" placeholder="Ex.: Pensando no conforto de todos, nossa celebração será sem crianças."></textarea></label>
+  </fieldset>
+
+  <fieldset>
+    <legend>Música</legend>
+    <label><span>URL do MP3 (toca ao abrir o envelope)</span><input id="musica" placeholder="https://.../musica.mp3"></label>
+    <p class="dica">Precisa ser um link direto para .mp3 hospedado. Começa só depois do toque — nenhum navegador bloqueia assim.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Prévia no WhatsApp</legend>
+    <label><span>Título do card</span><input id="ogTitulo" placeholder="Larissa &amp; André | Casamento"></label>
+    <label><span>Descrição do card</span><input id="ogDesc" placeholder="Junte-se a nós para celebrar o casamento de Larissa e André."></label>
+    <label><span>URL da imagem do card (1200×630)</span><input id="ogImg" placeholder="https://seudominio.com/capa.jpg"></label>
+    <p class="dica">É esse card que aparece quando o link é colado no WhatsApp. Vale muito — é a primeira impressão.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Sua marca</legend>
+    <div class="dupla">
+      <label><span>Assinatura no rodapé</span><input id="marca" value="Nutti Convites"></label>
+      <label><span>Link da marca</span><input id="marcaUrl" value="https://nutticonvites.com"></label>
+    </div>
+    <label><span>Nome do arquivo gerado</span><input id="slug" value="larissa-andre"></label>
+  </fieldset>
+</div>
+
+<!-- =================== PREVIEW =================== -->
+<div class="preview">
+  <div class="fone"><iframe id="fone" title="Prévia do convite"></iframe></div>
+  <p class="legenda">Prévia ao vivo. Clique no envelope para testar a abertura · <b id="peso">—</b></p>
+  <button id="btnRecarregar">↻ Reiniciar animação</button>
+</div>
+
+<!-- ======= o motor, guardado como texto para ser injetado ======= -->
+<script type="text/template" id="src-css"><!--INJECT:engine/invite.css--></script>
+<script type="text/template" id="src-js"><!--INJECT:engine/invite.js--></script>
+<script type="text/template" id="src-tpl"><!--INJECT:engine/templates.js--></script>
+
+<script>
+/* carrega as definições de template no escopo do estúdio */
+(new Function(document.getElementById('src-tpl').textContent))();
+var TPLS = window.TEMPLATES;
+
+var CSS = document.getElementById('src-css').textContent;
+var JS  = document.getElementById('src-js').textContent;
+var TPLSRC = document.getElementById('src-tpl').textContent;
+
+var FONTES = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&family=Pinyon+Script&family=Italianno&display=swap';
+
+var estado = { tpl: 'perola', fotoHistoria: '', galeria: [] };
+
+var CAMPOS = ['noiva','noivo','dataISO','cidade','tipoEvento','versiculo','textoAbrir',
+  'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
+  'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
+  'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
+  'msgRsvp','tituloPresentes','textoPresentes','listaPresentes','pixChave','pixNome',
+  'tituloRecado','recado','musica','ogTitulo','ogDesc','ogImg','marca','marcaUrl','slug'];
+
+function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
+
+function coletar(){
+  var c = {};
+  CAMPOS.forEach(function(k){ c[k] = val(k); });
+  c.fotoHistoria = estado.fotoHistoria;
+  c.galeria = estado.galeria;
+  c._tpl = TPLS.filter(function(t){ return t.id === estado.tpl; })[0];
+  return c;
+}
+
+/* ---------- monta o documento completo do convite ---------- */
+function montarHTML(c, paraExport){
+  var titulo = c.ogTitulo || (c.noiva + ' & ' + c.noivo + ' | Casamento');
+  var desc = c.ogDesc || ('Junte-se a nós para celebrar o casamento de ' + c.noiva + ' e ' + c.noivo + '.');
+  var cfg = JSON.stringify(c);
+  var meta = paraExport
+    ? '<meta name="description" content="' + att(desc) + '">' +
+      '<meta property="og:type" content="website">' +
+      '<meta property="og:title" content="' + att(titulo) + '">' +
+      '<meta property="og:description" content="' + att(desc) + '">' +
+      (c.ogImg ? '<meta property="og:image" content="' + att(c.ogImg) + '">' : '') +
+      '<meta name="twitter:card" content="summary_large_image">' +
+      '<meta name="theme-color" content="' + (c._tpl.vars['--paper-2'] || '#efe6d6') + '">'
+    : '';
+
+  return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' +
+    '<title>' + att(titulo) + '</title>' + meta +
+    '<link rel="preconnect" href="https://fonts.googleapis.com">' +
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+    '<link href="' + FONTES + '" rel="stylesheet">' +
+    '<style>' + CSS + '</style></head><body>' +
+    '<script>window.__CONVITE__=' + cfg.replace(/<\//g,'<\\/') + '<\/script>' +
+    '<script>' + TPLSRC + '<\/script>' +
+    '<script>' + JS + '<\/script>' +
+    '</body></html>';
+}
+function att(s){ return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* ---------- preview ---------- */
+var timer;
+function atualizar(){
+  clearTimeout(timer);
+  timer = setTimeout(function(){
+    var c = coletar();
+    var html = montarHTML(c, false);
+    document.getElementById('fone').srcdoc = html;
+    var kb = (new Blob([montarHTML(c, true)]).size / 1024);
+    document.getElementById('peso').textContent =
+      (kb > 1024 ? (kb/1024).toFixed(1) + ' MB' : Math.round(kb) + ' KB') + ' · 1 arquivo';
+  }, 260);
+}
+
+/* ---------- seletor de template ---------- */
+function pintarTemplates(){
+  var alvo = document.getElementById('tpls');
+  alvo.innerHTML = TPLS.map(function(t){
+    var v = t.vars;
+    return '<div class="tpl' + (t.id === estado.tpl ? ' sel' : '') + '" data-id="' + t.id + '" title="' + att(t.tagline) + '">' +
+      '<div class="mini" style="background:linear-gradient(160deg,' + v['--paper-2'] + ',' + v['--paper'] + ')">' +
+        '<div class="env" style="background:linear-gradient(160deg,' + v['--paper'] + ',' + v['--paper-2'] + ')">' +
+          '<div class="s" style="background:' + v['--seal'] + '"></div>' +
+        '</div>' +
+      '</div>' +
+      '<b>' + t.nome + '</b><i>' + t.tagline.split('·')[0].trim() + '</i>' +
+    '</div>';
+  }).join('');
+  [].forEach.call(alvo.children, function(el){
+    el.addEventListener('click', function(){
+      estado.tpl = el.dataset.id;
+      pintarTemplates();
+      atualizar();
+    });
+  });
+}
+
+/* ---------- fotos ---------- */
+function lerArquivo(f){
+  return new Promise(function(res){
+    var r = new FileReader();
+    r.onload = function(){ res(r.result); };
+    r.readAsDataURL(f);
+  });
+}
+// Reduz a foto antes de embutir — senão o arquivo final fica gigante.
+function comprimir(dataUrl, maxLado, q){
+  return new Promise(function(res){
+    var img = new Image();
+    img.onload = function(){
+      var k = Math.min(1, maxLado / Math.max(img.width, img.height));
+      var cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * k);
+      cv.height = Math.round(img.height * k);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+      res(cv.toDataURL('image/jpeg', q));
+    };
+    img.onerror = function(){ res(dataUrl); };
+    img.src = dataUrl;
+  });
+}
+
+document.getElementById('fotoHistoria').addEventListener('change', function(e){
+  var f = e.target.files[0]; if (!f) return;
+  lerArquivo(f).then(function(d){ return comprimir(d, 1100, .82); }).then(function(d){
+    estado.fotoHistoria = d;
+    document.getElementById('previewHistoria').innerHTML =
+      '<figure><img src="' + d + '"><button type="button" data-rm="h">×</button></figure>';
+    atualizar();
+  });
+});
+
+document.getElementById('galeria').addEventListener('change', function(e){
+  var fs = [].slice.call(e.target.files);
+  Promise.all(fs.map(function(f){
+    return lerArquivo(f).then(function(d){ return comprimir(d, 1000, .78); });
+  })).then(function(ds){
+    estado.galeria = estado.galeria.concat(ds);
+    pintarGaleria();
+    atualizar();
+  });
+});
+
+function pintarGaleria(){
+  document.getElementById('previewGaleria').innerHTML = estado.galeria.map(function(d,i){
+    return '<figure><img src="' + d + '"><button type="button" data-rm="' + i + '">×</button></figure>';
+  }).join('');
+}
+
+document.addEventListener('click', function(e){
+  var rm = e.target.dataset && e.target.dataset.rm;
+  if (rm === undefined) return;
+  if (rm === 'h'){
+    estado.fotoHistoria = '';
+    document.getElementById('previewHistoria').innerHTML = '';
+  } else {
+    estado.galeria.splice(+rm, 1);
+    pintarGaleria();
+  }
+  atualizar();
+});
+
+/* ---------- exportar ---------- */
+function baixar(nome, conteudo, tipo){
+  var b = new Blob([conteudo], { type: tipo });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = nome;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 400);
+}
+
+function avisar(msg, erro){
+  var el = document.getElementById('aviso');
+  el.innerHTML = '<div class="aviso' + (erro ? ' erro' : '') + '">' + msg + '</div>';
+  setTimeout(function(){ el.innerHTML = ''; }, 7000);
+}
+
+document.getElementById('btnGerar').addEventListener('click', function(){
+  var c = coletar();
+  if (!c.noiva || !c.noivo){ return avisar('Preencha os dois nomes antes de gerar.', true); }
+  var html = montarHTML(c, true);
+  baixar('index.html', html, 'text/html;charset=utf-8');
+  avisar('Pronto. Arraste o <b>index.html</b> em <b>app.netlify.com/drop</b> ou publique no Vercel e o link já funciona no WhatsApp.');
+});
+
+document.getElementById('btnSalvar').addEventListener('click', function(){
+  var c = coletar();
+  baixar((c.slug || 'convite') + '.json', JSON.stringify({ campos: c, tpl: estado.tpl }, null, 1), 'application/json');
+});
+
+document.getElementById('fileProjeto').addEventListener('change', function(e){
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try {
+      var p = JSON.parse(r.result);
+      var c = p.campos || {};
+      CAMPOS.forEach(function(k){
+        var el = document.getElementById(k);
+        if (el && c[k] !== undefined) el.value = c[k];
+      });
+      estado.tpl = p.tpl || c._tpl && c._tpl.id || 'perola';
+      estado.fotoHistoria = c.fotoHistoria || '';
+      estado.galeria = c.galeria || [];
+      document.getElementById('previewHistoria').innerHTML = estado.fotoHistoria
+        ? '<figure><img src="' + estado.fotoHistoria + '"><button type="button" data-rm="h">×</button></figure>' : '';
+      pintarGaleria(); pintarTemplates(); atualizar();
+      avisar('Projeto carregado.');
+    } catch (err) { avisar('Arquivo inválido.', true); }
+  };
+  r.readAsText(f);
+});
+
+document.getElementById('btnRecarregar').addEventListener('click', atualizar);
+
+document.getElementById('btnExemplo').addEventListener('click', function(){
+  var ex = {
+    noiva:'Rebeca', noivo:'Newley', dataISO:'2026-12-05', cidade:'São José dos Campos · SP',
+    versiculo:'Grandes coisas fez o Senhor por nós · Salmos 126:3',
+    tituloConvite:'Com a bênção de Deus e de nossos pais',
+    textoConvite:'Convidamos você para testemunhar o nosso amor e celebrar o início de uma nova história.',
+    localCerimonia:'Igreja Batista Central', enderecoCerimonia:'R. Rubião Júnior, 240 · Centro',
+    horaCerimonia:'19:00', localFesta:'Espaço Jardim das Acácias',
+    enderecoFesta:'Rod. dos Tamoios, km 12', horaFesta:'21:00',
+    dressCode:'Passeio completo', dressCodeObs:'Pedimos gentilmente que evitem branco e off-white.',
+    prazoRsvp:'10 de novembro', slug:'rebeca-newley'
+  };
+  Object.keys(ex).forEach(function(k){
+    var el = document.getElementById(k); if (el) el.value = ex[k];
+  });
+  document.getElementById('textoRsvp').value = 'Confirme até 10 de novembro para garantirmos seu lugar à mesa.';
+  atualizar();
+});
+
+/* ---------- liga tudo ---------- */
+CAMPOS.forEach(function(k){
+  var el = document.getElementById(k);
+  if (el) el.addEventListener('input', atualizar);
+});
+pintarTemplates();
+atualizar();
+</script>
+</body>
+</html>
