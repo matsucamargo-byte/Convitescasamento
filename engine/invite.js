@@ -1,12 +1,21 @@
 /* =============================================================
-   Renderizador. Lê window.__CONVITE__ e monta o convite.
-   O mesmo arquivo roda na prévia do estúdio e no site exportado.
+   Renderizador.
+
+   É uma função, não um script que roda uma vez: a vitrine precisa
+   trocar de convite sem recarregar a página, e para isso o motor
+   tem de poder ser chamado de novo e desmontar o anterior.
    ============================================================= */
-(function () {
+window.renderConvite = function (C, raiz) {
   'use strict';
 
-  var C = window.__CONVITE__ || {};
+  C = C || {};
+  raiz = raiz || document.body;
   var T = C._tpl || {};
+
+  // desmonta o convite anterior: sem isso sobram cronômetros, o
+  // observador de rolagem e o laço das pétalas rodando em segundo plano
+  if (raiz._limpar) { raiz._limpar.forEach(function (f) { try { f(); } catch (e) {} }); }
+  var limpar = raiz._limpar = [];
 
   var esc = function (s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -25,7 +34,7 @@
   };
 
   /* ---------- template ---------- */
-  var root = document.documentElement;
+  var root = raiz;
   Object.keys(T.vars || {}).forEach(function (k) { root.style.setProperty(k, T.vars[k]); });
   var f = T.fonts || {};
   root.style.setProperty('--f-display', '"' + (f.display || 'Cormorant Garamond') + '"');
@@ -291,16 +300,38 @@
     );
   }
 
-  // RSVP — faixa invertida: o maior contraste da página fica na única ação
+  // RSVP. No reel do concorrente é formulário na própria página com
+  // tela de sucesso, não um link que joga o convidado pra fora. Aqui o
+  // envio sai pelo WhatsApp já formatado: a experiência é a mesma e não
+  // precisa de servidor.
   if (tem(C.whatsapp)) {
-    var zap = String(C.whatsapp).replace(/\D/g, '');
-    var msg = encodeURIComponent(C.msgRsvp || ('Olá! Confirmo minha presença no casamento de ' + C.noiva + ' e ' + C.noivo));
     S.push(
-      '<section class="faixa-invertida">' +
-        '<h2 class="sec-titulo">Você vem?</h2>' +
+      '<section class="faixa-invertida" id="rsvp">' +
+        '<h2 class="sec-titulo">' + esc(C.tituloRsvp || 'Você vem?') + '</h2>' +
         '<div class="rule"><i class="fim"></i></div>' +
         par(C.textoRsvp) +
-        '<a class="btn cheio btn-bloco" target="_blank" rel="noopener" href="https://wa.me/' + esc(zap) + '?text=' + msg + '">Confirmar presença</a>' +
+        '<form class="form" id="formRsvp" novalidate>' +
+          '<label class="cmp"><span>Seu nome</span>' +
+            '<input name="nome" type="text" autocomplete="name" required placeholder="Nome e sobrenome"></label>' +
+          '<fieldset class="esc"><legend>Você irá comparecer?</legend>' +
+            '<label><input type="radio" name="vai" value="Sim, estarei lá" checked><span>Sim, estarei lá</span></label>' +
+            '<label><input type="radio" name="vai" value="Não poderei ir"><span>Não poderei ir</span></label>' +
+          '</fieldset>' +
+          '<label class="cmp"><span>Quantas pessoas, contando você</span>' +
+            '<input name="qtd" type="number" min="1" max="20" value="1" inputmode="numeric"></label>' +
+          '<label class="cmp"><span>Restrição alimentar <i>(opcional)</i></span>' +
+            '<input name="dieta" type="text" placeholder="Vegetariano, sem glúten..."></label>' +
+          '<label class="cmp"><span>Recado para os noivos <i>(opcional)</i></span>' +
+            '<textarea name="msg" rows="3" placeholder="Deixe uma mensagem"></textarea></label>' +
+          '<button class="btn cheio" type="submit">Confirmar presença</button>' +
+          '<p class="erroForm" id="erroRsvp" role="alert" hidden></p>' +
+        '</form>' +
+        '<div class="okForm" id="okRsvp" hidden>' +
+          '<svg class="tick" viewBox="0 0 48 48" aria-hidden="true">' +
+            '<circle cx="24" cy="24" r="21"/><path d="M15 24.5l6.5 6.5L33 19"/></svg>' +
+          '<p class="okT">Obrigado</p>' +
+          '<p class="sec-texto">Sua confirmação foi registrada. Até lá.</p>' +
+        '</div>' +
       '</section>'
     );
   }
@@ -356,10 +387,10 @@
 
   if (tem(C.textura)) {
     root.style.setProperty('--textura', 'url("' + C.textura + '")');
-    document.body.classList.add('tem-textura');
+    raiz.classList.add('tem-textura');
   }
 
-  document.body.innerHTML =
+  raiz.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
     '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
 
@@ -367,11 +398,13 @@
      Comportamento
      ============================================================= */
   document.body.classList.add('locked');
-  var env = document.getElementById('env');
-  var cenaEl = document.getElementById('cena');
-  var audio = document.getElementById('audio');
-  var btnSom = document.getElementById('som');
+  limpar.push(function () { document.body.classList.remove('locked'); });
+  var env = raiz.querySelector('#env');
+  var cenaEl = raiz.querySelector('#cena');
+  var audio = raiz.querySelector('#audio');
+  var btnSom = raiz.querySelector('#som');
   var abriu = false;
+  if (audio) { limpar.push(function () { try { audio.pause(); } catch (e) {} }); }
 
   /* A abertura é encenada em etapas. Tudo junto não se vê.
      Duração longa se justifica: é um momento único, visto uma vez. */
@@ -407,7 +440,7 @@
       // Revela quando o vídeo acaba — com teto de tempo, porque um
       // vídeo que não carrega não pode prender o convidado na tela.
       cenaEl.classList.add('tocou');
-      var vid = document.getElementById('cortina');
+      var vid = raiz.querySelector('#cortina');
       var revelou = false;
       var revela = function () { if (!revelou) { revelou = true; revelar(); } };
       vid.addEventListener('ended', revela);
@@ -427,7 +460,7 @@
     cenaEl.classList.add('foi');
     document.body.classList.remove('locked');
     window.scrollTo(0, 0);
-    var pet = document.getElementById('petalas');
+    var pet = raiz.querySelector('#petalas');
     if (pet) pet.classList.add('on');
   }
 
@@ -455,13 +488,15 @@
       io.unobserve(e.target);
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
-  document.querySelectorAll('.seq').forEach(function (el) { io.observe(el); });
+  raiz.querySelectorAll('.seq').forEach(function (el) { io.observe(el); });
+  limpar.push(function () { io.disconnect(); });
 
   /* contagem regressiva */
   if (dt) {
     var alvo = dt.getTime();
     var campos = {};
-    document.querySelectorAll('#contagem [data-c]').forEach(function (el) { campos[el.dataset.c] = el; });
+    raiz.querySelectorAll('#contagem [data-c]').forEach(function (el) { campos[el.dataset.c] = el; });
+    var relogio;
     (function tick() {
       var seg = Math.floor(Math.max(0, alvo - Date.now()) / 1000);
       var o = { d: Math.floor(seg / 86400), h: Math.floor(seg % 86400 / 3600),
@@ -469,15 +504,52 @@
       Object.keys(campos).forEach(function (k) {
         campos[k].textContent = String(o[k]).padStart(2, '0');
       });
-      setTimeout(tick, 1000);
+      relogio = setTimeout(tick, 1000);
     })();
+    limpar.push(function () { clearTimeout(relogio); });
+  }
+
+  /* RSVP: valida, mostra o sucesso e entrega pelo WhatsApp */
+  var form = raiz.querySelector('#formRsvp');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var erro = raiz.querySelector('#erroRsvp');
+      var d = new FormData(form);
+      var nome = String(d.get('nome') || '').trim();
+      if (!nome) {
+        erro.textContent = 'Precisamos do seu nome para confirmar.';
+        erro.hidden = false;
+        form.querySelector('[name=nome]').focus();
+        return;
+      }
+      erro.hidden = true;
+
+      var linhasMsg = [
+        'Confirmação de presença no casamento de ' + C.noiva + ' e ' + C.noivo,
+        'Nome: ' + nome,
+        'Resposta: ' + d.get('vai')
+      ];
+      if (d.get('vai') !== 'Não poderei ir') linhasMsg.push('Pessoas: ' + (d.get('qtd') || '1'));
+      if (String(d.get('dieta') || '').trim()) linhasMsg.push('Restrição: ' + d.get('dieta'));
+      if (String(d.get('msg') || '').trim()) linhasMsg.push('Recado: ' + d.get('msg'));
+
+      var zap = String(C.whatsapp).replace(/\D/g, '');
+      var url = 'https://wa.me/' + zap + '?text=' + encodeURIComponent(linhasMsg.join('\n'));
+
+      form.hidden = true;
+      raiz.querySelector('#okRsvp').hidden = false;
+      // a aba só abre depois do sucesso aparecer, senão o convidado
+      // volta e acha que nada aconteceu
+      setTimeout(function () { window.open(url, '_blank', 'noopener'); }, 650);
+    });
   }
 
   /* copiar PIX */
-  var bp = document.getElementById('copiaPix');
+  var bp = raiz.querySelector('#copiaPix');
   if (bp) {
     bp.addEventListener('click', function () {
-      var txt = document.getElementById('pix').textContent;
+      var txt = raiz.querySelector('#pix').textContent;
       var ok = function () {
         bp.textContent = 'Copiado';
         setTimeout(function () { bp.textContent = 'Copiar chave'; }, 2200);
@@ -495,19 +567,23 @@
   /* pétalas */
   (function () {
     if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-    var cv = document.getElementById('petalas');
+    var cv = raiz.querySelector('#petalas');
     if (!cv) return;
     var cx = cv.getContext('2d'), w, h, ps = [];
     var cor = getComputedStyle(root).getPropertyValue('--accent-2').trim() || '#ddc79a';
     function dim() { w = cv.width = innerWidth; h = cv.height = innerHeight; }
     dim(); addEventListener('resize', dim);
+    limpar.push(function () { removeEventListener('resize', dim); });
     for (var i = 0; i < 14; i++) {
       ps.push({ x: Math.random() * w, y: Math.random() * h, r: 3 + Math.random() * 4.5,
                 vy: .2 + Math.random() * .45, vx: -.22 + Math.random() * .44,
                 a: Math.random() * 6.28, va: -.013 + Math.random() * .026,
                 o: .14 + Math.random() * .24 });
     }
+    var vivo = true;
+    limpar.push(function () { vivo = false; });
     (function loop() {
+      if (!vivo) return;
       cx.clearRect(0, 0, w, h);
       ps.forEach(function (p) {
         p.y += p.vy; p.x += p.vx + Math.sin(p.y / 80) * .3; p.a += p.va;
@@ -520,4 +596,15 @@
       requestAnimationFrame(loop);
     })();
   })();
-})();
+};
+
+/* O convite exportado é um arquivo só: dispara sozinho. */
+if (window.__CONVITE__) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      window.renderConvite(window.__CONVITE__, document.body);
+    });
+  } else {
+    window.renderConvite(window.__CONVITE__, document.body);
+  }
+}

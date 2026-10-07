@@ -875,3 +875,80 @@ body.tem-textura .faixa-escura{
     transition-duration:.3s!important;animation-duration:.3s!important
   }
 }
+
+/* =============================================================
+   FORMULÁRIO DE RSVP
+   ============================================================= */
+.form{max-width:340px;margin:2rem auto 0;text-align:left}
+.cmp{display:block;margin:0 0 1.1rem}
+.cmp > span{
+  display:block;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--paper) 70%,var(--ink));margin:0 0 .45rem
+}
+.cmp > span i{font-style:normal;text-transform:none;letter-spacing:.02em;opacity:.65}
+.form input[type=text],.form input[type=number],.form textarea{
+  width:100%;font:inherit;font-size:1rem;padding:.8rem .9rem;
+  color:var(--paper);background:color-mix(in srgb,var(--paper) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--paper) 26%,transparent);
+  border-radius:3px;outline:0;
+  -webkit-appearance:none;appearance:none
+}
+.form textarea{resize:vertical;line-height:1.6;min-height:84px}
+.form input::placeholder,.form textarea::placeholder{
+  color:color-mix(in srgb,var(--paper) 42%,transparent)
+}
+.form input:focus,.form textarea:focus{
+  border-color:var(--accent-2);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-2) 22%,transparent)
+}
+.esc{border:0;margin:0 0 1.1rem;padding:0}
+.esc legend{
+  font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--paper) 70%,var(--ink));padding:0;margin-bottom:.5rem
+}
+.esc label{
+  display:flex;align-items:center;gap:.6rem;padding:.62rem .2rem;
+  font-size:.96rem;color:var(--paper);cursor:pointer
+}
+.esc input[type=radio]{
+  -webkit-appearance:none;appearance:none;margin:0;flex:0 0 auto;
+  width:19px;height:19px;border-radius:50%;
+  border:1px solid color-mix(in srgb,var(--paper) 42%,transparent);
+  display:grid;place-content:center;cursor:pointer
+}
+.esc input[type=radio]::before{
+  content:'';width:9px;height:9px;border-radius:50%;
+  background:var(--accent-2);transform:scale(0);
+  transition:transform .16s var(--ease-out)
+}
+.esc input[type=radio]:checked{border-color:var(--accent-2)}
+.esc input[type=radio]:checked::before{transform:scale(1)}
+.form .btn{width:100%;margin-top:.4rem;padding:1rem}
+.erroForm{
+  margin:.8rem 0 0;font-size:.88rem;
+  color:color-mix(in srgb,var(--paper) 86%,#ff8a8a)
+}
+
+/* tela de sucesso */
+.okForm{max-width:340px;margin:2.4rem auto 0;text-align:center}
+.okForm .tick{
+  width:54px;height:54px;margin:0 auto 1rem;display:block;
+  fill:none;stroke:var(--accent-2);stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round
+}
+.okForm .tick circle{
+  stroke-dasharray:132;stroke-dashoffset:132;
+  animation:tracar .7s var(--ease-out) forwards
+}
+.okForm .tick path{
+  stroke-dasharray:32;stroke-dashoffset:32;
+  animation:tracar .45s var(--ease-out) .5s forwards
+}
+@keyframes tracar{to{stroke-dashoffset:0}}
+.okForm .okT{
+  font-family:var(--f-script),cursive;font-size:2.1rem;
+  color:var(--paper);margin:0 0 .3rem
+}
+@media (prefers-reduced-motion:reduce){
+  .okForm .tick circle,.okForm .tick path{animation-duration:.01ms;stroke-dashoffset:0}
+}

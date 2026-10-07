@@ -170,12 +170,14 @@ comum de convidado é não saber por onde confirmar.
 
 ## Só quero ver os convites
 
-Abra `convites/index.html`. Lista os doze, clique para abrir.
-Não precisa do estúdio para isso: o estúdio é para criar um convite novo.
+Abra **`vitrine.html`**. Arquivo único, 1,5 MB, funciona no celular e sem
+internet depois de carregado. Os doze modelos estão dentro dele: toca num,
+abre o convite inteiro; o botão Modelos volta, e o botão voltar do aparelho
+também.
 
-Cinco já estão com arte de verdade (Marfim, Cloud Dancer, Mocha, Oliva,
-Sálvia), gerada no Flow e guardada em `arte/`. Os outros sete usam o
-envelope desenhado em CSS até a arte chegar.
+Era aqui que estava o bug: a versão anterior era um índice com links para
+`marfim.html`, `oliva.html` e assim por diante. Baixado sozinho no celular,
+esses arquivos não iam junto, então os links não levavam a lugar nenhum.
 
 ## Três formas de abrir
 
@@ -184,9 +186,20 @@ O motor escolhe sozinho, pela ordem:
 | Campo preenchido | O que acontece |
 |---|---|
 | Vídeo de abertura (cortina) | O vídeo é a abertura; revela quando termina |
-| Foto do envelope | A foto é o envelope; some com um leve zoom ao toque |
-| Nenhum dos dois | Envelope desenhado em CSS, com aba, lacre e relevo |
+| Cena ilustrada | O envelope vira uma fenda que cresce e revela a ilustração |
+| Foto do envelope | A mesma fenda, revelando a capa do convite |
+| Nenhum | Envelope desenhado em CSS, com aba, lacre e relevo |
 
-Foto boa e vetor desenhado brigando na mesma tela é pior que qualquer um
-dos dois sozinho, por isso a foto substitui o envelope em vez de ficar
-atrás dele.
+## Confirmação de presença
+
+Formulário na própria página, com tela de sucesso, como no concorrente.
+Nome, se vem, quantas pessoas, restrição alimentar e recado. Depois do
+"Obrigado" ele abre o WhatsApp com tudo já escrito: a experiência é de
+formulário e não precisa de servidor nenhum.
+
+## Gerar os arquivos
+
+```
+./build.sh              # estudio.html
+python3 build-vitrine.py # vitrine.html
+```
