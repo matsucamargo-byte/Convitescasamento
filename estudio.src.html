@@ -6,7 +6,7 @@
 <title>Estúdio de Convites</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&family=Pinyon+Script&family=Italianno&display=swap" rel="stylesheet">
+<link id="fontesEstudio" rel="stylesheet" href="">
 <style>
 :root{
   --bg:#17161a; --bg2:#1f1e24; --bg3:#2a2930;
@@ -45,12 +45,12 @@ button.primario:hover{filter:brightness(1.12);color:#191307}
 
 fieldset{border:0;border-top:1px solid var(--li);margin:0;padding:1.4rem 1.6rem}
 legend{
-  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;
+  font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;
   color:var(--ac);padding:0 .5rem 0 0
 }
 label{display:block;margin:.85rem 0 0}
 label > span{
-  display:block;font-size:.68rem;color:var(--txt2);
+  display:block;font-size:.78rem;color:var(--txt2);
   margin-bottom:.3rem;letter-spacing:.04em
 }
 input,textarea,select{
@@ -61,7 +61,7 @@ input,textarea,select{
 input:focus,textarea:focus,select:focus{border-color:var(--ac)}
 textarea{resize:vertical;min-height:76px;line-height:1.6}
 .dupla{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-.dica{font-size:.66rem;color:var(--txt2);margin:.3rem 0 0;opacity:.8}
+.dica{font-size:.78rem;color:var(--txt2);margin:.3rem 0 0;opacity:.8}
 
 /* ---- seletor de template ---- */
 .tpls{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:.9rem}
@@ -87,7 +87,7 @@ textarea{resize:vertical;min-height:76px;line-height:1.6}
   width:16px;height:16px;border-radius:50%;z-index:2
 }
 .tpl b{display:block;font-size:.74rem;font-weight:400;margin-top:.45rem}
-.tpl i{display:block;font-size:.58rem;color:var(--txt2);font-style:normal;padding:0 .3rem;line-height:1.35}
+.tpl i{display:block;font-size:.7rem;color:var(--txt2);font-style:normal;padding:0 .3rem;line-height:1.35}
 
 /* ---- fotos ---- */
 .fotos{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.6rem}
@@ -151,6 +151,8 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   <fieldset>
     <legend>Template</legend>
     <div class="tpls" id="tpls"></div>
+    <label><span>Ornamento próprio (URL de PNG ou SVG) — opcional</span><input id="ornamentoUrl" placeholder="https://.../floral-aquarela.png"></label>
+    <p class="dica">Preenchido, substitui o desenho vetorial do envelope pela sua arte. É o caminho para sair do genérico — veja o README.</p>
   </fieldset>
 
   <fieldset>
@@ -163,7 +165,6 @@ input[type=file]{padding:.4rem;font-size:.72rem}
       <label><span>Data</span><input id="dataISO" type="date" value="2027-09-28"></label>
       <label><span>Cidade</span><input id="cidade" value="Campos do Jordão · SP"></label>
     </div>
-    <label><span>Tipo de evento (aparece pequeno no topo)</span><input id="tipoEvento" value="Nosso casamento"></label>
     <label><span>Versículo ou frase de abertura (opcional)</span><input id="versiculo" placeholder="Grandes coisas fez o Senhor por nós · Salmos 126:3"></label>
   </fieldset>
 
@@ -289,11 +290,25 @@ var CSS = document.getElementById('src-css').textContent;
 var JS  = document.getElementById('src-js').textContent;
 var TPLSRC = document.getElementById('src-tpl').textContent;
 
-var FONTES = 'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@200;300;400&family=Pinyon+Script&family=Italianno&display=swap';
+function urlFontes(ts){
+  var fams = [];
+  ts.forEach(function(t){
+    [t.fonts.display, t.fonts.body, t.fonts.script].forEach(function(n){
+      var q = n.replace(/ /g,'+');
+      // só as famílias com peso variável pedem eixo
+      if (/Cormorant Garamond|Spectral|EB Garamond|Jost|Karla|Outfit|Commissioner|Playfair Display/.test(n)) q += ':wght@300;400;500';
+      if (fams.indexOf(q) < 0) fams.push(q);
+    });
+  });
+  return 'https://fonts.googleapis.com/css2?family=' + fams.join('&family=') + '&display=swap';
+}
+var FONTES_TODAS = urlFontes(TPLS);
 
-var estado = { tpl: 'perola', fotoHistoria: '', galeria: [] };
+document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','tipoEvento','versiculo','textoAbrir',
+var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
+
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornamentoUrl',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
@@ -331,7 +346,7 @@ function montarHTML(c, paraExport){
     '<title>' + att(titulo) + '</title>' + meta +
     '<link rel="preconnect" href="https://fonts.googleapis.com">' +
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
-    '<link href="' + FONTES + '" rel="stylesheet">' +
+    '<link href="' + (paraExport ? urlFontes([c._tpl]) : FONTES_TODAS) + '" rel="stylesheet">' +
     '<style>' + CSS + '</style></head><body>' +
     '<script>window.__CONVITE__=' + cfg.replace(/<\//g,'<\\/') + '<\/script>' +
     '<script>' + TPLSRC + '<\/script>' +
@@ -365,7 +380,7 @@ function pintarTemplates(){
           '<div class="s" style="background:' + v['--seal'] + '"></div>' +
         '</div>' +
       '</div>' +
-      '<b>' + t.nome + '</b><i>' + t.tagline.split('·')[0].trim() + '</i>' +
+      '<b>' + t.nome + '</b><i>' + t.familia + '</i>' +
     '</div>';
   }).join('');
   [].forEach.call(alvo.children, function(el){
@@ -482,7 +497,7 @@ document.getElementById('fileProjeto').addEventListener('change', function(e){
         var el = document.getElementById(k);
         if (el && c[k] !== undefined) el.value = c[k];
       });
-      estado.tpl = p.tpl || c._tpl && c._tpl.id || 'perola';
+      estado.tpl = p.tpl || (c._tpl && c._tpl.id) || 'marfim';
       estado.fotoHistoria = c.fotoHistoria || '';
       estado.galeria = c.galeria || [];
       document.getElementById('previewHistoria').innerHTML = estado.fotoHistoria

@@ -46,14 +46,35 @@ Cada bloco só aparece se você preencher. Deixou vazio, some.
 
 ## Templates
 
-| Template | Paleta | Abertura |
-|---|---|---|
-| Pérola | marfim e ouro | envelope |
-| Serenity | azul sereno, lacre branco | envelope |
-| Toscana | aquarela oliva | puxar a ponta |
-| Esmeralda | verde profundo e ouro | envelope |
-| Blush | rosé com tassel | envelope |
-| Noir | preto e ouro | envelope |
+Seis **famílias** de paleta, não seis variações da mesma. Bege com dourado é
+o reflexo padrão para esse tipo de briefing e faz toda marca ficar igual —
+só Marfim fica nessa família, e por um motivo defensável: é a convenção da
+papelaria de casamento. As outras cinco saem de lugares diferentes de
+propósito. Cada uma também troca o par tipográfico.
+
+| Template | Família | Tipografia | Abertura |
+|---|---|---|---|
+| Marfim | marfim e ouro | Cormorant + Pinyon | envelope |
+| Bosque | verde profundo, osso, âmbar | Cinzel + Italianno | envelope |
+| Terracota | terracota e ardósia | Playfair + Great Vibes | puxar a ponta |
+| Linho | preto real e tan | Spectral + Petit Formal | envelope |
+| Cobalto | cobalto e creme | EB Garamond + Tangerine | envelope |
+| Bruma | prata, cromo, fumaça | Marcellus + Parisienne | envelope |
+
+## Trocar o ornamento — o que mais sobe o nível
+
+Os florais do envelope são vetores autorais. Funcionam, mas não competem com
+aquarela botânica de verdade, e é aí que mora a diferença entre "bonito" e
+"a noiva mandou pro noivo na hora".
+
+O campo **Ornamento próprio** no estúdio aceita a URL de um PNG ou SVG. Com
+ele preenchido, sua arte entra no lugar do vetor. Uma aquarela botânica boa
+sai por volta de R$ 30 no Creative Market ou Freepik e serve para todos os
+convites — é o melhor dinheiro que dá pra gastar nisso.
+
+Use PNG com fundo transparente, 1200px de largura, na proporção do motivo
+(largo e baixo, tipo 200×110). Para manter o convite em um arquivo só,
+converta para data URI antes de colar.
 
 ---
 
