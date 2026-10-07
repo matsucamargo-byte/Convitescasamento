@@ -86,10 +86,17 @@ def main():
                 fams.append(q)
     fontes = 'https://fonts.googleapis.com/css2?family=' + '&family='.join(fams) + '&display=swap'
 
+    # Envelope preenchendo a tela, como na referência. Recortado de
+    # 15–85% x e 23–77% y da foto, então a geometria muda: a aba passa a
+    # começar na borda (0%) e o ápice vai de 52% para (52-23)/54 = 53,7%.
+    # O lacre ocupa fração maior da largura nova: 8,5/70 = 12,1%.
+    GEO_CHEIO = dict(abaTopo=2.5, abaEsq=2.5, abaDir=97.5,
+                     abaApice=54.5, lacreY=53.5, lacreR=11.8)
     cfgs = {}
     for id_, *_ in MODELOS:
         c = dict(BASE)
-        c['envelopeImagem'] = uri(ARTE / (id_ + '.jpg'))
+        c['envelopeImagem'] = uri(ARTE / 'cheio' / (id_ + '.jpg'))
+        c['geo'] = GEO_CHEIO
         cfgs[id_] = c
 
     cartoes = []

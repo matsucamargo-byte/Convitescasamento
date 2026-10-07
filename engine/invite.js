@@ -128,7 +128,10 @@ window.renderConvite = function (C, raiz) {
     '--aba-dir:' + (g.abaDir || 85) + '%;' +
     '--aba-apice:' + (g.abaApice || 52) + '%;' +
     '--lacre-y:' + (g.lacreY || 51.5) + '%;' +
-    '--lacre-r:' + (g.lacreR || 8.5) + '%';
+    '--lacre-r:' + (g.lacreR || 8.5) + '%;' +
+    // circle() em clip-path aceita porcentagem; radial-gradient(circle ...)
+    // não — exige comprimento. Daí a mesma medida também em vw.
+    '--lacre-rv:' + (g.lacreR || 8.5) + 'vw';
 
   var foto = esc(C.envelopeImagem);
   var cena = abreEmFenda
@@ -151,6 +154,9 @@ window.renderConvite = function (C, raiz) {
             '<div class="e3-brilho"><i></i></div>' +
           '</div>' +
           '<div class="e3-halo"></div>' +
+          '<div class="e3-raios"></div>' +
+          '<canvas id="faiscas"></canvas>' +
+          '<div class="e3-estouro"></div>' +
         '</div>' +
         '<div class="e3-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
@@ -451,6 +457,8 @@ window.renderConvite = function (C, raiz) {
     }
 
     if (abreEmFenda) {
+      var fa = raiz.querySelector('#faiscas');
+      if (fa && fa.comecar) fa.comecar();
       // Seis tempos. Cada um precisa do anterior ter sido visto: tudo
       // junto vira um borrão e foi o que deixava a abertura amadora.
       [[0,    't1'],   // brilho corre no lacre
@@ -599,6 +607,57 @@ window.renderConvite = function (C, raiz) {
       }
     });
   }
+
+  /* Faíscas douradas em volta do lacre. Na referência elas aparecem no
+     toque e acompanham a abertura: é metade do que faz parecer caro. */
+  (function () {
+    var cv = raiz.querySelector('#faiscas');
+    if (!cv || !abreEmFenda) return;
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    var cx2 = cv.getContext('2d'), w, h, ps = [], vivo = true, rodando = false;
+    var cor = getComputedStyle(root).getPropertyValue('--glow').trim() || '#ffe9b8';
+    var gy = (parseFloat((C.geo || {}).lacreY) || 51.5) / 100;
+
+    function dim() {
+      var r = cv.getBoundingClientRect();
+      w = cv.width = Math.max(1, r.width); h = cv.height = Math.max(1, r.height);
+    }
+    function nasce() {
+      var a = Math.random() * 6.2832, d = Math.random() * w * .06;
+      return {
+        x: w / 2 + Math.cos(a) * d, y: h * gy + Math.sin(a) * d,
+        vx: Math.cos(a) * (.3 + Math.random() * 1.9),
+        vy: Math.sin(a) * (.3 + Math.random() * 1.9) - .25,
+        r: .7 + Math.random() * 2.1,
+        vida: 1, mingua: .007 + Math.random() * .017
+      };
+    }
+    limpar.push(function () { vivo = false; removeEventListener('resize', dim); });
+    addEventListener('resize', dim);
+
+    cv.comecar = function () {
+      if (rodando) return;
+      rodando = true; dim();
+      for (var i = 0; i < 70; i++) ps.push(nasce());
+      (function laco() {
+        if (!vivo) return;
+        cx2.clearRect(0, 0, w, h);
+        for (var i = ps.length - 1; i >= 0; i--) {
+          var p = ps[i];
+          p.x += p.vx; p.y += p.vy; p.vy += .012; p.vida -= p.mingua;
+          if (p.vida <= 0) { ps.splice(i, 1); continue; }
+          cx2.globalAlpha = Math.max(0, Math.sin(p.vida * Math.PI)) * .95;
+          cx2.fillStyle = cor;
+          cx2.beginPath(); cx2.arc(p.x, p.y, p.r, 0, 6.2832); cx2.fill();
+        }
+        cx2.globalAlpha = 1;
+        if (ps.length < 46) ps.push(nasce());
+        requestAnimationFrame(laco);
+      })();
+      // param de nascer: as faíscas acompanham a abertura e se apagam
+      setTimeout(function () { ps.forEach(function (p) { p.mingua = .03; }); }, 2600);
+    };
+  })();
 
   /* pétalas */
   (function () {

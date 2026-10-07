@@ -978,7 +978,7 @@ body.tem-textura .faixa-escura{
 
 .e3-palco > *{position:absolute;inset:0}
 .e3-palco img{
-  width:100%;height:100%;object-fit:cover;display:block;
+  width:100%;height:100%;object-fit:cover;object-position:center;display:block;
   -webkit-user-select:none;user-select:none;pointer-events:none
 }
 
@@ -1029,10 +1029,12 @@ body.tem-textura .faixa-escura{
      recorte e continuava na tela depois de o selo se romper. A máscara
      vaza o círculo do lacre daqui: quem mostra o selo é só a camada
      .e3-lacre, que sai de cena. */
-  -webkit-mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
-    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%);
-  mask-image:radial-gradient(circle calc(var(--lacre-r,8.5%) * 1.04)
-    at 50% var(--lacre-y,51.5%),transparent 96%,#000 100%)
+  /* a transição do vazado precisa ser suave: em 96%-100% a borda reta
+     aparecia como um risco claro cruzando o lacre */
+  -webkit-mask-image:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 1.06)
+    at 50% var(--lacre-y,51.5%),transparent 86%,#000 100%);
+  mask-image:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 1.06)
+    at 50% var(--lacre-y,51.5%),transparent 86%,#000 100%)
 }
 
 /* A carta sobe de dentro do bolso.
@@ -1052,7 +1054,7 @@ body.tem-textura .faixa-escura{
   box-shadow:
     0 2px 6px -1px rgba(0,0,0,.3),
     0 14px 34px -12px rgba(0,0,0,.45);
-  transform:translateY(58%);opacity:1;
+  transform:translateY(68%);opacity:1;
   transition:transform 1.8s cubic-bezier(.22,.6,.2,1)
 }
 /* sai de dentro e para a meia altura, como carta de verdade no envelope */
@@ -1132,6 +1134,61 @@ body.tem-textura .faixa-escura{
 #cena.env3d.t1 .e3-brilho i{
   animation:floresce 1.15s cubic-bezier(.22,.7,.3,1) forwards
 }
+
+/* RAIOS. Na referência a luz não é um halo: são raios irradiando do
+   lacre, que crescem até lavar a tela de branco. Um cone repetido em
+   gradiente cônico dá os raios; a rotação lenta tira o ar de adesivo. */
+.e3-raios{
+  position:absolute;left:50%;top:var(--lacre-y,51.5%);
+  width:260vmax;aspect-ratio:1;z-index:6;pointer-events:none;
+  transform:translate(-50%,-50%) scale(.04) rotate(0deg);
+  opacity:0;mix-blend-mode:screen;
+  /* Borda dura vira adesivo de sol. O desfoque pesado e o degradê
+     largo entre os raios transformam o leque em luz estourada. */
+  filter:blur(10px);
+  background:
+    repeating-conic-gradient(from 0deg,
+      color-mix(in srgb,var(--glow,#ffe9b8) 62%,transparent) 0deg 2.2deg,
+      transparent 2.6deg 11deg),
+    repeating-conic-gradient(from 5.5deg,
+      color-mix(in srgb,var(--glow,#ffe9b8) 30%,transparent) 0deg 1.2deg,
+      transparent 1.8deg 6.5deg),
+    radial-gradient(circle closest-side,
+      color-mix(in srgb,var(--glow,#ffe9b8) 85%,transparent) 0%,
+      transparent 18%);
+  -webkit-mask-image:radial-gradient(circle closest-side,
+    #000 2%,rgba(0,0,0,.7) 14%,rgba(0,0,0,.28) 34%,rgba(0,0,0,.08) 52%,transparent 66%);
+  mask-image:radial-gradient(circle closest-side,
+    #000 2%,rgba(0,0,0,.7) 14%,rgba(0,0,0,.28) 34%,rgba(0,0,0,.08) 52%,transparent 66%)
+}
+#cena.env3d.t3 .e3-raios{animation:irradia 2.6s cubic-bezier(.3,.1,.2,1) forwards}
+@keyframes irradia{
+  0%  {opacity:0;  transform:translate(-50%,-50%) scale(.05) rotate(0deg)}
+  26% {opacity:.78; transform:translate(-50%,-50%) scale(.3)  rotate(4deg)}
+  62% {opacity:.95; transform:translate(-50%,-50%) scale(.78) rotate(11deg)}
+  100%{opacity:.5;  transform:translate(-50%,-50%) scale(1.45) rotate(19deg)}
+}
+
+/* FAÍSCAS douradas em volta do lacre */
+#faiscas{
+  position:absolute;inset:0;z-index:6;pointer-events:none;
+  opacity:0;transition:opacity .4s ease
+}
+#cena.env3d.t1 #faiscas{opacity:1}
+#cena.env3d.t5 #faiscas{opacity:0;transition-duration:.9s}
+
+/* ESTOURO: a luz lava a tela antes de entregar o convite */
+.e3-estouro{
+  position:absolute;inset:0;z-index:9;pointer-events:none;
+  background:radial-gradient(circle at 50% var(--lacre-y,51.5%),
+    #fff 0%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 70%,#fff) 26%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 45%,transparent) 54%,
+    transparent 78%);
+  opacity:0;transform:scale(.3);
+  transition:opacity 1.1s ease,transform 1.5s cubic-bezier(.4,0,.25,1)
+}
+#cena.env3d.t5 .e3-estouro{opacity:1;transform:scale(2.6)}
 @keyframes floresce{
   0%  {opacity:0;  transform:translate(-50%,-50%) scale(.6)}
   30% {opacity:1;  transform:translate(-50%,-50%) scale(.92)}
@@ -1142,7 +1199,7 @@ body.tem-textura .faixa-escura{
 /* halo pulsando antes do toque, para o lacre pedir o clique */
 .e3-halo{
   position:absolute;inset:0;z-index:8;pointer-events:none;
-  background:radial-gradient(circle calc(var(--lacre-r,8.5%) * 3) at 50% var(--lacre-y,51.5%),
+  background:radial-gradient(circle calc(var(--lacre-rv,8.5vw) * 3) at 50% var(--lacre-y,51.5%),
     transparent 0%,transparent 28%,
     color-mix(in srgb,var(--glow,#fff) 30%,transparent) 42%,
     color-mix(in srgb,var(--glow,#fff) 10%,transparent) 62%,
@@ -1172,7 +1229,7 @@ body.tem-textura .faixa-escura{
 #cena.env3d.t1 .e3-toque{opacity:0;pointer-events:none}
 
 /* o fim: tudo dissolve no convite */
-#cena.env3d.t6{opacity:0;transition:opacity 1s ease}
+#cena.env3d.t6{opacity:0;transition:opacity .9s ease}
 
 @media (prefers-reduced-motion:reduce){
   .e3-palco,.e3-aba,.e3-lacre,.e3-carta,.e3-luz{transition-duration:.25s!important}
