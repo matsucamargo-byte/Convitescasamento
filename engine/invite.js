@@ -169,6 +169,7 @@ window.renderConvite = function (C, raiz) {
             (tem(C.cortinaPoster) ? 'poster="' + esc(C.cortinaPoster) + '" ' : '') +
             'src="' + esc(C.cortinaVideo) + '"></video>' +
         '</div>' +
+        '<div class="cortina-fim"></div>' +
         '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
@@ -484,7 +485,13 @@ window.renderConvite = function (C, raiz) {
       cenaEl.classList.add('tocou');
       var vid = raiz.querySelector('#cortina');
       var revelou = false;
-      var revela = function () { if (!revelou) { revelou = true; revelar(); } };
+      var revela = function () {
+        if (revelou) return;
+        revelou = true;
+        // lava a tela antes de entregar: esconde o final torto do vídeo
+        cenaEl.classList.add('fechando');
+        setTimeout(revelar, 620);
+      };
       vid.addEventListener('ended', revela);
       vid.addEventListener('error', revela);
       var pv = vid.play();
