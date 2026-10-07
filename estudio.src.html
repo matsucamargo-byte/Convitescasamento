@@ -157,6 +157,8 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Mídia</legend>
+    <label><span>Foto do envelope (abre o convite)</span><input id="envelopeImagem" placeholder="https://.../envelope.jpg"></label>
+    <p class="dica">Preenchida, a foto substitui o envelope desenhado em CSS. Foto boa e vetor brigando na mesma tela é pior que qualquer um sozinho.</p>
     <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
@@ -226,6 +228,13 @@ input[type=file]{padding:.4rem;font-size:.72rem}
       <label><span>Horário</span><input id="horaFesta" type="time" value="18:30"></label>
       <label><span>Link do Google Maps</span><input id="mapaFesta" placeholder="https://maps.app.goo.gl/..."></label>
     </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Programação do dia</legend>
+    <label><span>Título</span><input id="tituloProgramacao" value="Programação do dia"></label>
+    <label><span>Um momento por linha, no formato <b>hora | o que é</b></span><textarea id="programacao" rows="7" placeholder="19:00 | Cerimônia&#10;20:00 | Coquetel de recepção&#10;21:00 | Jantar&#10;22:30 | Valsa dos noivos&#10;23:00 | Pista aberta&#10;02:00 | Café da manhã"></textarea></label>
+    <p class="dica">Dois concorrentes têm essa seção e ela responde a pergunta que todo convidado faz. Deixe vazio e some.</p>
   </fieldset>
 
   <fieldset>
@@ -350,10 +359,10 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
-  'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
+  'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
   'msgRsvp','tituloPresentes','textoPresentes','listaPresentes','pixChave','pixNome',
   'tituloRecado','recado','musica','musicaTitulo','musicaVolume','ogTitulo','ogDesc','ogImg','marca','marcaUrl','slug'];
 
@@ -564,7 +573,7 @@ document.getElementById('btnExemplo').addEventListener('click', function(){
     localCerimonia:'Igreja Batista Central', enderecoCerimonia:'R. Rubião Júnior, 240 · Centro',
     horaCerimonia:'19:00', localFesta:'Espaço Jardim das Acácias',
     enderecoFesta:'Rod. dos Tamoios, km 12', horaFesta:'21:00',
-    dressCode:'Passeio completo', dressCodeObs:'Pedimos gentilmente que evitem branco e off-white.',
+    programacao:'19:00 | Cerimônia\n20:00 | Coquetel de recepção\n21:00 | Jantar\n22:30 | Valsa dos noivos\n23:00 | Pista aberta\n02:00 | Café da manhã', dressCode:'Passeio completo', dressCodeObs:'Pedimos gentilmente que evitem branco e off-white.',
     prazoRsvp:'10 de novembro', slug:'rebeca-newley'
   };
   Object.keys(ex).forEach(function(k){

@@ -171,4 +171,22 @@ comum de convidado é não saber por onde confirmar.
 ## Só quero ver os convites
 
 Abra `convites/index.html`. Lista os doze, clique para abrir.
-Não precisa do estúdio para isso — o estúdio é para criar um convite novo.
+Não precisa do estúdio para isso: o estúdio é para criar um convite novo.
+
+Cinco já estão com arte de verdade (Marfim, Cloud Dancer, Mocha, Oliva,
+Sálvia), gerada no Flow e guardada em `arte/`. Os outros sete usam o
+envelope desenhado em CSS até a arte chegar.
+
+## Três formas de abrir
+
+O motor escolhe sozinho, pela ordem:
+
+| Campo preenchido | O que acontece |
+|---|---|
+| Vídeo de abertura (cortina) | O vídeo é a abertura; revela quando termina |
+| Foto do envelope | A foto é o envelope; some com um leve zoom ao toque |
+| Nenhum dos dois | Envelope desenhado em CSS, com aba, lacre e relevo |
+
+Foto boa e vetor desenhado brigando na mesma tela é pior que qualquer um
+dos dois sozinho, por isso a foto substitui o envelope em vez de ficar
+atrás dele.

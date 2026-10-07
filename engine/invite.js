@@ -96,8 +96,16 @@
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
+  var temFoto = tem(C.envelopeImagem) && !tem(C.cortinaVideo);
   var temCortina = tem(C.cortinaVideo);
-  var cena = temCortina
+  var cena = temFoto
+    ? '<div id="cena" class="foto">' +
+        '<div class="foto-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' +
+        '<div class="foto-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : temCortina
     ? '<div id="cena" class="cortina">' +
         '<div class="cortina-midia">' +
           '<video id="cortina" playsinline preload="auto" ' +
@@ -212,6 +220,28 @@
       '<section class="faixa-escura">' +
         '<h2 class="sec-titulo">O grande dia</h2>' +
         '<ul class="linha seq">' + itens + '</ul>' +
+      '</section>'
+    );
+  }
+
+
+  // Programação do dia. Dois concorrentes têm, e eu só tinha cerimônia
+  // e festa. Uma linha por momento: "19:00 | Cerimônia".
+  if (tem(C.programacao)) {
+    var linhasProg = String(C.programacao).split(/\n+/)
+      .map(function (l) { return l.trim(); }).filter(Boolean)
+      .map(function (l) {
+        var m = l.split('|');
+        var hora = (m[0] || '').trim();
+        var oque = (m.slice(1).join('|') || '').trim();
+        return '<li><span class="hr">' + esc(hora) + '</span>' +
+               '<span class="oq">' + esc(oque) + '</span></li>';
+      }).join('');
+    S.push(
+      '<section class="centro faixa-clara">' +
+        '<h2 class="sec-titulo">' + esc(C.tituloProgramacao || 'Programação do dia') + '</h2>' +
+        '<div class="rule"><i class="fim"></i></div>' +
+        '<ol class="prog seq">' + linhasProg + '</ol>' +
       '</section>'
     );
   }
@@ -342,6 +372,12 @@
         else { audio.volume = alvoVol; clearInterval(sobe); }
       }, 120);
       if (btnSom) btnSom.classList.add('vis');
+    }
+
+    if (temFoto) {
+      cenaEl.classList.add('abrindo');
+      setTimeout(revelar, 1350);
+      return;
     }
 
     if (temCortina) {
