@@ -66,6 +66,9 @@ Doze paletas. Cada uma sai de um tema com demanda medida, não de gosto.
 Cada template troca também o par tipográfico. Mesma serifada em tudo faz
 doze convites virarem um.
 
+![Templates 1 a 6](exemplos/cartela-01-06.jpg)
+![Templates 7 a 12](exemplos/cartela-07-12.jpg)
+
 ## Mídia — o que separa caro de barato
 
 A análise do código dos concorrentes premium mostrou o seguinte: cada convite
