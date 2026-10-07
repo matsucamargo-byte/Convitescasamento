@@ -118,19 +118,41 @@ window.renderConvite = function (C, raiz) {
     ? '<img src="' + esc(C.heroMidia) + '" alt="">'
     : '<div class="ilu-papel"></div>';
 
+  // Geometria do envelope dentro da fotografia. As cinco foram geradas
+  // com a mesma composição, então uma medida serve para todas; cada
+  // template pode sobrescrever se a foto sair diferente.
+  var g = C.geo || {};
+  var estiloGeo =
+    '--aba-topo:' + (g.abaTopo || 23) + '%;' +
+    '--aba-esq:' + (g.abaEsq || 15) + '%;' +
+    '--aba-dir:' + (g.abaDir || 85) + '%;' +
+    '--aba-apice:' + (g.abaApice || 52) + '%;' +
+    '--lacre-y:' + (g.lacreY || 51.5) + '%;' +
+    '--lacre-r:' + (g.lacreR || 8.5) + '%';
+
+  var foto = esc(C.envelopeImagem);
   var cena = abreEmFenda
-    ? '<div id="cena" class="ilustra' + (temIlustra ? '' : ' simples') + '">' +
-        '<div class="ilu">' +
-          (tem(C.envelopeImagem) ? '<div class="ilu-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' : '') +
-          '<div class="ilu-cena">' + revelado + '</div>' +
-          (tem(C.cenaTopo) ? '<div class="ilu-topo"><img src="' + esc(C.cenaTopo) + '" alt=""></div>' : '') +
-          (tem(C.cenaBase) ? '<div class="ilu-base"><img src="' + esc(C.cenaBase) + '" alt=""></div>' : '') +
-          '<div class="ilu-nomes">' +
-            '<p class="rot">' + esc(C.rotuloCena || 'O casamento de') + '</p>' +
-            '<p class="par">' + esc(C.noiva) + '<span class="e">&amp;</span>' + esc(C.noivo) + '</p>' +
+    ? '<div id="cena" class="env3d" style="' + estiloGeo + '">' +
+        '<div class="e3-palco">' +
+          '<div class="e3-foto"><img src="' + foto + '" alt="Envelope do convite"></div>' +
+          '<div class="e3-dentro"></div>' +
+          '<div class="e3-luz"></div>' +
+          '<div class="e3-carta">' +
+            '<p class="mono">' + mono + '</p>' +
+            '<p class="par">' + esc(C.noiva) + '<span>&amp;</span>' + esc(C.noivo) + '</p>' +
           '</div>' +
+          '<div class="e3-frente"><img src="' + foto + '" alt=""></div>' +
+          '<div class="e3-aba">' +
+            '<div class="face frente"><img src="' + foto + '" alt=""></div>' +
+            '<div class="face verso"></div>' +
+          '</div>' +
+          '<div class="e3-lacre">' +
+            '<div class="face"><img src="' + foto + '" alt=""></div>' +
+            '<div class="e3-brilho"><i></i></div>' +
+          '</div>' +
+          '<div class="e3-halo"></div>' +
         '</div>' +
-        '<div class="foto-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+        '<div class="e3-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
       '</div>'
@@ -429,10 +451,18 @@ window.renderConvite = function (C, raiz) {
     }
 
     if (abreEmFenda) {
-      cenaEl.classList.add('abrindo');
-      // com ilustração a cena é o produto e merece tempo; sem ela, é só
-      // a passagem para o convite
-      setTimeout(revelar, temIlustra ? 4200 : 2600);
+      // Seis tempos. Cada um precisa do anterior ter sido visto: tudo
+      // junto vira um borrão e foi o que deixava a abertura amadora.
+      [[0,    't1'],   // brilho corre no lacre
+       [760,  't2'],   // o lacre se rompe
+       [1180, 't3'],   // a aba gira e a luz escapa
+       [1900, 't4'],   // a carta sobe de dentro
+       [2900, 't5'],   // a câmera entra
+       [4300, 't6']    // dissolve
+      ].forEach(function (p) {
+        setTimeout(function () { cenaEl.classList.add(p[1]); }, p[0]);
+      });
+      setTimeout(revelar, 5100);
       return;
     }
 

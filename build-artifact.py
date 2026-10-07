@@ -116,6 +116,10 @@ def main():
   --v-suave:#9a948c;
   --v-ouro:#c3a05a;
   color-scheme:dark;
+  /* no :root também, não só no body: o visitante pinta o próprio fundo
+     atrás da página e um body transparente mostraria o tema do hospedeiro */
+  background:var(--v-fundo);
+  color:var(--v-tinta);
 }
 
 __CSS_CONVITE__
@@ -123,12 +127,12 @@ __CSS_CONVITE__
 /* =============================================================
    VITRINE
    ============================================================= */
-html,body{margin:0;background:var(--v-fundo)}
+html,body{margin:0;background:var(--v-fundo);color:var(--v-tinta)}
 #palco:empty{display:none}
 
 .v-wrap{
   max-width:1060px;margin:0 auto;
-  padding-inline:16px;
+  padding-inline:20px;
   padding-block:clamp(2rem,7vw,3.4rem) 4rem;
   font:400 15px/1.7 'Jost',system-ui,-apple-system,sans-serif;
   color:var(--v-tinta)

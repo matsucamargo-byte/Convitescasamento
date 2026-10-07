@@ -1290,6 +1290,198 @@ body.tem-textura .faixa-escura{
 @media (prefers-reduced-motion:reduce){
   .okForm .tick circle,.okForm .tick path{animation-duration:.01ms;stroke-dashoffset:0}
 }
+
+/* =============================================================
+   ABERTURA DO ENVELOPE FOTOGRÁFICO
+
+   A foto é plana, mas o envelope dentro dela tem geometria conhecida:
+   a aba é o triângulo do topo até o ápice onde fica o lacre. Recortando
+   uma cópia da própria foto nesse triângulo e girando em rotateX, a aba
+   da fotografia abre de verdade.
+
+   Seis tempos: brilho corre no lacre, lacre se rompe, aba gira, luz
+   escapa, carta sobe, câmera entra.
+   ============================================================= */
+#cena.env3d{
+  background:#0b0b0c;
+  perspective:1100px;perspective-origin:50% 42%;
+  overflow:hidden
+}
+.e3-palco{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transform:scale(1);
+  transition:transform 2.6s cubic-bezier(.45,0,.2,1)
+}
+#cena.env3d.t5 .e3-palco{transform:scale(1.45) translateY(7%)}
+
+.e3-palco > *{position:absolute;inset:0}
+.e3-palco img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  -webkit-user-select:none;user-select:none;pointer-events:none
+}
+
+/* a fotografia inteira: corpo do envelope e a mesa em volta */
+.e3-foto{z-index:1}
+
+/* O INTERIOR. A aba girando sobre a mesma fotografia não se vê: o que
+   estava embaixo dela era o próprio envelope fechado. Aqui fica o vão
+   escuro de dentro, recortado no mesmo triângulo. */
+.e3-dentro{
+  z-index:2;opacity:0;
+  clip-path:polygon(var(--aba-esq,15%) var(--aba-topo,23%),
+                    var(--aba-dir,85%) var(--aba-topo,23%),
+                    50% var(--aba-apice,52%));
+  /* vão do envelope: sombra do papel, não buraco preto. A luz vem de
+     baixo, de onde a carta sai. */
+  background:
+    radial-gradient(ellipse 52% 72% at 50% 104%,
+      color-mix(in srgb,var(--glow,#ffe9b8) 78%,transparent) 0%,
+      color-mix(in srgb,var(--glow,#ffe9b8) 24%,transparent) 44%,
+      transparent 74%),
+    linear-gradient(180deg,
+      color-mix(in srgb,var(--paper-2) 26%,#2b1d10) 0%,
+      color-mix(in srgb,var(--paper-2) 46%,#3d2b18) 58%,
+      color-mix(in srgb,var(--paper-2) 72%,#513b22) 100%);
+  transition:opacity .5s ease
+}
+#cena.env3d.t2 .e3-dentro{opacity:1}
+
+/* luz quente saindo de dentro do envelope */
+.e3-luz{
+  z-index:3;opacity:0;
+  background:radial-gradient(ellipse 46% 26% at 50% 50%,
+    var(--glow,#ffe9b8) 0%,
+    color-mix(in srgb,var(--glow,#ffe9b8) 55%,transparent) 38%,
+    transparent 72%);
+  transition:opacity 1.1s ease
+}
+#cena.env3d.t3 .e3-luz{opacity:.85}
+#cena.env3d.t5 .e3-luz{opacity:.5}
+
+/* A FRENTE DO BOLSO: a mesma foto recortada abaixo do ápice. É o que
+   faz a carta sair de DENTRO em vez de aparecer por cima do envelope. */
+.e3-frente{
+  z-index:5;
+  clip-path:polygon(0 var(--aba-apice,52%),100% var(--aba-apice,52%),100% 100%,0 100%)
+}
+
+/* a carta que sobe de dentro, atrás da frente do bolso */
+.e3-carta{
+  z-index:4;position:absolute;
+  inset:30% 23% 30% 23%;
+  display:grid;place-items:center;text-align:center;padding:1.2rem;
+  background:linear-gradient(168deg,var(--paper),var(--paper-2));
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.45);
+  transform:translateY(34%) scale(.97);opacity:0;
+  transition:transform 1.6s cubic-bezier(.25,0,.2,1),opacity .35s ease
+}
+#cena.env3d.t4 .e3-carta{transform:translateY(-26%) scale(1);opacity:1}
+#cena.env3d.t5 .e3-carta{transform:translateY(-30%) scale(1.01);opacity:1}
+.e3-carta .mono{
+  font-family:var(--f-display),serif;font-size:1.5rem;letter-spacing:.08em;
+  color:var(--accent);margin:0 0 .5rem
+}
+.e3-carta .par{
+  font-family:var(--f-script),cursive;font-size:1.9rem;line-height:1.15;
+  color:var(--ink);margin:0
+}
+.e3-carta .par span{display:block;font-size:.5em;color:var(--accent);margin:.08em 0}
+
+/* A ABA: cópia da foto recortada no triângulo, girando sobre a borda de cima */
+.e3-aba{
+  z-index:6;transform-style:preserve-3d;
+  transform-origin:50% var(--aba-topo,23%);
+  transition:transform 1.5s cubic-bezier(.55,0,.25,1)
+}
+#cena.env3d.t3 .e3-aba{transform:rotateX(168deg)}
+.e3-aba .face{
+  position:absolute;inset:0;backface-visibility:hidden;
+  clip-path:polygon(var(--aba-esq,15%) var(--aba-topo,23%),
+                    var(--aba-dir,85%) var(--aba-topo,23%),
+                    50% var(--aba-apice,52%))
+}
+/* verso da aba: o papel por dentro, que aparece depois de passar de 90° */
+.e3-aba .verso{
+  transform:rotateX(180deg);
+  background:linear-gradient(0deg,
+    color-mix(in srgb,var(--paper) 88%,var(--emboss-lo)) 0%,
+    var(--paper) 46%,var(--paper-2) 100%);
+  box-shadow:inset 0 14px 34px -14px var(--emboss-lo)
+}
+
+/* O LACRE: mesma cópia recortada no círculo do selo */
+.e3-lacre{
+  z-index:7;transform-origin:50% var(--lacre-y,51.5%);
+  transition:transform .6s var(--ease-out),opacity .5s var(--ease-out)
+}
+#cena.env3d.t2 .e3-lacre{transform:scale(1.5) rotate(-9deg);opacity:0}
+.e3-lacre .face{
+  position:absolute;inset:0;
+  clip-path:circle(var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%))
+}
+/* o brilho que corre por cima do lacre */
+/* O recorte fica no invólucro e o brilho corre por dentro dele. Juntos,
+   o recorte viajava com o brilho e o clarão saía de cima do lacre. */
+.e3-brilho{
+  position:absolute;inset:0;overflow:hidden;
+  clip-path:circle(var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%))
+}
+.e3-brilho i{
+  position:absolute;inset:-20% -40%;display:block;
+  background:linear-gradient(104deg,
+    transparent 38%,
+    rgba(255,255,255,.12) 45%,
+    rgba(255,255,255,.8) 50%,
+    rgba(255,255,255,.12) 55%,
+    transparent 62%);
+  mix-blend-mode:screen;
+  transform:translateX(-120%);opacity:0
+}
+#cena.env3d.t1 .e3-brilho i{
+  animation:correBrilho 1s cubic-bezier(.4,0,.3,1) forwards
+}
+@keyframes correBrilho{
+  0%  {transform:translateX(-120%);opacity:0}
+  18% {opacity:1}
+  82% {opacity:1}
+  100%{transform:translateX(120%);opacity:0}
+}
+/* halo pulsando antes do toque, para o lacre pedir o clique */
+.e3-halo{
+  position:absolute;inset:0;z-index:8;pointer-events:none;
+  background:radial-gradient(circle var(--lacre-r,8.5%) at 50% var(--lacre-y,51.5%),
+    color-mix(in srgb,var(--glow,#fff) 42%,transparent) 0%,transparent 70%);
+  animation:halo 2.6s ease-in-out infinite
+}
+@keyframes halo{0%,100%{opacity:.18}50%{opacity:.62}}
+#cena.env3d.t1 .e3-halo{opacity:0;transition:opacity .4s}
+
+/* o aviso de toque */
+.e3-toque{
+  position:absolute;inset:0;z-index:7;cursor:pointer;
+  display:grid;align-content:end;justify-items:center;
+  padding-bottom:max(7vh,calc(env(safe-area-inset-bottom,0px) + 2rem));
+  background:linear-gradient(180deg,transparent 54%,rgba(0,0,0,.52) 100%);
+  -webkit-tap-highlight-color:transparent;transition:opacity .4s ease
+}
+.e3-toque p{
+  margin:0;color:#fff;font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;
+  padding:.62rem 1.3rem;border-radius:999px;min-height:44px;
+  display:flex;align-items:center;
+  border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.32);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  animation:respira 2.6s var(--ease-in-out) infinite
+}
+#cena.env3d.t1 .e3-toque{opacity:0;pointer-events:none}
+
+/* o fim: tudo dissolve no convite */
+#cena.env3d.t6{opacity:0;transition:opacity 1s ease}
+
+@media (prefers-reduced-motion:reduce){
+  .e3-palco,.e3-aba,.e3-lacre,.e3-carta,.e3-luz{transition-duration:.25s!important}
+  .e3-brilho,.e3-halo{animation:none}
+  #cena.env3d.t3 .e3-aba{transform:rotateX(168deg)}
+}
 </script>
 <script type="text/template" id="src-js">/* =============================================================
    Renderizador.
@@ -1411,19 +1603,41 @@ window.renderConvite = function (C, raiz) {
     ? '<img src="' + esc(C.heroMidia) + '" alt="">'
     : '<div class="ilu-papel"></div>';
 
+  // Geometria do envelope dentro da fotografia. As cinco foram geradas
+  // com a mesma composição, então uma medida serve para todas; cada
+  // template pode sobrescrever se a foto sair diferente.
+  var g = C.geo || {};
+  var estiloGeo =
+    '--aba-topo:' + (g.abaTopo || 23) + '%;' +
+    '--aba-esq:' + (g.abaEsq || 15) + '%;' +
+    '--aba-dir:' + (g.abaDir || 85) + '%;' +
+    '--aba-apice:' + (g.abaApice || 52) + '%;' +
+    '--lacre-y:' + (g.lacreY || 51.5) + '%;' +
+    '--lacre-r:' + (g.lacreR || 8.5) + '%';
+
+  var foto = esc(C.envelopeImagem);
   var cena = abreEmFenda
-    ? '<div id="cena" class="ilustra' + (temIlustra ? '' : ' simples') + '">' +
-        '<div class="ilu">' +
-          (tem(C.envelopeImagem) ? '<div class="ilu-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' : '') +
-          '<div class="ilu-cena">' + revelado + '</div>' +
-          (tem(C.cenaTopo) ? '<div class="ilu-topo"><img src="' + esc(C.cenaTopo) + '" alt=""></div>' : '') +
-          (tem(C.cenaBase) ? '<div class="ilu-base"><img src="' + esc(C.cenaBase) + '" alt=""></div>' : '') +
-          '<div class="ilu-nomes">' +
-            '<p class="rot">' + esc(C.rotuloCena || 'O casamento de') + '</p>' +
-            '<p class="par">' + esc(C.noiva) + '<span class="e">&amp;</span>' + esc(C.noivo) + '</p>' +
+    ? '<div id="cena" class="env3d" style="' + estiloGeo + '">' +
+        '<div class="e3-palco">' +
+          '<div class="e3-foto"><img src="' + foto + '" alt="Envelope do convite"></div>' +
+          '<div class="e3-dentro"></div>' +
+          '<div class="e3-luz"></div>' +
+          '<div class="e3-carta">' +
+            '<p class="mono">' + mono + '</p>' +
+            '<p class="par">' + esc(C.noiva) + '<span>&amp;</span>' + esc(C.noivo) + '</p>' +
           '</div>' +
+          '<div class="e3-frente"><img src="' + foto + '" alt=""></div>' +
+          '<div class="e3-aba">' +
+            '<div class="face frente"><img src="' + foto + '" alt=""></div>' +
+            '<div class="face verso"></div>' +
+          '</div>' +
+          '<div class="e3-lacre">' +
+            '<div class="face"><img src="' + foto + '" alt=""></div>' +
+            '<div class="e3-brilho"><i></i></div>' +
+          '</div>' +
+          '<div class="e3-halo"></div>' +
         '</div>' +
-        '<div class="foto-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+        '<div class="e3-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
       '</div>'
@@ -1722,10 +1936,18 @@ window.renderConvite = function (C, raiz) {
     }
 
     if (abreEmFenda) {
-      cenaEl.classList.add('abrindo');
-      // com ilustração a cena é o produto e merece tempo; sem ela, é só
-      // a passagem para o convite
-      setTimeout(revelar, temIlustra ? 4200 : 2600);
+      // Seis tempos. Cada um precisa do anterior ter sido visto: tudo
+      // junto vira um borrão e foi o que deixava a abertura amadora.
+      [[0,    't1'],   // brilho corre no lacre
+       [760,  't2'],   // o lacre se rompe
+       [1180, 't3'],   // a aba gira e a luz escapa
+       [1900, 't4'],   // a carta sobe de dentro
+       [2900, 't5'],   // a câmera entra
+       [4300, 't6']    // dissolve
+      ].forEach(function (p) {
+        setTimeout(function () { cenaEl.classList.add(p[1]); }, p[0]);
+      });
+      setTimeout(revelar, 5100);
       return;
     }
 
