@@ -271,7 +271,8 @@
     '<footer>' +
       '<p class="mono-grande">' + mono + '</p>' +
       '<p class="nomes-fim">' + esc(C.noiva) + ' &amp; ' + esc(C.noivo) + '</p>' +
-      '<p class="data-fim">' + esc(dataExtenso) + (tem(C.cidade) ? ' · ' + esc(C.cidade) : '') + '</p>' +
+      '<p class="data-fim">' + esc(dataExtenso) + '</p>' +
+      (tem(C.cidade) ? '<p class="cidade-fim">' + esc(C.cidade) + '</p>' : '') +
       '<p class="assinatura">' +
         (tem(C.marcaUrl)
           ? '<a href="' + esc(C.marcaUrl) + '" target="_blank" rel="noopener">' + esc(C.marca || '') + '</a>'
@@ -282,7 +283,8 @@
 
   var audioHtml = tem(C.musica)
     ? '<audio id="audio" loop preload="none" src="' + esc(C.musica) + '"></audio>' +
-      '<button class="som" id="som" type="button" aria-label="Desligar a música">' +
+      '<button class="som" id="som" type="button" title="' + esc(C.musicaTitulo || 'Música') + '" ' +
+        'aria-label="Desligar a música' + (tem(C.musicaTitulo) ? ': ' + esc(C.musicaTitulo) : '') + '">' +
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
@@ -313,12 +315,15 @@
 
     // o toque É o gesto do usuário — é aqui, e só aqui, que o áudio libera
     if (audio) {
+      // Sobe o volume aos poucos: entrar com som cheio num lugar público
+      // faz o convidado fechar antes de ler.
+      var alvoVol = Math.min(1, Math.max(0, (parseFloat(C.musicaVolume) || 32) / 100));
       audio.volume = 0;
       var p = audio.play();
       if (p && p.catch) p.catch(function () {});
       var sobe = setInterval(function () {
-        if (audio.volume < 0.32) audio.volume = Math.min(0.32, audio.volume + 0.02);
-        else clearInterval(sobe);
+        if (audio.volume < alvoVol - 0.01) audio.volume = Math.min(alvoVol, audio.volume + alvoVol / 16);
+        else { audio.volume = alvoVol; clearInterval(sobe); }
       }, 120);
       if (btnSom) btnSom.classList.add('vis');
     }

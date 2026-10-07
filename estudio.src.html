@@ -152,11 +152,11 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <legend>Template</legend>
     <div class="tpls" id="tpls"></div>
     <label><span>Ornamento próprio (URL de PNG ou SVG) — opcional</span><input id="ornamentoUrl" placeholder="https://.../floral-aquarela.png"></label>
-    <p class="dica">Preenchido, substitui o desenho vetorial do envelope pela sua arte. É o caminho para sair do genérico — veja o README.</p>
+    <p class="dica">Preenchido, substitui o desenho vetorial do envelope pela sua arte. É o caminho para sair do genérico. Veja o README.</p>
   </fieldset>
 
   <fieldset>
-    <legend>Mídia — é o que tira o convite do básico</legend>
+    <legend>Mídia</legend>
     <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
@@ -189,7 +189,7 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   <fieldset>
     <legend>Nossa história</legend>
     <label><span>Título</span><input id="tituloHistoria" value="Como tudo começou"></label>
-    <label><span>Texto</span><textarea id="historia">O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar — agora com vocês por perto.</textarea></label>
+    <label><span>Texto</span><textarea id="historia">O que começou como uma conversa que não queria acabar virou casa, viagem, rotina e planos. Oito anos depois, a gente escolheu continuar, agora com vocês por perto.</textarea></label>
     <label><span>Foto de destaque</span><input type="file" id="fotoHistoria" accept="image/*"></label>
     <div class="fotos" id="previewHistoria"></div>
   </fieldset>
@@ -258,8 +258,25 @@ input[type=file]{padding:.4rem;font-size:.72rem}
 
   <fieldset>
     <legend>Música</legend>
-    <label><span>URL do MP3 (toca ao abrir o envelope)</span><input id="musica" placeholder="https://.../musica.mp3"></label>
-    <p class="dica">Precisa ser um link direto para .mp3 hospedado. Começa só depois do toque — nenhum navegador bloqueia assim.</p>
+    <label><span>URL do MP3 (começa ao abrir)</span><input id="musica" placeholder="https://.../instrumental.mp3"></label>
+    <div class="dupla">
+      <label><span>Nome da faixa</span><input id="musicaTitulo" placeholder="Canon in D · instrumental"></label>
+      <label><span>Volume (0 a 100)</span><input id="musicaVolume" type="number" min="0" max="100" value="32"></label>
+    </div>
+    <p class="dica">
+      Precisa ser link direto para <b>.mp3</b> hospedado. Link do Spotify ou do YouTube não toca.
+      Começa só depois do toque. Nenhum navegador bloqueia assim.
+    </p>
+    <p class="dica">
+      <b>Onde pegar instrumental livre:</b> Pixabay Music e Chosic (ambos grátis, uso comercial liberado),
+      Epidemic Sound e Artlist (assinatura). Busque por <i>wedding piano</i>, <i>romantic strings</i>,
+      <i>worship instrumental</i>, <i>acoustic guitar wedding</i>.
+      Hospede o arquivo junto do convite e cole o endereço completo.
+    </p>
+    <p class="dica">
+      <b>Peça um volume baixo.</b> O convite costuma abrir em lugar público. Acima de 40 o convidado
+      fecha antes de ler. O botão de desligar fica sempre visível no canto.
+    </p>
   </fieldset>
 
   <fieldset>
@@ -324,7 +341,7 @@ var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','ornam
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',
   'msgRsvp','tituloPresentes','textoPresentes','listaPresentes','pixChave','pixNome',
-  'tituloRecado','recado','musica','ogTitulo','ogDesc','ogImg','marca','marcaUrl','slug'];
+  'tituloRecado','recado','musica','musicaTitulo','musicaVolume','ogTitulo','ogDesc','ogImg','marca','marcaUrl','slug'];
 
 function val(id){ var e = document.getElementById(id); return e ? e.value.trim() : ''; }
 

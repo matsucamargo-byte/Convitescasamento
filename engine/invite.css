@@ -467,9 +467,15 @@ footer .nomes-fim{
   font-family:var(--f-script),cursive;font-size:2rem;color:var(--accent);
   margin:.6rem 0 0;line-height:1.2
 }
+/* Sem caixa alta: data por extenso mais cidade passa de 40 caracteres,
+   e caixa alta nesse comprimento para de ser legível. */
 footer .data-fim{
-  font-size:.72rem;letter-spacing:.26em;text-transform:uppercase;
+  font-family:var(--f-display),serif;font-size:.92rem;letter-spacing:.04em;
   color:var(--ink-soft);margin-top:1.1rem;font-variant-numeric:tabular-nums
+}
+footer .cidade-fim{
+  font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:.35rem;opacity:.8
 }
 .assinatura{
   margin-top:2.6rem;font-size:.7rem;letter-spacing:.26em;

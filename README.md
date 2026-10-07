@@ -44,22 +44,27 @@ Cada bloco só aparece se você preencher. Deixou vazio, some.
 
 ---
 
-## Templates
+## Cartela de templates
 
-Seis **famílias** de paleta, não seis variações da mesma. Bege com dourado é
-o reflexo padrão para esse tipo de briefing e faz toda marca ficar igual —
-só Marfim fica nessa família, e por um motivo defensável: é a convenção da
-papelaria de casamento. As outras cinco saem de lugares diferentes de
-propósito. Cada uma também troca o par tipográfico.
+Doze paletas. Cada uma sai de um tema com demanda medida, não de gosto.
 
-| Template | Família | Tipografia | Abertura |
-|---|---|---|---|
-| Marfim | marfim e ouro | Cormorant + Pinyon | envelope |
-| Bosque | verde profundo, osso, âmbar | Cinzel + Italianno | envelope |
-| Terracota | terracota e ardósia | Playfair + Great Vibes | puxar a ponta |
-| Linho | preto real e tan | Spectral + Petit Formal | envelope |
-| Cobalto | cobalto e creme | EB Garamond + Tangerine | envelope |
-| Bruma | prata, cromo, fumaça | Marcellus + Parisienne | envelope |
+| Template | Família | Vem de |
+|---|---|---|
+| Cloud Dancer | off-white suave | cor do ano 2026 |
+| Marfim | marfim e ouro | convenção da papelaria clássica |
+| Mocha | mocha mousse, nude amadeirado | paleta terrosa de 2026 |
+| Oliva | verde oliva e linho | casamento ao ar livre, o pedido padrão |
+| Sálvia | sálvia, off-white, champanhe | paleta anunciada dominante para 2027 |
+| Esmeralda | esmeralda, prata, preto | salão à noite |
+| Borgonha | borgonha e dourado | inverno e catedral |
+| Ameixa | ameixa e rosé | saturação alta, tendência 2027 |
+| Blush | rosé e laço | coquette; busca por renda subiu 280% |
+| Serenity | azul sereno, lacre branco | a paleta que mais viralizou no nicho |
+| Toscana | terracota, cipreste, sol | destination wedding |
+| Linho | preto real e tan | urbano, à noite, sem bege |
+
+Cada template troca também o par tipográfico. Mesma serifada em tudo faz
+doze convites virarem um.
 
 ## Mídia — o que separa caro de barato
 
