@@ -159,6 +159,13 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <legend>Mídia</legend>
     <label><span>Foto do envelope (abre o convite)</span><input id="envelopeImagem" placeholder="https://.../envelope.jpg"></label>
     <p class="dica">Preenchida, a foto substitui o envelope desenhado em CSS. Foto boa e vetor brigando na mesma tela é pior que qualquer um sozinho.</p>
+    <label><span>Cena ilustrada (abertura premium)</span><input id="cenaIlustracao" placeholder="https://.../villa-aquarela.jpg"></label>
+    <div class="dupla">
+      <label><span>Camada do topo, PNG transparente</span><input id="cenaTopo" placeholder="https://.../folhagem.png"></label>
+      <label><span>Camada da base, PNG transparente</span><input id="cenaBase" placeholder="https://.../flores.png"></label>
+    </div>
+    <label><span>Rótulo acima dos nomes</span><input id="rotuloCena" value="O casamento de"></label>
+    <p class="dica">Preenchida, o envelope vira uma abertura que cresce e revela a ilustração, com a câmera entrando nela. As camadas de topo e base entram depois e dão profundidade. É o nível de cima: o concorrente cobra projeto sob medida por isso.</p>
     <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
@@ -1100,7 +1107,8 @@ body.tem-textura .faixa-escura{
   text-shadow:0 1px 8px rgba(0,0,0,.7);
   animation:respira 2.6s var(--ease-in-out) infinite
 }
-#cena.foto.abrindo .foto-toque{opacity:0;pointer-events:none}
+#cena.foto.abrindo .foto-toque,
+#cena.ilustra.abrindo .foto-toque{opacity:0;pointer-events:none;transition-duration:.3s}
 
 /* Programação do dia: hora à esquerda numa coluna fixa, momento à direita,
    sobre uma régua. Números tabulares para as horas alinharem. */
@@ -1124,6 +1132,86 @@ body.tem-textura .faixa-escura{
   font-variant-numeric:tabular-nums;letter-spacing:.02em
 }
 .prog .oq{font-size:.95rem;color:var(--ink);line-height:1.5}
+
+/* =============================================================
+   ABERTURA EM ILUSTRAÇÃO
+   O envelope não abre a aba: ele vira uma abertura que cresce e
+   revela um mundo ilustrado, com a câmera continuando a entrar.
+   Camadas separadas (fundo, folhagem do topo, flores da base)
+   entram em tempos diferentes — é isso que dá a profundidade.
+   ============================================================= */
+#cena.ilustra{background:#0b0b0c;perspective:none}
+.ilu{position:absolute;inset:0;z-index:1;overflow:hidden}
+.ilu > *{position:absolute;inset:0}
+.ilu img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* o mundo, ainda longe; a abertura o revela e a câmera se aproxima */
+.ilu-cena{
+  transform:scale(1.28);
+  z-index:2;
+  clip-path:polygon(50% 44%,50% 44%,50% 52%,50% 52%);
+  transition:transform 3.4s var(--ease-out)
+}
+#cena.ilustra.abrindo .ilu-cena{
+  transform:scale(1);
+  animation:abertura 1.9s var(--ease-out) forwards
+}
+/* sem ilustração, a fenda é passagem e não espetáculo */
+#cena.ilustra.simples .ilu-cena{transition-duration:2.2s}
+#cena.ilustra.simples.abrindo .ilu-cena{animation-duration:1.4s}
+#cena.ilustra.simples .ilu-nomes{transition-delay:1.4s}
+@keyframes abertura{
+  0%  {clip-path:polygon(50% 44%,50% 44%,50% 52%,50% 52%)}
+  38% {clip-path:polygon(24% 30%,76% 30%,58% 64%,42% 64%)}
+  100%{clip-path:polygon(0% 0%,100% 0%,100% 100%,0% 100%)}
+}
+
+/* folhagem desce do topo, flores sobem da base */
+.ilu-topo{transform:translateY(-16%);opacity:0;
+  transition:transform 2.6s var(--ease-out) 1.1s,opacity 1.4s var(--ease-out) 1.1s}
+.ilu-base{transform:translateY(18%);opacity:0;
+  transition:transform 2.6s var(--ease-out) 1.3s,opacity 1.4s var(--ease-out) 1.3s}
+#cena.ilustra.abrindo .ilu-topo,
+#cena.ilustra.abrindo .ilu-base{transform:none;opacity:1}
+
+/* o envelope cobre tudo e sai de cena conforme a abertura cresce */
+.ilu-env{z-index:1}
+.ilu-cena{z-index:2}
+.ilu-topo{z-index:3}
+.ilu-base{z-index:3}
+/* capa lisa do convite, para quando não há ilustração */
+.ilu-papel{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--accent-2) 26%,transparent),transparent 62%),
+    linear-gradient(180deg,var(--paper),var(--paper-2))
+}
+
+/* nomes aparecem por último, já dentro do mundo */
+.ilu-nomes{
+  z-index:3;display:grid;align-content:center;justify-items:center;
+  text-align:center;padding:0 2rem;opacity:0;transform:translateY(10px);
+  transition:opacity 1.3s var(--ease-out) 2.1s,transform 1.3s var(--ease-out) 2.1s
+}
+#cena.ilustra.abrindo .ilu-nomes{opacity:1;transform:none}
+.ilu-nomes .rot{
+  font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--ink);margin:0 0 .7rem;opacity:.85
+}
+.ilu-nomes .par{
+  font-family:var(--f-script),cursive;font-size:clamp(2.4rem,12vw,3.6rem);
+  color:var(--ink);line-height:1.12;margin:0;
+  text-shadow:0 2px 20px color-mix(in srgb,var(--paper) 60%,transparent)
+}
+.ilu-nomes .e{display:block;font-size:.46em;margin:.1em 0;color:var(--accent)}
+
+#cena.ilustra .foto-toque{z-index:4}
+
+@media (prefers-reduced-motion:reduce){
+  .ilu-cena,.ilu-topo,.ilu-base,.ilu-env,.ilu-nomes{
+    transition-duration:.3s!important;animation-duration:.3s!important
+  }
+}
 </script>
 <script type="text/template" id="src-js">/* =============================================================
    Renderizador. Lê window.__CONVITE__ e monta o convite.
@@ -1223,11 +1311,31 @@ body.tem-textura .faixa-escura{
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
+  // Toda foto de envelope abre em fenda. O que a fenda revela é a cena
+  // ilustrada, quando existe, ou a própria capa do convite.
   var temFoto = tem(C.envelopeImagem) && !tem(C.cortinaVideo);
+  var temIlustra = tem(C.cenaIlustracao) && !tem(C.cortinaVideo);
   var temCortina = tem(C.cortinaVideo);
-  var cena = temFoto
-    ? '<div id="cena" class="foto">' +
-        '<div class="foto-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' +
+  var abreEmFenda = temFoto || temIlustra;
+
+  var revelado = temIlustra
+    ? '<img src="' + esc(C.cenaIlustracao) + '" alt="">'
+    : tem(C.heroMidia) && !/\.(mp4|webm|mov)(\?|$)/i.test(C.heroMidia)
+    ? '<img src="' + esc(C.heroMidia) + '" alt="">'
+    : '<div class="ilu-papel"></div>';
+
+  var cena = abreEmFenda
+    ? '<div id="cena" class="ilustra' + (temIlustra ? '' : ' simples') + '">' +
+        '<div class="ilu">' +
+          (tem(C.envelopeImagem) ? '<div class="ilu-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' : '') +
+          '<div class="ilu-cena">' + revelado + '</div>' +
+          (tem(C.cenaTopo) ? '<div class="ilu-topo"><img src="' + esc(C.cenaTopo) + '" alt=""></div>' : '') +
+          (tem(C.cenaBase) ? '<div class="ilu-base"><img src="' + esc(C.cenaBase) + '" alt=""></div>' : '') +
+          '<div class="ilu-nomes">' +
+            '<p class="rot">' + esc(C.rotuloCena || 'O casamento de') + '</p>' +
+            '<p class="par">' + esc(C.noiva) + '<span class="e">&amp;</span>' + esc(C.noivo) + '</p>' +
+          '</div>' +
+        '</div>' +
         '<div class="foto-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
@@ -1501,9 +1609,11 @@ body.tem-textura .faixa-escura{
       if (btnSom) btnSom.classList.add('vis');
     }
 
-    if (temFoto) {
+    if (abreEmFenda) {
       cenaEl.classList.add('abrindo');
-      setTimeout(revelar, 1350);
+      // com ilustração a cena é o produto e merece tempo; sem ela, é só
+      // a passagem para o convite
+      setTimeout(revelar, temIlustra ? 4200 : 2600);
       return;
     }
 
@@ -1829,7 +1939,7 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',

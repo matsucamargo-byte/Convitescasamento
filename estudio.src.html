@@ -159,6 +159,13 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <legend>Mídia</legend>
     <label><span>Foto do envelope (abre o convite)</span><input id="envelopeImagem" placeholder="https://.../envelope.jpg"></label>
     <p class="dica">Preenchida, a foto substitui o envelope desenhado em CSS. Foto boa e vetor brigando na mesma tela é pior que qualquer um sozinho.</p>
+    <label><span>Cena ilustrada (abertura premium)</span><input id="cenaIlustracao" placeholder="https://.../villa-aquarela.jpg"></label>
+    <div class="dupla">
+      <label><span>Camada do topo, PNG transparente</span><input id="cenaTopo" placeholder="https://.../folhagem.png"></label>
+      <label><span>Camada da base, PNG transparente</span><input id="cenaBase" placeholder="https://.../flores.png"></label>
+    </div>
+    <label><span>Rótulo acima dos nomes</span><input id="rotuloCena" value="O casamento de"></label>
+    <p class="dica">Preenchida, o envelope vira uma abertura que cresce e revela a ilustração, com a câmera entrando nela. As camadas de topo e base entram depois e dão profundidade. É o nível de cima: o concorrente cobra projeto sob medida por isso.</p>
     <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
     <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
@@ -359,7 +366,7 @@ document.getElementById('fontesEstudio').href = FONTES_TODAS;
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [] };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroVeu','textura',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','prazoRsvp','textoRsvp',

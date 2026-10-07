@@ -96,11 +96,31 @@
       '<div class="aba aba-e"></div><div class="aba aba-d"></div>' +
       '<div class="aba aba-b"></div><div class="aba aba-t"></div>';
 
+  // Toda foto de envelope abre em fenda. O que a fenda revela é a cena
+  // ilustrada, quando existe, ou a própria capa do convite.
   var temFoto = tem(C.envelopeImagem) && !tem(C.cortinaVideo);
+  var temIlustra = tem(C.cenaIlustracao) && !tem(C.cortinaVideo);
   var temCortina = tem(C.cortinaVideo);
-  var cena = temFoto
-    ? '<div id="cena" class="foto">' +
-        '<div class="foto-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' +
+  var abreEmFenda = temFoto || temIlustra;
+
+  var revelado = temIlustra
+    ? '<img src="' + esc(C.cenaIlustracao) + '" alt="">'
+    : tem(C.heroMidia) && !/\.(mp4|webm|mov)(\?|$)/i.test(C.heroMidia)
+    ? '<img src="' + esc(C.heroMidia) + '" alt="">'
+    : '<div class="ilu-papel"></div>';
+
+  var cena = abreEmFenda
+    ? '<div id="cena" class="ilustra' + (temIlustra ? '' : ' simples') + '">' +
+        '<div class="ilu">' +
+          (tem(C.envelopeImagem) ? '<div class="ilu-env"><img src="' + esc(C.envelopeImagem) + '" alt="Envelope do convite"></div>' : '') +
+          '<div class="ilu-cena">' + revelado + '</div>' +
+          (tem(C.cenaTopo) ? '<div class="ilu-topo"><img src="' + esc(C.cenaTopo) + '" alt=""></div>' : '') +
+          (tem(C.cenaBase) ? '<div class="ilu-base"><img src="' + esc(C.cenaBase) + '" alt=""></div>' : '') +
+          '<div class="ilu-nomes">' +
+            '<p class="rot">' + esc(C.rotuloCena || 'O casamento de') + '</p>' +
+            '<p class="par">' + esc(C.noiva) + '<span class="e">&amp;</span>' + esc(C.noivo) + '</p>' +
+          '</div>' +
+        '</div>' +
         '<div class="foto-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
@@ -374,9 +394,11 @@
       if (btnSom) btnSom.classList.add('vis');
     }
 
-    if (temFoto) {
+    if (abreEmFenda) {
       cenaEl.classList.add('abrindo');
-      setTimeout(revelar, 1350);
+      // com ilustração a cena é o produto e merece tempo; sem ela, é só
+      // a passagem para o convite
+      setTimeout(revelar, temIlustra ? 4200 : 2600);
       return;
     }
 
