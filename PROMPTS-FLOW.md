@@ -1,169 +1,163 @@
-# Prompts para gerar a mídia dos convites
+# Prompts de mídia — Flow / Veo 3
 
-Três ativos por template. O vídeo de abertura é o que mais pesa: a análise do
-código dos concorrentes mostrou que a abertura premium deles é vídeo gerado
-por IA (nomes de arquivo começando com `kling_`), não animação em CSS.
-
-| Ativo | Para quê | Onde cola no estúdio |
-|---|---|---|
-| Vídeo de abertura, 5s | Substitui o envelope em CSS | Vídeo de abertura (cortina) |
-| Imagem de fundo da capa | Entra atrás do nome do casal | Imagem ou vídeo de fundo da capa |
-| Ornamento PNG | Substitui o floral vetorial | Ornamento próprio |
+A abertura dos concorrentes premium é vídeo gerado por IA, não CSS. Os nomes
+dos arquivos deles entregam: `kling_20260807_video_faca_uma_a_5964_0.mp4`.
+Este arquivo é para você produzir o equivalente.
 
 ---
 
-## Regras que valem para todos
+## Como o Flow funciona, e por que isso muda o prompt
 
-**Sempre inclua:** `sem texto, sem letras, sem watermark`. Modelo de vídeo
-escreve texto errado e estraga a peça.
+**Não gere direto de texto.** Veo 3 a partir de texto puro inventa o objeto a
+cada rodada: o envelope muda de cor, o lacre troca de lugar, a proporção
+dança. Você perde o controle justamente no que precisa ser consistente entre
+os 12 templates.
 
-**Sempre inclua:** `câmera fixa, movimento lento, 5 segundos`. Movimento de
-câmera rápido destrói a sensação de papelaria.
+**O caminho é em dois passos:**
 
-**Formato:** vertical 9:16 para cortina e capa. Ornamento em PNG com fundo
-transparente, proporção larga (algo como 200×110).
+1. **Gere o quadro inicial** como imagem (Gemini, ChatGPT ou Imagen). Aqui
+   você trava cor, textura, enquadramento e o lacre.
+2. **Leve a imagem para o Flow** e descreva **só o movimento**. O Veo anima o
+   que já existe no quadro em vez de inventar.
 
-**Teste antes de gerar 12.** Rode o Marfim primeiro, veja no estúdio, ajuste
-o prompt, depois rode o resto.
+Isso também barateia: errou o movimento, você regenera o vídeo sem refazer a
+arte.
 
----
+**Limites que valem sempre**
 
-## 1. Marfim — marfim e ouro
-
-**Vídeo de abertura**
-> Envelope de papel marfim texturizado com relevo floral de peônia em baixo relevo, lacre de cera dourado ao centro. Sobre mármore claro, luz natural lateral suave, sombra longa. A aba superior abre devagar e um cartão de papel algodão desliza para fora. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Papel de algodão marfim com borda deckle, ramos de gipsofila secos ao lado, fita de seda cor champanhe, luz de janela ao entardecer, fotografia cenital, tons quentes, profundidade rasa. Sem texto.
-
----
-
-## 2. Cloud Dancer — off-white suave
-
-**Vídeo de abertura**
-> Envelope off-white com renda em relevo tridimensional nas laterais formando um arco, lacre de cera branco perolado. Fundo de linho cru, luz difusa de manhã. As laterais em relevo deslizam para os lados revelando o cartão. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Tecido de linho branco amassado com renda antiga sobreposta, pérolas soltas, luz suave e difusa, paleta off-white e marfim, fotografia cenital minimalista. Sem texto.
+| Item | Valor |
+|---|---|
+| Duração | 8s é o teto do Veo 3. Use 5s — a abertura do convite revela em 2,7s |
+| Proporção | 9:16 vertical |
+| Áudio | **Desligue.** A página já tem trilha própria; dois áudios brigam |
+| Texto na imagem | Nunca. Modelo escreve errado e estraga a peça |
 
 ---
 
-## 3. Mocha — mocha mousse e nude amadeirado
+## O molde
 
-**Vídeo de abertura**
-> Envelope cor mocha com laço de fita de seda nude atravessado, lacre de cera marrom café. Sobre madeira clara e tecido bege, luz quente de fim de tarde. O laço se desfaz devagar e a aba abre. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
+Troque só o que está entre colchetes.
 
-**Fundo da capa**
-> Papel artesanal cor mocha sobre madeira clara, fita de seda nude, folhas secas em tom caramelo, luz dourada lateral, fotografia cenital, tons terrosos quentes. Sem texto.
+### Passo 1 — quadro inicial (Gemini / ChatGPT / Imagen)
 
----
+> Fotografia cenital de um envelope de convite de casamento fechado, em
+> [PAPEL], visto de cima, preenchendo o quadro vertical.
+> [ORNAMENTO] em relevo seco nas laterais superior e inferior.
+> Lacre de cera [COR DO LACRE] ao centro, com [GRAVAÇÃO DO LACRE], textura
+> fosca e borda irregular.
+> Apoiado sobre [SUPERFÍCIE], com [ADEREÇOS] ao redor.
+> [LUZ]. Sombras suaves e longas. Profundidade de campo rasa.
+> Estética de papelaria fina, fotografia de produto editorial.
+> Proporção 9:16.
+> Sem texto, sem letras, sem números, sem marca d'água.
 
-## 4. Oliva — verde oliva e linho
+### Passo 2 — movimento (Flow, a partir da imagem)
 
-**Vídeo de abertura**
-> Envelope de linho cor oliva com ramo de oliveira em relevo, lacre de cera verde oliva com folha gravada. Sobre mesa de pedra rústica com azeitonas e ramos frescos. Luz mediterrânea de fim de tarde. A aba abre devagar. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
+> A aba superior do envelope abre lentamente para trás, girando sobre a
+> dobra. Uma luz quente escapa de dentro. Um cartão de papel desliza para
+> cima, saindo do envelope.
+> Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 
-**Fundo da capa**
-> Ramos de oliveira frescos sobre linho cru, azeitonas verdes, prato de cerâmica artesanal, luz dourada de fim de tarde na Toscana, fotografia cenital, verde oliva e bege. Sem texto.
+### Negativo (nos dois passos)
 
----
-
-## 5. Sálvia — sálvia, off-white e champanhe
-
-**Vídeo de abertura**
-> Envelope verde sálvia claro com ramo de eucalipto em relevo, lacre de cera sálvia. Sobre mármore branco com eucalipto fresco. Luz clara de manhã, sombras suaves. A aba abre devagar e o cartão desliza. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Eucalipto fresco sobre mármore branco, fita cor champanhe, luz natural clara de manhã, fotografia cenital, paleta verde sálvia e off-white, minimalista. Sem texto.
-
----
-
-## 6. Esmeralda — esmeralda, prata e preto
-
-**Vídeo de abertura**
-> Envelope verde esmeralda profundo em papel texturizado, moldura art déco em relevo prateado, lacre de cera prata. Sobre mármore preto, luz dramática lateral, atmosfera noturna. A aba abre revelando luz prateada. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Veludo verde esmeralda com detalhes prateados art déco, mármore preto, luz dramática baixa, fotografia cenital, atmosfera de salão noturno. Sem texto.
+> texto, letras, números, marca d'água, logotipo, mãos, pessoas, rosto,
+> movimento de câmera, zoom, corte, transição, distorção, baixa resolução
 
 ---
 
-## 7. Borgonha — borgonha e dourado
+## Os 12 templates
 
-**Vídeo de abertura**
-> Envelope cor borgonha em papel texturizado com peônias em relevo dourado, lacre de cera dourado. Sobre veludo vinho, luz quente de velas, atmosfera de catedral no inverno. A aba abre devagar com brilho dourado. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
+Pegue o molde acima e substitua pela linha do seu template.
 
-**Fundo da capa**
-> Rosas borgonha e veludo vinho com detalhes dourados, luz quente de velas, fotografia cenital, atmosfera de inverno, profundidade rasa. Sem texto.
-
----
-
-## 8. Ameixa — ameixa e rosé empoeirado
-
-**Vídeo de abertura**
-> Envelope cor ameixa em papel texturizado com laço de fita rosé empoeirado, lacre de cera rosé. Sobre seda cor vinho claro, luz suave de fim de tarde. O laço se desfaz e a aba abre. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Pétalas cor ameixa e rosé empoeirado sobre seda, fita de veludo, luz suave difusa, fotografia cenital, paleta saturada e profunda. Sem texto.
-
----
-
-## 9. Blush — rosé e laço
-
-**Vídeo de abertura**
-> Envelope rosé claro com renda delicada em relevo formando arco, laço de fita de cetim rosé, lacre de cera rosé com flor gravada. Sobre tecido claro, luz suave e romântica. O laço se desfaz devagar. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Pétalas de rosa clara, renda antiga, fitas de cetim rosé, pérolas, luz suave e sonhadora, fotografia cenital, estética coquette romântica. Sem texto.
+| # | Template | PAPEL | ORNAMENTO | LACRE | GRAVAÇÃO | SUPERFÍCIE | ADEREÇOS | LUZ |
+|---|---|---|---|---|---|---|---|---|
+| 1 | **Cloud Dancer** | papel algodão off-white, textura de linho | renda delicada formando arco | cera branco perolado | uma flor pequena | linho branco amassado | pérolas soltas, renda antiga | difusa de manhã, janela ampla |
+| 2 | **Marfim** | papel algodão marfim, borda deckle | peônia aberta com folhagem | cera dourada | monograma liso | mármore claro | gipsofila seca, fita champanhe | natural lateral, fim de tarde |
+| 3 | **Mocha** | papel cor mocha, textura areia | laço de fita de seda nude | cera marrom café | ramo fino | madeira clara | folhas secas caramelo, fita nude | quente lateral, fim de tarde |
+| 4 | **Oliva** | linho cor oliva | ramo de oliveira | cera verde oliva | folha de oliveira | pedra rústica | azeitonas verdes, ramos frescos | mediterrânea, sol baixo |
+| 5 | **Sálvia** | papel verde sálvia claro | ramo de eucalipto | cera sálvia | eucalipto | mármore branco | eucalipto fresco, fita champanhe | clara de manhã, sombra curta |
+| 6 | **Esmeralda** | papel verde esmeralda profundo | moldura art déco em prata | cera prata | losango geométrico | mármore preto | vidro facetado, prata escovada | dramática lateral, fundo escuro |
+| 7 | **Borgonha** | papel borgonha texturizado | peônia em dourado | cera dourada | monograma liso | veludo vinho | rosas borgonha, velas acesas | quente de velas, inverno |
+| 8 | **Ameixa** | papel cor ameixa | laço de fita rosé empoeirado | cera rosé | flor pequena | seda vinho claro | pétalas ameixa, fita de veludo | suave difusa, fim de tarde |
+| 9 | **Blush** | papel rosé claro | renda delicada em arco | cera rosé | flor pequena | tecido claro | pétalas de rosa, fitas de cetim, pérolas | suave e romântica, contraluz leve |
+| 10 | **Serenity** | papel azul sereno claro | ramos finos em relevo branco | cera branco perolado | ramo fino | mármore claro | hortênsias azul claro, fita de seda | natural de janela, leve |
+| 11 | **Toscana** | papel artesanal terracota, borda deckle | aquarela de villa com ciprestes | cera terracota | ramo de oliveira | mesa de pedra | ramos de oliveira, selo de latão | dourada de fim de tarde |
+| 12 | **Linho** | papel preto fosco texturizado | arco dourado em hot stamping | cera dourada | monograma liso | pedra escura | latão escovado, linho preto | lateral dramática, noturna |
 
 ---
 
-## 10. Serenity — azul sereno e lacre branco
+## Variantes de movimento
 
-**Vídeo de abertura**
-> Envelope azul sereno claro em papel texturizado com ramos em relevo branco, lacre de cera branco perolado. Sobre mármore claro, luz natural de janela, atmosfera leve. A aba abre devagar. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
+O molde usa a abertura de aba. Dois templates pedem outra coisa.
 
-**Fundo da capa**
-> Hortênsias azul claro sobre mármore branco, fita de seda azul sereno, luz natural de janela, fotografia cenital, paleta azul suave e branco. Sem texto.
+**Toscana e Oliva** usam abertura por canto (`peel` no estúdio):
 
----
+> O canto inferior direito do envelope se levanta devagar e a capa desliza
+> para fora do quadro, revelando o cartão que estava embaixo.
+> Câmera totalmente fixa. Movimento lento. Nada mais se move.
 
-## 11. Toscana — terracota, cipreste e sol
+**Variante Invitely** (igual à sua referência turca), para Cloud Dancer e Blush:
 
-**Vídeo de abertura**
-> Envelope cor terracota em papel artesanal com borda deckle, ilustração em aquarela de villa toscana com ciprestes, lacre de cera terracota com ramo de oliveira gravado. Sobre mesa de pedra com ramos de oliveira. Luz dourada de fim de tarde. A ponta se levanta revelando o cartão. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
-
-**Fundo da capa**
-> Paisagem toscana em aquarela: villa de pedra, ciprestes altos, campo dourado ao fim da tarde, estilo ilustração botânica delicada, tons terracota e verde oliva, sem bordas duras. Sem texto.
+> Dois painéis laterais com relevo floral tridimensional deslizam para os
+> lados, afastando-se do centro, revelando o cartão entre eles.
+> Câmera totalmente fixa. Movimento lento e simétrico.
 
 ---
 
-## 12. Linho — preto real e tan
+## Fundo da capa
 
-**Vídeo de abertura**
-> Envelope preto fosco texturizado com moldura em arco dourada em hot stamping, lacre de cera dourado. Sobre pedra escura, luz lateral dramática, atmosfera urbana noturna. A aba abre revelando brilho dourado. Câmera fixa, movimento lento, 5 segundos, sem texto, sem letras, sem watermark.
+Entra atrás do nome do casal, com véu por cima. Não é o envelope: é o clima.
 
-**Fundo da capa**
-> Superfície preta fosca com detalhes dourados finos, mármore escuro, luz lateral dramática, fotografia cenital minimalista, contraste alto. Sem texto.
+> Fotografia cenital de [ADEREÇOS do template] sobre [SUPERFÍCIE do template],
+> [LUZ do template], composição com área central vazia, profundidade de campo
+> rasa, paleta [FAMÍLIA do template], estética de papelaria fina.
+> Proporção 9:16. Sem texto, sem letras, sem marca d'água.
+
+**A área central vazia é o detalhe que importa.** É onde o nome do casal vai
+ficar. Imagem cheia no meio briga com a tipografia e o véu não resolve.
 
 ---
 
 ## Ornamento em PNG
 
-Serve para qualquer template. Troque a cor e a planta.
+Substitui o floral vetorial do envelope. Um por template.
 
-> Ilustração botânica em aquarela de [ramo de eucalipto / peônia aberta / ramo de oliveira / laço de fita], tons [cor do template], pincelada solta e delicada, fundo transparente, composição horizontal simétrica, estilo papelaria fina. Sem texto, sem moldura, sem sombra.
+> Ilustração botânica em aquarela de [ORNAMENTO do template], tons [FAMÍLIA do
+> template], pincelada solta e delicada, composição horizontal simétrica,
+> fundo transparente, estilo papelaria fina.
+> Sem texto, sem moldura, sem sombra, sem fundo.
 
-Salve em PNG com transparência, 1200px de largura.
+PNG com transparência, 1200px de largura, proporção larga e baixa.
+
+---
+
+## Ordem de produção
+
+Não gere os 12 de uma vez. Faça assim:
+
+1. **Marfim primeiro**, só o quadro inicial. Olhe. Ajuste o prompt até a
+   imagem ficar boa.
+2. Leve para o Flow, gere o movimento. Confira se a câmera ficou mesmo parada.
+3. Cole no estúdio, campo **Vídeo de abertura (cortina)**, e veja no telefone.
+4. Só então rode os outros 11, reaproveitando o prompt que já deu certo.
+
+Errar no primeiro custa uma geração. Errar nos doze custa doze.
 
 ---
 
 ## Depois de gerar
 
-1. Hospede os arquivos. Netlify Drop serve: suba uma pasta com os vídeos e
-   imagens, pegue a URL de cada um.
-2. No estúdio, cole no campo correspondente.
-3. A prévia atualiza na hora. Teste a abertura clicando no envelope.
+Suba os arquivos no Netlify Drop (uma pasta com todos), pegue a URL de cada
+um e cole nos campos do estúdio:
 
-O vídeo de abertura serve para todos os convites daquele template. São 12
-vídeos no total, custo único, uso infinito.
+| Arquivo | Campo |
+|---|---|
+| Vídeo 5s | Vídeo de abertura (cortina) |
+| Primeiro quadro em JPG | Poster do vídeo |
+| Fundo da capa | Imagem ou vídeo de fundo da capa |
+| Ornamento PNG | Ornamento próprio |
+
+O poster importa: é o que aparece enquanto o vídeo carrega. Sem ele o
+convidado vê preto por um segundo.
+
+Cada conjunto serve para todos os convites daquele template. Custo único.
