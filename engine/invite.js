@@ -74,6 +74,22 @@ window.renderConvite = function (C, raiz) {
            '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
   }
 
+  /* Os rostos recortados entram por cima da ilustração da capa.
+     O recorte é feito no estúdio, não aqui: aqui chega PNG com
+     fundo já transparente e só a posição é aplicada. */
+  function rosto(url, x, y, t, quem) {
+    if (!tem(url)) return '';
+    return '<img class="rosto" src="' + esc(url) + '" alt="" aria-hidden="true" style="' +
+      '--r-x:' + (x == null || x === '' ? 50 : x) + '%;' +
+      '--r-y:' + (y == null || y === '' ? 30 : y) + '%;' +
+      '--r-t:' + (t == null || t === '' ? 16 : t) + '%" data-quem="' + quem + '">';
+  }
+  function rostos(C) {
+    var a = rosto(C.rostoNoiva, C.rostoNoivaX, C.rostoNoivaY, C.rostoNoivaT, 'noiva');
+    var b = rosto(C.rostoNoivo, C.rostoNoivoX, C.rostoNoivoY, C.rostoNoivoT, 'noivo');
+    return (a || b) ? '<div class="rostos">' + a + b + '</div>' : '';
+  }
+
   var COROA = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M46.7 84.8 A32.0 32.0 0 0 1 38.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M46.7 84.8 Q42.4 79.2, 46.7 72.3 Q51.0 79.2, 46.7 84.8 Z" transform="rotate(200.0 46.7 84.8)"/><path d="M36.5 82.0 Q32.4 76.7, 36.5 70.1 Q40.6 76.7, 36.5 82.0 Z" transform="rotate(219.0 36.5 82.0)"/><path d="M27.8 76.0 Q23.9 71.0, 27.8 64.8 Q31.7 71.0, 27.8 76.0 Z" transform="rotate(238.0 27.8 76.0)"/><path d="M21.5 67.5 Q17.8 62.7, 21.5 56.9 Q25.2 62.7, 21.5 67.5 Z" transform="rotate(257.0 21.5 67.5)"/><path d="M18.3 57.5 Q14.8 53.0, 18.3 47.5 Q21.8 53.0, 18.3 57.5 Z" transform="rotate(276.0 18.3 57.5)"/><path d="M18.6 46.9 Q15.3 42.7, 18.6 37.5 Q21.9 42.7, 18.6 46.9 Z" transform="rotate(295.0 18.6 46.9)"/><path d="M22.3 37.0 Q19.2 33.1, 22.3 28.2 Q25.4 33.1, 22.3 37.0 Z" transform="rotate(314.0 22.3 37.0)"/><path d="M29.0 28.8 Q26.1 25.2, 29.0 20.7 Q31.9 25.2, 29.0 28.8 Z" transform="rotate(333.0 29.0 28.8)"/><path d="M38.0 23.3 Q35.3 20.0, 38.0 15.8 Q40.7 20.0, 38.0 23.3 Z" transform="rotate(352.0 38.0 23.3)"/><path d="M53.3 84.8 A32.0 32.0 0 0 0 62.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M53.3 84.8 Q49.0 79.2, 53.3 72.3 Q57.6 79.2, 53.3 84.8 Z" transform="rotate(160.0 53.3 84.8)"/><path d="M63.5 82.0 Q59.4 76.7, 63.5 70.1 Q67.6 76.7, 63.5 82.0 Z" transform="rotate(141.0 63.5 82.0)"/><path d="M72.2 76.0 Q68.3 71.0, 72.2 64.8 Q76.1 71.0, 72.2 76.0 Z" transform="rotate(122.0 72.2 76.0)"/><path d="M78.5 67.5 Q74.8 62.7, 78.5 56.9 Q82.2 62.7, 78.5 67.5 Z" transform="rotate(103.0 78.5 67.5)"/><path d="M81.7 57.5 Q78.2 53.0, 81.7 47.5 Q85.2 53.0, 81.7 57.5 Z" transform="rotate(84.0 81.7 57.5)"/><path d="M81.4 46.9 Q78.1 42.7, 81.4 37.5 Q84.7 42.7, 81.4 46.9 Z" transform="rotate(65.0 81.4 46.9)"/><path d="M77.7 37.0 Q74.6 33.1, 77.7 28.2 Q80.8 33.1, 77.7 37.0 Z" transform="rotate(46.0 77.7 37.0)"/><path d="M71.0 28.8 Q68.1 25.2, 71.0 20.7 Q73.9 25.2, 71.0 28.8 Z" transform="rotate(27.0 71.0 28.8)"/><path d="M62.0 23.3 Q59.3 20.0, 62.0 15.8 Q64.7 20.0, 62.0 23.3 Z" transform="rotate(8.0 62.0 23.3)"/><circle cx="50.0" cy="85" r="2"/></svg>';
 
   /* ---------- envelope ---------- */
@@ -194,12 +210,14 @@ window.renderConvite = function (C, raiz) {
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
     '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') +
-      (tem(C.heroMoldura) ? ' com-moldura' : '') + '">' +
+      (tem(C.heroMoldura) ? ' com-moldura' : '') +
+      ((tem(C.rostoNoiva) || tem(C.rostoNoivo)) ? ' com-rostos' : '') + '">' +
       camadaMidia(C.heroMidia, C.heroVeu) +
       (tem(C.heroMoldura)
         ? '<img class="moldura-arte" src="' + esc(C.heroMoldura) + '" alt="">'
         : '<div class="moldura"></div>') +
       '<div class="coroa">' + COROA + '<span class="mono">' + mono + '</span></div>' +
+      rostos(C) +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
       '<h1 class="nomes script">' + esc(C.noiva) + '<span class="e-comercial">&amp;</span>' + esc(C.noivo) + '</h1>' +
       '<div class="rule"><i class="fim"></i></div>' +
@@ -421,6 +439,18 @@ window.renderConvite = function (C, raiz) {
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
+  /* Modo livro: o convite se folheia em vez de rolar. Vem ligado
+     porque é o que o cliente pediu como experiência padrão; quem
+     preferir a página corrida põe navegacao:'rolagem'. */
+  var modoLivro = (C.navegacao || 'pagina') !== 'rolagem';
+  var SETA_ANT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>';
+  var SETA_PRO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>';
+  var NAVEGADOR =
+    '<nav class="pags" id="pags" aria-label="Páginas do convite"></nav>' +
+    '<button class="folhear ant" id="folAnt" type="button" aria-label="Página anterior">' + SETA_ANT + '</button>' +
+    '<button class="folhear pro" id="folPro" type="button" aria-label="Próxima página">' + SETA_PRO + '</button>' +
+    '<p class="dica-swipe" id="dicaSwipe" aria-hidden="true">arraste<i></i></p>';
+
   if (tem(C.textura)) {
     root.style.setProperty('--textura', 'url("' + C.textura + '")');
     raiz.classList.add('tem-textura');
@@ -428,7 +458,8 @@ window.renderConvite = function (C, raiz) {
 
   raiz.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
-    '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
+    '<main class="wrap' + (modoLivro ? ' livro' : '') + '">' + S.join('') + '</main>' +
+    (modoLivro ? NAVEGADOR : '') + audioHtml;
 
   /* =============================================================
      Comportamento
@@ -510,10 +541,116 @@ window.renderConvite = function (C, raiz) {
 
   function revelar() {
     cenaEl.classList.add('foi');
-    document.body.classList.remove('locked');
+    if (!modoLivro) document.body.classList.remove('locked');
     window.scrollTo(0, 0);
     var pet = raiz.querySelector('#petalas');
     if (pet) pet.classList.add('on');
+    if (modoLivro) ligarLivro();
+  }
+
+  /* -------------------------------------------------------------
+     O livro.
+
+     A rolagem horizontal é nativa (scroll-snap), porque é ela que
+     entrega o atrito e a inércia certos no telefone. O que o JS faz
+     é só desenhar a virada em cima: para cada folha, o quanto ela
+     já saiu da tela vira um giro em Y e uma sombra na dobra.
+     ------------------------------------------------------------- */
+  function ligarLivro() {
+    var trilho = raiz.querySelector('.wrap.livro');
+    if (!trilho) return;
+    var folhas = [].slice.call(trilho.children);
+    if (folhas.length < 2) return;
+
+    var pags = raiz.querySelector('#pags');
+    var bAnt = raiz.querySelector('#folAnt');
+    var bPro = raiz.querySelector('#folPro');
+    var dica = raiz.querySelector('#dicaSwipe');
+    var atual = 0, pedido = 0, reduzido = false;
+    try {
+      reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+
+    // uma bolinha por folha
+    folhas.forEach(function (folha, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Ir para a página ' + (i + 1) + ' de ' + folhas.length);
+      b.addEventListener('click', function () { irPara(i); });
+      pags.appendChild(b);
+      // conteúdo mais alto que a folha deixa de ser centrado
+      if (folha.scrollHeight > folha.clientHeight + 4) folha.classList.add('transborda');
+    });
+    pags.classList.add('vis');
+
+    function irPara(i) {
+      i = Math.max(0, Math.min(folhas.length - 1, i));
+      trilho.scrollTo({ left: i * trilho.clientWidth, behavior: 'smooth' });
+    }
+
+    function pintar() {
+      pedido = 0;
+      var larg = trilho.clientWidth || 1;
+      var x = trilho.scrollLeft;
+      folhas.forEach(function (folha, i) {
+        // -1 saiu pela esquerda, 0 no lugar, 1 ainda à direita
+        var d = (i * larg - x) / larg;
+        // preso em uma folha: sem isto a terceira página atrás gira 52°
+        // e a pilha vira leque
+        if (d < -1) d = -1; else if (d > 1) d = 1;
+        var fora = Math.abs(d);
+        if (reduzido) {
+          folha.style.transform = '';
+          folha.style.setProperty('--dobra', 0);
+        } else {
+          // só a folha que está saindo gira; a que entra desliza reta,
+          // senão as duas giram ao mesmo tempo e vira origami
+          var giro = d < 0 ? -d * 26 : 0;
+          var funda = d < 0 ? 1 - fora * 0.06 : 1;
+          folha.style.transform =
+            'rotateY(' + (-giro).toFixed(2) + 'deg) scale(' + funda.toFixed(3) + ')';
+          folha.style.setProperty('--dobra', d > 0 ? Math.min(1, d * 1.6).toFixed(3) : 0);
+        }
+      });
+      var novo = Math.round(x / larg);
+      if (novo !== atual) {
+        atual = novo;
+        [].forEach.call(pags.children, function (b, i) {
+          b.setAttribute('aria-current', i === atual ? 'true' : 'false');
+        });
+        if (bAnt) bAnt.disabled = atual === 0;
+        if (bPro) bPro.disabled = atual === folhas.length - 1;
+        if (dica && atual > 0 && !dica.classList.contains('foi')) {
+          dica.classList.add('foi');
+          setTimeout(function () { if (dica.parentNode) dica.parentNode.removeChild(dica); }, 500);
+        }
+      }
+    }
+
+    function aoRolar() {
+      if (!pedido) pedido = requestAnimationFrame(pintar);
+    }
+    trilho.addEventListener('scroll', aoRolar, { passive: true });
+    window.addEventListener('resize', aoRolar);
+    limpar.push(function () {
+      trilho.removeEventListener('scroll', aoRolar);
+      window.removeEventListener('resize', aoRolar);
+      if (pedido) cancelAnimationFrame(pedido);
+    });
+
+    if (bAnt) bAnt.addEventListener('click', function () { irPara(atual - 1); });
+    if (bPro) bPro.addEventListener('click', function () { irPara(atual + 1); });
+
+    // teclado: a seta só folheia quando a folha já chegou ao fim do seu
+    // próprio texto, senão rouba a rolagem de quem está lendo
+    function aoTeclar(e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); irPara(atual + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(atual - 1); }
+    }
+    document.addEventListener('keydown', aoTeclar);
+    limpar.push(function () { document.removeEventListener('keydown', aoTeclar); });
+
+    pintar();
   }
 
   env.addEventListener('click', abrir);

@@ -262,6 +262,55 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   </fieldset>
 
   <fieldset>
+    <legend>Rostos na ilustração</legend>
+    <p class="dica guia-sec">Para os modelos em que o casal é desenhado. Suba só a foto
+    do rosto de cada um — o estúdio recorta o fundo sozinho e encaixa no desenho.
+    Foto de frente, rosto inteiro no quadro, é o que funciona melhor.</p>
+
+    <label><span>Como recortar</span>
+      <select id="rostoModo">
+        <option value="auto">Automático — tira o fundo e arredonda</option>
+        <option value="oval">Só oval — corta em círculo, mantém o fundo</option>
+        <option value="nada">Sem recorte — a foto já vem recortada</option>
+      </select>
+    </label>
+    <label><span>Tolerância do recorte (0 a 100)</span><input id="rostoTol" type="number" min="0" max="100" value="34"></label>
+    <p class="dica">Sobrou fundo, aumente. Comeu pedaço do cabelo, diminua.</p>
+
+    <div class="dupla">
+      <label><span>Rosto da noiva</span><input type="file" id="rostoNoivaArq" accept="image/*"></label>
+      <label><span>Rosto do noivo</span><input type="file" id="rostoNoivoArq" accept="image/*"></label>
+    </div>
+    <div class="fotos" id="previewRostos"></div>
+
+    <div class="dupla">
+      <label><span>Noiva — horizontal %</span><input id="rostoNoivaX" type="number" min="0" max="100" value="42"></label>
+      <label><span>Noiva — vertical %</span><input id="rostoNoivaY" type="number" min="0" max="100" value="26"></label>
+    </div>
+    <label><span>Noiva — tamanho %</span><input id="rostoNoivaT" type="number" min="3" max="60" value="15"></label>
+    <div class="dupla">
+      <label><span>Noivo — horizontal %</span><input id="rostoNoivoX" type="number" min="0" max="100" value="58"></label>
+      <label><span>Noivo — vertical %</span><input id="rostoNoivoY" type="number" min="0" max="100" value="26"></label>
+    </div>
+    <label><span>Noivo — tamanho %</span><input id="rostoNoivoT" type="number" min="3" max="60" value="15"></label>
+    <p class="dica">Mexa nos números olhando a prévia. Horizontal 0 é a borda esquerda,
+    100 a direita; vertical 0 é o topo.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Como o convidado navega</legend>
+    <label><span>Navegação</span>
+      <select id="navegacao">
+        <option value="pagina">Folhear — arrasta o dedo e vira a página</option>
+        <option value="rolagem">Rolar — página corrida, de cima para baixo</option>
+      </select>
+    </label>
+    <p class="dica guia-sec">Folhear é o padrão: cada bloco do convite vira uma página
+    inteira e o convidado passa com o dedo, com a dobra virando como num livro. Rolar
+    é o site comum. Folhear prende mais; rolar é melhor quando o convite tem textos longos.</p>
+  </fieldset>
+
+  <fieldset>
     <legend>O casal</legend>
     <p class="dica guia-sec">Os nomes como <b>eles</b> querem ler, não como está no documento. A data monta a contagem regressiva sozinha. O versículo é opcional e é o que costuma emocionar: pergunte se existe uma frase, oração ou música que significa algo para os dois.</p>
     <div class="dupla">
@@ -1711,6 +1760,146 @@ body.tem-textura .faixa-escura{
 @media (max-width:380px){
   .capa-hero.com-moldura{padding:4rem 2.4rem}
 }
+
+/* =============================================================
+   13. MODO PÁGINA
+   O convite deixa de ser uma página que rola e vira um livro que
+   se folheia com o dedo. A rolagem horizontal é nativa, com
+   scroll-snap: é ela que dá o atrito, a inércia e o encaixe que
+   um arrasto feito em JS nunca acerta no iOS. O JS só desenha a
+   virada por cima do que o navegador já está fazendo.
+   ============================================================= */
+.wrap.livro{
+  max-width:none;margin:0;
+  display:flex;
+  height:100svh;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  perspective:1400px;
+  perspective-origin:50% 45%;
+}
+.wrap.livro::-webkit-scrollbar{display:none}
+
+.wrap.livro > *{
+  flex:0 0 100%;width:100%;min-width:0;
+  height:100%;
+  scroll-snap-align:center;
+  scroll-snap-stop:always;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;justify-content:center;
+  /* a dobra vive na borda de entrada da folha */
+  transform-origin:0% 50%;
+  will-change:transform;
+  backface-visibility:hidden;
+}
+/* conteúdo mais alto que a tela: volta a ser bloco e ganha respiro */
+.wrap.livro > *.transborda{justify-content:flex-start;padding-block:4.5rem}
+
+/* a sombra da dobra, pintada por cima sem mexer no fluxo */
+.wrap.livro > *::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,.22) 0%, rgba(0,0,0,.07) 7%, rgba(0,0,0,0) 22%);
+  opacity:var(--dobra,0);
+  transition:opacity .12s linear;
+}
+.wrap.livro > *{position:relative}
+
+/* a seção já não precisa do respiro de página rolável */
+.wrap.livro section,
+.wrap.livro .capa-hero,
+.wrap.livro footer{padding-block:3.2rem}
+.wrap.livro .capa-hero{min-height:0}
+.wrap.livro .seta{display:none}
+
+/* ---- marcadores de página ---- */
+.pags{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(1.1rem + env(safe-area-inset-bottom,0px));
+  z-index:40;display:flex;gap:.42rem;align-items:center;
+  padding:.5rem .7rem;border-radius:999px;
+  background:color-mix(in srgb, var(--paper) 78%, transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 1px 10px var(--sombra);
+  opacity:0;transition:opacity .4s var(--ease-out)
+}
+.pags.vis{opacity:1}
+.pags button{
+  width:7px;height:7px;padding:0;border:0;border-radius:50%;
+  background:var(--ink-soft);opacity:.34;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .22s var(--ease-out),transform .22s var(--ease-out)
+}
+.pags button[aria-current="true"]{opacity:1;background:var(--accent);transform:scale(1.5)}
+.pags button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---- a dica do primeiro arrasto, uma vez só ---- */
+.dica-swipe{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(3.4rem + env(safe-area-inset-bottom,0px));
+  z-index:40;pointer-events:none;
+  font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-soft);
+  display:flex;align-items:center;gap:.5rem;
+  animation:dica-ir 2.6s var(--ease-in-out) infinite
+}
+.dica-swipe i{
+  width:16px;height:1px;background:currentColor;display:block;position:relative
+}
+.dica-swipe i::after{
+  content:'';position:absolute;right:0;top:-2.5px;
+  width:5px;height:5px;border-top:1px solid currentColor;
+  border-right:1px solid currentColor;transform:rotate(45deg)
+}
+@keyframes dica-ir{
+  0%,100%{opacity:.35;transform:translateX(-50%)}
+  50%    {opacity:1;transform:translateX(calc(-50% + 7px))}
+}
+.dica-swipe.foi{opacity:0;transition:opacity .4s var(--ease-out)}
+
+/* setas, só onde há mouse */
+.folhear{display:none}
+/* a seta é para quem tem mouse E espaço; no telefone o dedo basta */
+@media (hover:hover) and (pointer:fine) and (min-width:620px){
+  .folhear{
+    display:grid;place-items:center;
+    position:fixed;top:50%;transform:translateY(-50%);z-index:40;
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--accent-2);
+    background:color-mix(in srgb, var(--paper) 86%, transparent);
+    color:var(--ink);cursor:pointer;
+    transition:opacity .2s var(--ease-out),border-color .2s var(--ease-out)
+  }
+  .folhear:hover{border-color:var(--accent)}
+  .folhear[disabled]{opacity:0;pointer-events:none}
+  .folhear.ant{left:1.4rem}
+  .folhear.pro{right:1.4rem}
+  .folhear svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .wrap.livro > *{transform:none!important}
+  .wrap.livro > *::after{opacity:0!important}
+  .dica-swipe{animation:none}
+}
+
+/* =============================================================
+   14. ROSTOS NA ILUSTRAÇÃO
+   A referência encaixa a foto do rosto dentro do desenho do casal.
+   O recorte vem pronto do estúdio; aqui só a posição e um assentamento
+   leve, para a foto não flutuar por cima do traço como adesivo.
+   ============================================================= */
+.rostos{position:absolute;inset:0;z-index:3;pointer-events:none}
+.rosto{
+  position:absolute;
+  left:var(--r-x,50%);top:var(--r-y,30%);
+  width:var(--r-t,16%);height:auto;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 1px 2px var(--sombra));
+}
+.capa-hero.com-rostos .coroa{display:none}
 </script>
 <script type="text/template" id="src-js">/* =============================================================
    Renderizador.
@@ -1786,6 +1975,22 @@ window.renderConvite = function (C, raiz) {
       : '<img src="' + esc(url) + '" alt="" loading="lazy">';
     return '<div class="midia">' + media + '</div>' +
            '<div class="veu" style="--veu:' + (veu == null ? 55 : veu) + '"></div>';
+  }
+
+  /* Os rostos recortados entram por cima da ilustração da capa.
+     O recorte é feito no estúdio, não aqui: aqui chega PNG com
+     fundo já transparente e só a posição é aplicada. */
+  function rosto(url, x, y, t, quem) {
+    if (!tem(url)) return '';
+    return '<img class="rosto" src="' + esc(url) + '" alt="" aria-hidden="true" style="' +
+      '--r-x:' + (x == null || x === '' ? 50 : x) + '%;' +
+      '--r-y:' + (y == null || y === '' ? 30 : y) + '%;' +
+      '--r-t:' + (t == null || t === '' ? 16 : t) + '%" data-quem="' + quem + '">';
+  }
+  function rostos(C) {
+    var a = rosto(C.rostoNoiva, C.rostoNoivaX, C.rostoNoivaY, C.rostoNoivaT, 'noiva');
+    var b = rosto(C.rostoNoivo, C.rostoNoivoX, C.rostoNoivoY, C.rostoNoivoT, 'noivo');
+    return (a || b) ? '<div class="rostos">' + a + b + '</div>' : '';
   }
 
   var COROA = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M46.7 84.8 A32.0 32.0 0 0 1 38.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M46.7 84.8 Q42.4 79.2, 46.7 72.3 Q51.0 79.2, 46.7 84.8 Z" transform="rotate(200.0 46.7 84.8)"/><path d="M36.5 82.0 Q32.4 76.7, 36.5 70.1 Q40.6 76.7, 36.5 82.0 Z" transform="rotate(219.0 36.5 82.0)"/><path d="M27.8 76.0 Q23.9 71.0, 27.8 64.8 Q31.7 71.0, 27.8 76.0 Z" transform="rotate(238.0 27.8 76.0)"/><path d="M21.5 67.5 Q17.8 62.7, 21.5 56.9 Q25.2 62.7, 21.5 67.5 Z" transform="rotate(257.0 21.5 67.5)"/><path d="M18.3 57.5 Q14.8 53.0, 18.3 47.5 Q21.8 53.0, 18.3 57.5 Z" transform="rotate(276.0 18.3 57.5)"/><path d="M18.6 46.9 Q15.3 42.7, 18.6 37.5 Q21.9 42.7, 18.6 46.9 Z" transform="rotate(295.0 18.6 46.9)"/><path d="M22.3 37.0 Q19.2 33.1, 22.3 28.2 Q25.4 33.1, 22.3 37.0 Z" transform="rotate(314.0 22.3 37.0)"/><path d="M29.0 28.8 Q26.1 25.2, 29.0 20.7 Q31.9 25.2, 29.0 28.8 Z" transform="rotate(333.0 29.0 28.8)"/><path d="M38.0 23.3 Q35.3 20.0, 38.0 15.8 Q40.7 20.0, 38.0 23.3 Z" transform="rotate(352.0 38.0 23.3)"/><path d="M53.3 84.8 A32.0 32.0 0 0 0 62.0 23.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M53.3 84.8 Q49.0 79.2, 53.3 72.3 Q57.6 79.2, 53.3 84.8 Z" transform="rotate(160.0 53.3 84.8)"/><path d="M63.5 82.0 Q59.4 76.7, 63.5 70.1 Q67.6 76.7, 63.5 82.0 Z" transform="rotate(141.0 63.5 82.0)"/><path d="M72.2 76.0 Q68.3 71.0, 72.2 64.8 Q76.1 71.0, 72.2 76.0 Z" transform="rotate(122.0 72.2 76.0)"/><path d="M78.5 67.5 Q74.8 62.7, 78.5 56.9 Q82.2 62.7, 78.5 67.5 Z" transform="rotate(103.0 78.5 67.5)"/><path d="M81.7 57.5 Q78.2 53.0, 81.7 47.5 Q85.2 53.0, 81.7 57.5 Z" transform="rotate(84.0 81.7 57.5)"/><path d="M81.4 46.9 Q78.1 42.7, 81.4 37.5 Q84.7 42.7, 81.4 46.9 Z" transform="rotate(65.0 81.4 46.9)"/><path d="M77.7 37.0 Q74.6 33.1, 77.7 28.2 Q80.8 33.1, 77.7 37.0 Z" transform="rotate(46.0 77.7 37.0)"/><path d="M71.0 28.8 Q68.1 25.2, 71.0 20.7 Q73.9 25.2, 71.0 28.8 Z" transform="rotate(27.0 71.0 28.8)"/><path d="M62.0 23.3 Q59.3 20.0, 62.0 15.8 Q64.7 20.0, 62.0 23.3 Z" transform="rotate(8.0 62.0 23.3)"/><circle cx="50.0" cy="85" r="2"/></svg>';
@@ -1908,12 +2113,14 @@ window.renderConvite = function (C, raiz) {
   // capa — centralizada se justifica: a mensagem é o design
   S.push(
     '<header class="capa-hero' + (tem(C.heroMidia) ? ' com-midia' : '') +
-      (tem(C.heroMoldura) ? ' com-moldura' : '') + '">' +
+      (tem(C.heroMoldura) ? ' com-moldura' : '') +
+      ((tem(C.rostoNoiva) || tem(C.rostoNoivo)) ? ' com-rostos' : '') + '">' +
       camadaMidia(C.heroMidia, C.heroVeu) +
       (tem(C.heroMoldura)
         ? '<img class="moldura-arte" src="' + esc(C.heroMoldura) + '" alt="">'
         : '<div class="moldura"></div>') +
       '<div class="coroa">' + COROA + '<span class="mono">' + mono + '</span></div>' +
+      rostos(C) +
       (tem(C.versiculo) ? '<p class="versiculo">' + esc(C.versiculo) + '</p>' : '') +
       '<h1 class="nomes script">' + esc(C.noiva) + '<span class="e-comercial">&amp;</span>' + esc(C.noivo) + '</h1>' +
       '<div class="rule"><i class="fim"></i></div>' +
@@ -2135,6 +2342,18 @@ window.renderConvite = function (C, raiz) {
         '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICO.som + '</svg></button>'
     : '';
 
+  /* Modo livro: o convite se folheia em vez de rolar. Vem ligado
+     porque é o que o cliente pediu como experiência padrão; quem
+     preferir a página corrida põe navegacao:'rolagem'. */
+  var modoLivro = (C.navegacao || 'pagina') !== 'rolagem';
+  var SETA_ANT = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg>';
+  var SETA_PRO = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6"/></svg>';
+  var NAVEGADOR =
+    '<nav class="pags" id="pags" aria-label="Páginas do convite"></nav>' +
+    '<button class="folhear ant" id="folAnt" type="button" aria-label="Página anterior">' + SETA_ANT + '</button>' +
+    '<button class="folhear pro" id="folPro" type="button" aria-label="Próxima página">' + SETA_PRO + '</button>' +
+    '<p class="dica-swipe" id="dicaSwipe" aria-hidden="true">arraste<i></i></p>';
+
   if (tem(C.textura)) {
     root.style.setProperty('--textura', 'url("' + C.textura + '")');
     raiz.classList.add('tem-textura');
@@ -2142,7 +2361,8 @@ window.renderConvite = function (C, raiz) {
 
   raiz.innerHTML =
     cena + '<canvas id="petalas" aria-hidden="true"></canvas>' +
-    '<main class="wrap">' + S.join('') + '</main>' + audioHtml;
+    '<main class="wrap' + (modoLivro ? ' livro' : '') + '">' + S.join('') + '</main>' +
+    (modoLivro ? NAVEGADOR : '') + audioHtml;
 
   /* =============================================================
      Comportamento
@@ -2224,10 +2444,116 @@ window.renderConvite = function (C, raiz) {
 
   function revelar() {
     cenaEl.classList.add('foi');
-    document.body.classList.remove('locked');
+    if (!modoLivro) document.body.classList.remove('locked');
     window.scrollTo(0, 0);
     var pet = raiz.querySelector('#petalas');
     if (pet) pet.classList.add('on');
+    if (modoLivro) ligarLivro();
+  }
+
+  /* -------------------------------------------------------------
+     O livro.
+
+     A rolagem horizontal é nativa (scroll-snap), porque é ela que
+     entrega o atrito e a inércia certos no telefone. O que o JS faz
+     é só desenhar a virada em cima: para cada folha, o quanto ela
+     já saiu da tela vira um giro em Y e uma sombra na dobra.
+     ------------------------------------------------------------- */
+  function ligarLivro() {
+    var trilho = raiz.querySelector('.wrap.livro');
+    if (!trilho) return;
+    var folhas = [].slice.call(trilho.children);
+    if (folhas.length < 2) return;
+
+    var pags = raiz.querySelector('#pags');
+    var bAnt = raiz.querySelector('#folAnt');
+    var bPro = raiz.querySelector('#folPro');
+    var dica = raiz.querySelector('#dicaSwipe');
+    var atual = 0, pedido = 0, reduzido = false;
+    try {
+      reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+
+    // uma bolinha por folha
+    folhas.forEach(function (folha, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Ir para a página ' + (i + 1) + ' de ' + folhas.length);
+      b.addEventListener('click', function () { irPara(i); });
+      pags.appendChild(b);
+      // conteúdo mais alto que a folha deixa de ser centrado
+      if (folha.scrollHeight > folha.clientHeight + 4) folha.classList.add('transborda');
+    });
+    pags.classList.add('vis');
+
+    function irPara(i) {
+      i = Math.max(0, Math.min(folhas.length - 1, i));
+      trilho.scrollTo({ left: i * trilho.clientWidth, behavior: 'smooth' });
+    }
+
+    function pintar() {
+      pedido = 0;
+      var larg = trilho.clientWidth || 1;
+      var x = trilho.scrollLeft;
+      folhas.forEach(function (folha, i) {
+        // -1 saiu pela esquerda, 0 no lugar, 1 ainda à direita
+        var d = (i * larg - x) / larg;
+        // preso em uma folha: sem isto a terceira página atrás gira 52°
+        // e a pilha vira leque
+        if (d < -1) d = -1; else if (d > 1) d = 1;
+        var fora = Math.abs(d);
+        if (reduzido) {
+          folha.style.transform = '';
+          folha.style.setProperty('--dobra', 0);
+        } else {
+          // só a folha que está saindo gira; a que entra desliza reta,
+          // senão as duas giram ao mesmo tempo e vira origami
+          var giro = d < 0 ? -d * 26 : 0;
+          var funda = d < 0 ? 1 - fora * 0.06 : 1;
+          folha.style.transform =
+            'rotateY(' + (-giro).toFixed(2) + 'deg) scale(' + funda.toFixed(3) + ')';
+          folha.style.setProperty('--dobra', d > 0 ? Math.min(1, d * 1.6).toFixed(3) : 0);
+        }
+      });
+      var novo = Math.round(x / larg);
+      if (novo !== atual) {
+        atual = novo;
+        [].forEach.call(pags.children, function (b, i) {
+          b.setAttribute('aria-current', i === atual ? 'true' : 'false');
+        });
+        if (bAnt) bAnt.disabled = atual === 0;
+        if (bPro) bPro.disabled = atual === folhas.length - 1;
+        if (dica && atual > 0 && !dica.classList.contains('foi')) {
+          dica.classList.add('foi');
+          setTimeout(function () { if (dica.parentNode) dica.parentNode.removeChild(dica); }, 500);
+        }
+      }
+    }
+
+    function aoRolar() {
+      if (!pedido) pedido = requestAnimationFrame(pintar);
+    }
+    trilho.addEventListener('scroll', aoRolar, { passive: true });
+    window.addEventListener('resize', aoRolar);
+    limpar.push(function () {
+      trilho.removeEventListener('scroll', aoRolar);
+      window.removeEventListener('resize', aoRolar);
+      if (pedido) cancelAnimationFrame(pedido);
+    });
+
+    if (bAnt) bAnt.addEventListener('click', function () { irPara(atual - 1); });
+    if (bPro) bPro.addEventListener('click', function () { irPara(atual + 1); });
+
+    // teclado: a seta só folheia quando a folha já chegou ao fim do seu
+    // próprio texto, senão rouba a rolagem de quem está lendo
+    function aoTeclar(e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); irPara(atual + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(atual - 1); }
+    }
+    document.addEventListener('keydown', aoTeclar);
+    limpar.push(function () { document.removeEventListener('keydown', aoTeclar); });
+
+    pintar();
   }
 
   env.addEventListener('click', abrir);
@@ -2755,7 +3081,8 @@ var ARTE_MINI = {"cloud": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2w
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [], arteManual: false };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura','navegacao',
+  'rostoNoivaX','rostoNoivaY','rostoNoivaT','rostoNoivoX','rostoNoivoY','rostoNoivoT',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','tituloRsvp','prazoRsvp','textoRsvp',
@@ -2769,6 +3096,8 @@ function coletar(){
   CAMPOS.forEach(function(k){ c[k] = val(k); });
   c.fotoHistoria = estado.fotoHistoria;
   c.galeria = estado.galeria;
+  c.rostoNoiva = estado.rostoNoiva || '';
+  c.rostoNoivo = estado.rostoNoivo || '';
   c._tpl = TPLS.filter(function(t){ return t.id === estado.tpl; })[0];
   return c;
 }
@@ -2870,6 +3199,159 @@ function comprimir(dataUrl, maxLado, q){
   });
 }
 
+/* ---------- recorte de rosto ----------
+   Sem modelo de IA e sem servidor: o estúdio tem que abrir com dois
+   cliques e funcionar offline. O que dá para fazer bem offline é
+   preencher a partir da borda — pega retrato em parede lisa, que é a
+   foto que a noiva manda — e, quando isso falha, cair no corte oval,
+   que é como a referência encaixa o rosto de qualquer jeito. */
+function recortarRosto(dataUrl, modo, tol){
+  return new Promise(function(res){
+    var img = new Image();
+    img.onload = function(){
+      var k = Math.min(1, 520 / Math.max(img.width, img.height));
+      var L = Math.round(img.width * k), A = Math.round(img.height * k);
+      var cv = document.createElement('canvas');
+      cv.width = L; cv.height = A;
+      var ctx = cv.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, L, A);
+      if (modo === 'nada'){ res(cv.toDataURL('image/png')); return; }
+
+      var d = ctx.getImageData(0, 0, L, A), px = d.data;
+      var limpou = 0;
+
+      if (modo !== 'oval'){
+        // limiar em distância ao quadrado, no espaço RGB
+        var lim = Math.pow(8 + (tol / 100) * 150, 2);
+        var fila = [], visto = new Uint8Array(L * A);
+        function semear(i){ if (!visto[i]){ visto[i] = 1; fila.push(i); } }
+        for (var x = 0; x < L; x++){ semear(x); semear((A - 1) * L + x); }
+        for (var y = 0; y < A; y++){ semear(y * L); semear(y * L + L - 1); }
+        // a cor do fundo é a média da borda, não um canto só: um canto
+        // escuro sozinho faz o preenchimento comer o cabelo
+        var sr = 0, sg = 0, sb = 0, n = fila.length;
+        for (var q = 0; q < n; q++){
+          var p4 = fila[q] * 4;
+          sr += px[p4]; sg += px[p4 + 1]; sb += px[p4 + 2];
+        }
+        var fr = sr / n, fg = sg / n, fb = sb / n;
+        var cab = 0;
+        while (cab < fila.length){
+          var i = fila[cab++], o = i * 4;
+          var dr = px[o] - fr, dg = px[o + 1] - fg, db = px[o + 2] - fb;
+          if (dr * dr + dg * dg + db * db > lim) continue;
+          px[o + 3] = 0; limpou++;
+          var cx = i % L, cy = (i - cx) / L;
+          if (cx > 0 && !visto[i - 1]){ visto[i - 1] = 1; fila.push(i - 1); }
+          if (cx < L - 1 && !visto[i + 1]){ visto[i + 1] = 1; fila.push(i + 1); }
+          if (cy > 0 && !visto[i - L]){ visto[i - L] = 1; fila.push(i - L); }
+          if (cy < A - 1 && !visto[i + L]){ visto[i + L] = 1; fila.push(i + L); }
+        }
+      }
+
+      var frac = limpou / (L * A);
+      // nem tirou nada, nem comeu a pessoa inteira: só aí o automático valeu
+      var deuCerto = modo === 'oval' ? false : (frac > 0.06 && frac < 0.88);
+
+      if (deuCerto){
+        ctx.putImageData(d, 0, 0);
+        // alisa a borda do recorte: sem isto fica serrilhado de tesoura
+        var cv2 = document.createElement('canvas');
+        cv2.width = L; cv2.height = A;
+        var c2 = cv2.getContext('2d');
+        c2.filter = 'blur(1.1px)';
+        c2.drawImage(cv, 0, 0);
+        c2.filter = 'none';
+        c2.globalCompositeOperation = 'source-in';
+        c2.drawImage(cv, 0, 0);
+        res(aparar(cv2));
+      } else {
+        // oval com borda esfumada, centrado no terço superior, que é
+        // onde o rosto fica em retrato
+        var cv3 = document.createElement('canvas');
+        cv3.width = L; cv3.height = A;
+        var c3 = cv3.getContext('2d');
+        var rx = L * 0.40, ry = A * 0.34, cxm = L / 2, cym = A * 0.42;
+        var g = c3.createRadialGradient(cxm, cym, 0, cxm, cym, 1);
+        c3.save();
+        c3.translate(cxm, cym); c3.scale(rx, ry);
+        g = c3.createRadialGradient(0, 0, 0, 0, 0, 1);
+        g.addColorStop(0, '#000'); g.addColorStop(0.86, '#000');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        c3.fillStyle = g;
+        c3.beginPath(); c3.arc(0, 0, 1, 0, Math.PI * 2); c3.fill();
+        c3.restore();
+        c3.globalCompositeOperation = 'source-in';
+        c3.drawImage(img, 0, 0, L, A);
+        res(aparar(cv3));
+      }
+    };
+    img.onerror = function(){ res(dataUrl); };
+    img.src = dataUrl;
+  });
+}
+
+// corta o vazio em volta, para o % de tamanho significar o rosto e não a moldura
+function aparar(cv){
+  var ctx = cv.getContext('2d', { willReadFrequently: true });
+  var L = cv.width, A = cv.height;
+  var px = ctx.getImageData(0, 0, L, A).data;
+  var x0 = L, y0 = A, x1 = -1, y1 = -1;
+  for (var y = 0; y < A; y++){
+    for (var x = 0; x < L; x++){
+      if (px[(y * L + x) * 4 + 3] > 12){
+        if (x < x0) x0 = x; if (x > x1) x1 = x;
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < 0) return cv.toDataURL('image/png');
+  var cv2 = document.createElement('canvas');
+  cv2.width = x1 - x0 + 1; cv2.height = y1 - y0 + 1;
+  cv2.getContext('2d').drawImage(cv, x0, y0, cv2.width, cv2.height, 0, 0, cv2.width, cv2.height);
+  return cv2.toDataURL('image/png');
+}
+
+function pintarRostos(){
+  var alvo = document.getElementById('previewRostos');
+  var h = '';
+  ['Noiva', 'Noivo'].forEach(function(q){
+    var d = estado['rosto' + q];
+    if (d) h += '<figure><img src="' + d + '" style="background:#2a2930">' +
+      '<button type="button" data-rm="r' + q + '">×</button></figure>';
+  });
+  alvo.innerHTML = h;
+}
+
+['Noiva', 'Noivo'].forEach(function(q){
+  document.getElementById('rosto' + q + 'Arq').addEventListener('change', function(e){
+    var f = e.target.files[0]; if (!f) return;
+    estado['rostoBruto' + q] = null;
+    lerArquivo(f).then(function(d){
+      estado['rostoBruto' + q] = d;
+      return refazerRosto(q);
+    });
+  });
+});
+
+function refazerRosto(q){
+  var bruto = estado['rostoBruto' + q];
+  if (!bruto) return Promise.resolve();
+  var modo = val('rostoModo') || 'auto';
+  var tol = parseInt(val('rostoTol'), 10); if (isNaN(tol)) tol = 34;
+  return recortarRosto(bruto, modo, tol).then(function(d){
+    estado['rosto' + q] = d;
+    pintarRostos();
+    atualizar();
+  });
+}
+
+['rostoModo', 'rostoTol'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', function(){
+    refazerRosto('Noiva').then(function(){ return refazerRosto('Noivo'); });
+  });
+});
+
 document.getElementById('fotoHistoria').addEventListener('change', function(e){
   var f = e.target.files[0]; if (!f) return;
   lerArquivo(f).then(function(d){ return comprimir(d, 1100, .82); }).then(function(d){
@@ -2903,6 +3385,13 @@ document.addEventListener('click', function(e){
   if (rm === 'h'){
     estado.fotoHistoria = '';
     document.getElementById('previewHistoria').innerHTML = '';
+  } else if (rm === 'rNoiva' || rm === 'rNoivo'){
+    var q = rm.slice(1);
+    estado['rosto' + q] = '';
+    estado['rostoBruto' + q] = null;
+    var inp = document.getElementById('rosto' + q + 'Arq');
+    if (inp) inp.value = '';
+    pintarRostos();
   } else {
     estado.galeria.splice(+rm, 1);
     pintarGaleria();
@@ -2953,6 +3442,9 @@ document.getElementById('fileProjeto').addEventListener('change', function(e){
       estado.tpl = p.tpl || (c._tpl && c._tpl.id) || 'marfim';
       estado.fotoHistoria = c.fotoHistoria || '';
       estado.galeria = c.galeria || [];
+      estado.rostoNoiva = c.rostoNoiva || '';
+      estado.rostoNoivo = c.rostoNoivo || '';
+      pintarRostos();
       document.getElementById('previewHistoria').innerHTML = estado.fotoHistoria
         ? '<figure><img src="' + estado.fotoHistoria + '"><button type="button" data-rm="h">×</button></figure>' : '';
       pintarGaleria(); pintarTemplates(); atualizar();

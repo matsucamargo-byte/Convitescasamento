@@ -199,6 +199,43 @@ Era aqui que estava o bug: a versão anterior era um índice com links para
 `marfim.html`, `oliva.html` e assim por diante. Baixado sozinho no celular,
 esses arquivos não iam junto, então os links não levavam a lugar nenhum.
 
+## Como o convidado navega
+
+Dois modos, no campo **Navegação** do estúdio:
+
+| Modo | O que acontece |
+|---|---|
+| **Folhear** (padrão) | Cada bloco vira uma página inteira. O convidado arrasta o dedo e a folha gira com dobra e sombra, como num livro |
+| Rolar | Página corrida, de cima para baixo |
+
+A rolagem horizontal é nativa (`scroll-snap`), não um arrasto feito em JS: é
+ela que entrega o atrito e a inércia certos no telefone. O JS só desenha a
+virada por cima — para cada folha, o quanto ela já saiu da tela vira giro em Y
+e sombra na dobra. Com `prefers-reduced-motion` o giro some e o encaixe fica.
+
+Bloco mais alto que a tela rola sozinho dentro da própria página.
+
+## Rostos na ilustração
+
+Nos modelos em que o casal é desenhado, você sobe **só a foto do rosto** de
+cada um e o estúdio recorta.
+
+O recorte é feito no navegador, sem IA e sem servidor — o estúdio precisa abrir
+com dois cliques e funcionar offline. São dois caminhos:
+
+- **Automático**: preenche a partir da borda da foto e apaga tudo que for
+  parecido com a cor média dela. Pega retrato em parede lisa, que é a foto que
+  a noiva manda. A borda sai alisada, sem serrilha de tesoura.
+- **Oval**: corta em elipse com borda esfumada. É como a referência encaixa o
+  rosto, e funciona com qualquer fundo.
+
+O automático se mede: se limpou menos de 6% ou mais de 88% da imagem, ele
+errou, e o oval entra no lugar sozinho. A imagem é aparada no contorno do que
+sobrou, para o % de tamanho significar o rosto e não a moldura vazia.
+
+Depois é posição: horizontal, vertical e tamanho em porcentagem, por rosto,
+olhando a prévia.
+
 ## Três formas de abrir
 
 O motor escolhe sozinho, pela ordem:

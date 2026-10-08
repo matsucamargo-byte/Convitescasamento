@@ -262,6 +262,55 @@ input[type=file]{padding:.4rem;font-size:.72rem}
   </fieldset>
 
   <fieldset>
+    <legend>Rostos na ilustração</legend>
+    <p class="dica guia-sec">Para os modelos em que o casal é desenhado. Suba só a foto
+    do rosto de cada um — o estúdio recorta o fundo sozinho e encaixa no desenho.
+    Foto de frente, rosto inteiro no quadro, é o que funciona melhor.</p>
+
+    <label><span>Como recortar</span>
+      <select id="rostoModo">
+        <option value="auto">Automático — tira o fundo e arredonda</option>
+        <option value="oval">Só oval — corta em círculo, mantém o fundo</option>
+        <option value="nada">Sem recorte — a foto já vem recortada</option>
+      </select>
+    </label>
+    <label><span>Tolerância do recorte (0 a 100)</span><input id="rostoTol" type="number" min="0" max="100" value="34"></label>
+    <p class="dica">Sobrou fundo, aumente. Comeu pedaço do cabelo, diminua.</p>
+
+    <div class="dupla">
+      <label><span>Rosto da noiva</span><input type="file" id="rostoNoivaArq" accept="image/*"></label>
+      <label><span>Rosto do noivo</span><input type="file" id="rostoNoivoArq" accept="image/*"></label>
+    </div>
+    <div class="fotos" id="previewRostos"></div>
+
+    <div class="dupla">
+      <label><span>Noiva — horizontal %</span><input id="rostoNoivaX" type="number" min="0" max="100" value="42"></label>
+      <label><span>Noiva — vertical %</span><input id="rostoNoivaY" type="number" min="0" max="100" value="26"></label>
+    </div>
+    <label><span>Noiva — tamanho %</span><input id="rostoNoivaT" type="number" min="3" max="60" value="15"></label>
+    <div class="dupla">
+      <label><span>Noivo — horizontal %</span><input id="rostoNoivoX" type="number" min="0" max="100" value="58"></label>
+      <label><span>Noivo — vertical %</span><input id="rostoNoivoY" type="number" min="0" max="100" value="26"></label>
+    </div>
+    <label><span>Noivo — tamanho %</span><input id="rostoNoivoT" type="number" min="3" max="60" value="15"></label>
+    <p class="dica">Mexa nos números olhando a prévia. Horizontal 0 é a borda esquerda,
+    100 a direita; vertical 0 é o topo.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Como o convidado navega</legend>
+    <label><span>Navegação</span>
+      <select id="navegacao">
+        <option value="pagina">Folhear — arrasta o dedo e vira a página</option>
+        <option value="rolagem">Rolar — página corrida, de cima para baixo</option>
+      </select>
+    </label>
+    <p class="dica guia-sec">Folhear é o padrão: cada bloco do convite vira uma página
+    inteira e o convidado passa com o dedo, com a dobra virando como num livro. Rolar
+    é o site comum. Folhear prende mais; rolar é melhor quando o convite tem textos longos.</p>
+  </fieldset>
+
+  <fieldset>
     <legend>O casal</legend>
     <p class="dica guia-sec">Os nomes como <b>eles</b> querem ler, não como está no documento. A data monta a contagem regressiva sozinha. O versículo é opcional e é o que costuma emocionar: pergunte se existe uma frase, oração ou música que significa algo para os dois.</p>
     <div class="dupla">
@@ -471,7 +520,8 @@ var ARTE_MINI = {"cloud": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2w
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [], arteManual: false };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura','navegacao',
+  'rostoNoivaX','rostoNoivaY','rostoNoivaT','rostoNoivoX','rostoNoivoY','rostoNoivoT',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',
   'horaFesta','mapaFesta','tituloProgramacao','programacao','dressCode','dressCodeObs','whatsapp','tituloRsvp','prazoRsvp','textoRsvp',
@@ -485,6 +535,8 @@ function coletar(){
   CAMPOS.forEach(function(k){ c[k] = val(k); });
   c.fotoHistoria = estado.fotoHistoria;
   c.galeria = estado.galeria;
+  c.rostoNoiva = estado.rostoNoiva || '';
+  c.rostoNoivo = estado.rostoNoivo || '';
   c._tpl = TPLS.filter(function(t){ return t.id === estado.tpl; })[0];
   return c;
 }
@@ -586,6 +638,159 @@ function comprimir(dataUrl, maxLado, q){
   });
 }
 
+/* ---------- recorte de rosto ----------
+   Sem modelo de IA e sem servidor: o estúdio tem que abrir com dois
+   cliques e funcionar offline. O que dá para fazer bem offline é
+   preencher a partir da borda — pega retrato em parede lisa, que é a
+   foto que a noiva manda — e, quando isso falha, cair no corte oval,
+   que é como a referência encaixa o rosto de qualquer jeito. */
+function recortarRosto(dataUrl, modo, tol){
+  return new Promise(function(res){
+    var img = new Image();
+    img.onload = function(){
+      var k = Math.min(1, 520 / Math.max(img.width, img.height));
+      var L = Math.round(img.width * k), A = Math.round(img.height * k);
+      var cv = document.createElement('canvas');
+      cv.width = L; cv.height = A;
+      var ctx = cv.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0, L, A);
+      if (modo === 'nada'){ res(cv.toDataURL('image/png')); return; }
+
+      var d = ctx.getImageData(0, 0, L, A), px = d.data;
+      var limpou = 0;
+
+      if (modo !== 'oval'){
+        // limiar em distância ao quadrado, no espaço RGB
+        var lim = Math.pow(8 + (tol / 100) * 150, 2);
+        var fila = [], visto = new Uint8Array(L * A);
+        function semear(i){ if (!visto[i]){ visto[i] = 1; fila.push(i); } }
+        for (var x = 0; x < L; x++){ semear(x); semear((A - 1) * L + x); }
+        for (var y = 0; y < A; y++){ semear(y * L); semear(y * L + L - 1); }
+        // a cor do fundo é a média da borda, não um canto só: um canto
+        // escuro sozinho faz o preenchimento comer o cabelo
+        var sr = 0, sg = 0, sb = 0, n = fila.length;
+        for (var q = 0; q < n; q++){
+          var p4 = fila[q] * 4;
+          sr += px[p4]; sg += px[p4 + 1]; sb += px[p4 + 2];
+        }
+        var fr = sr / n, fg = sg / n, fb = sb / n;
+        var cab = 0;
+        while (cab < fila.length){
+          var i = fila[cab++], o = i * 4;
+          var dr = px[o] - fr, dg = px[o + 1] - fg, db = px[o + 2] - fb;
+          if (dr * dr + dg * dg + db * db > lim) continue;
+          px[o + 3] = 0; limpou++;
+          var cx = i % L, cy = (i - cx) / L;
+          if (cx > 0 && !visto[i - 1]){ visto[i - 1] = 1; fila.push(i - 1); }
+          if (cx < L - 1 && !visto[i + 1]){ visto[i + 1] = 1; fila.push(i + 1); }
+          if (cy > 0 && !visto[i - L]){ visto[i - L] = 1; fila.push(i - L); }
+          if (cy < A - 1 && !visto[i + L]){ visto[i + L] = 1; fila.push(i + L); }
+        }
+      }
+
+      var frac = limpou / (L * A);
+      // nem tirou nada, nem comeu a pessoa inteira: só aí o automático valeu
+      var deuCerto = modo === 'oval' ? false : (frac > 0.06 && frac < 0.88);
+
+      if (deuCerto){
+        ctx.putImageData(d, 0, 0);
+        // alisa a borda do recorte: sem isto fica serrilhado de tesoura
+        var cv2 = document.createElement('canvas');
+        cv2.width = L; cv2.height = A;
+        var c2 = cv2.getContext('2d');
+        c2.filter = 'blur(1.1px)';
+        c2.drawImage(cv, 0, 0);
+        c2.filter = 'none';
+        c2.globalCompositeOperation = 'source-in';
+        c2.drawImage(cv, 0, 0);
+        res(aparar(cv2));
+      } else {
+        // oval com borda esfumada, centrado no terço superior, que é
+        // onde o rosto fica em retrato
+        var cv3 = document.createElement('canvas');
+        cv3.width = L; cv3.height = A;
+        var c3 = cv3.getContext('2d');
+        var rx = L * 0.40, ry = A * 0.34, cxm = L / 2, cym = A * 0.42;
+        var g = c3.createRadialGradient(cxm, cym, 0, cxm, cym, 1);
+        c3.save();
+        c3.translate(cxm, cym); c3.scale(rx, ry);
+        g = c3.createRadialGradient(0, 0, 0, 0, 0, 1);
+        g.addColorStop(0, '#000'); g.addColorStop(0.86, '#000');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        c3.fillStyle = g;
+        c3.beginPath(); c3.arc(0, 0, 1, 0, Math.PI * 2); c3.fill();
+        c3.restore();
+        c3.globalCompositeOperation = 'source-in';
+        c3.drawImage(img, 0, 0, L, A);
+        res(aparar(cv3));
+      }
+    };
+    img.onerror = function(){ res(dataUrl); };
+    img.src = dataUrl;
+  });
+}
+
+// corta o vazio em volta, para o % de tamanho significar o rosto e não a moldura
+function aparar(cv){
+  var ctx = cv.getContext('2d', { willReadFrequently: true });
+  var L = cv.width, A = cv.height;
+  var px = ctx.getImageData(0, 0, L, A).data;
+  var x0 = L, y0 = A, x1 = -1, y1 = -1;
+  for (var y = 0; y < A; y++){
+    for (var x = 0; x < L; x++){
+      if (px[(y * L + x) * 4 + 3] > 12){
+        if (x < x0) x0 = x; if (x > x1) x1 = x;
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < 0) return cv.toDataURL('image/png');
+  var cv2 = document.createElement('canvas');
+  cv2.width = x1 - x0 + 1; cv2.height = y1 - y0 + 1;
+  cv2.getContext('2d').drawImage(cv, x0, y0, cv2.width, cv2.height, 0, 0, cv2.width, cv2.height);
+  return cv2.toDataURL('image/png');
+}
+
+function pintarRostos(){
+  var alvo = document.getElementById('previewRostos');
+  var h = '';
+  ['Noiva', 'Noivo'].forEach(function(q){
+    var d = estado['rosto' + q];
+    if (d) h += '<figure><img src="' + d + '" style="background:#2a2930">' +
+      '<button type="button" data-rm="r' + q + '">×</button></figure>';
+  });
+  alvo.innerHTML = h;
+}
+
+['Noiva', 'Noivo'].forEach(function(q){
+  document.getElementById('rosto' + q + 'Arq').addEventListener('change', function(e){
+    var f = e.target.files[0]; if (!f) return;
+    estado['rostoBruto' + q] = null;
+    lerArquivo(f).then(function(d){
+      estado['rostoBruto' + q] = d;
+      return refazerRosto(q);
+    });
+  });
+});
+
+function refazerRosto(q){
+  var bruto = estado['rostoBruto' + q];
+  if (!bruto) return Promise.resolve();
+  var modo = val('rostoModo') || 'auto';
+  var tol = parseInt(val('rostoTol'), 10); if (isNaN(tol)) tol = 34;
+  return recortarRosto(bruto, modo, tol).then(function(d){
+    estado['rosto' + q] = d;
+    pintarRostos();
+    atualizar();
+  });
+}
+
+['rostoModo', 'rostoTol'].forEach(function(id){
+  document.getElementById(id).addEventListener('change', function(){
+    refazerRosto('Noiva').then(function(){ return refazerRosto('Noivo'); });
+  });
+});
+
 document.getElementById('fotoHistoria').addEventListener('change', function(e){
   var f = e.target.files[0]; if (!f) return;
   lerArquivo(f).then(function(d){ return comprimir(d, 1100, .82); }).then(function(d){
@@ -619,6 +824,13 @@ document.addEventListener('click', function(e){
   if (rm === 'h'){
     estado.fotoHistoria = '';
     document.getElementById('previewHistoria').innerHTML = '';
+  } else if (rm === 'rNoiva' || rm === 'rNoivo'){
+    var q = rm.slice(1);
+    estado['rosto' + q] = '';
+    estado['rostoBruto' + q] = null;
+    var inp = document.getElementById('rosto' + q + 'Arq');
+    if (inp) inp.value = '';
+    pintarRostos();
   } else {
     estado.galeria.splice(+rm, 1);
     pintarGaleria();
@@ -669,6 +881,9 @@ document.getElementById('fileProjeto').addEventListener('change', function(e){
       estado.tpl = p.tpl || (c._tpl && c._tpl.id) || 'marfim';
       estado.fotoHistoria = c.fotoHistoria || '';
       estado.galeria = c.galeria || [];
+      estado.rostoNoiva = c.rostoNoiva || '';
+      estado.rostoNoivo = c.rostoNoivo || '';
+      pintarRostos();
       document.getElementById('previewHistoria').innerHTML = estado.fotoHistoria
         ? '<figure><img src="' + estado.fotoHistoria + '"><button type="button" data-rm="h">×</button></figure>' : '';
       pintarGaleria(); pintarTemplates(); atualizar();

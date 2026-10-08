@@ -1275,3 +1275,143 @@ body.tem-textura .faixa-escura{
 @media (max-width:380px){
   .capa-hero.com-moldura{padding:4rem 2.4rem}
 }
+
+/* =============================================================
+   13. MODO PÁGINA
+   O convite deixa de ser uma página que rola e vira um livro que
+   se folheia com o dedo. A rolagem horizontal é nativa, com
+   scroll-snap: é ela que dá o atrito, a inércia e o encaixe que
+   um arrasto feito em JS nunca acerta no iOS. O JS só desenha a
+   virada por cima do que o navegador já está fazendo.
+   ============================================================= */
+.wrap.livro{
+  max-width:none;margin:0;
+  display:flex;
+  height:100svh;
+  overflow-x:auto;overflow-y:hidden;
+  scroll-snap-type:x mandatory;
+  overscroll-behavior-x:contain;
+  scrollbar-width:none;
+  perspective:1400px;
+  perspective-origin:50% 45%;
+}
+.wrap.livro::-webkit-scrollbar{display:none}
+
+.wrap.livro > *{
+  flex:0 0 100%;width:100%;min-width:0;
+  height:100%;
+  scroll-snap-align:center;
+  scroll-snap-stop:always;
+  overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;justify-content:center;
+  /* a dobra vive na borda de entrada da folha */
+  transform-origin:0% 50%;
+  will-change:transform;
+  backface-visibility:hidden;
+}
+/* conteúdo mais alto que a tela: volta a ser bloco e ganha respiro */
+.wrap.livro > *.transborda{justify-content:flex-start;padding-block:4.5rem}
+
+/* a sombra da dobra, pintada por cima sem mexer no fluxo */
+.wrap.livro > *::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,.22) 0%, rgba(0,0,0,.07) 7%, rgba(0,0,0,0) 22%);
+  opacity:var(--dobra,0);
+  transition:opacity .12s linear;
+}
+.wrap.livro > *{position:relative}
+
+/* a seção já não precisa do respiro de página rolável */
+.wrap.livro section,
+.wrap.livro .capa-hero,
+.wrap.livro footer{padding-block:3.2rem}
+.wrap.livro .capa-hero{min-height:0}
+.wrap.livro .seta{display:none}
+
+/* ---- marcadores de página ---- */
+.pags{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(1.1rem + env(safe-area-inset-bottom,0px));
+  z-index:40;display:flex;gap:.42rem;align-items:center;
+  padding:.5rem .7rem;border-radius:999px;
+  background:color-mix(in srgb, var(--paper) 78%, transparent);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 1px 10px var(--sombra);
+  opacity:0;transition:opacity .4s var(--ease-out)
+}
+.pags.vis{opacity:1}
+.pags button{
+  width:7px;height:7px;padding:0;border:0;border-radius:50%;
+  background:var(--ink-soft);opacity:.34;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:opacity .22s var(--ease-out),transform .22s var(--ease-out)
+}
+.pags button[aria-current="true"]{opacity:1;background:var(--accent);transform:scale(1.5)}
+.pags button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---- a dica do primeiro arrasto, uma vez só ---- */
+.dica-swipe{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(3.4rem + env(safe-area-inset-bottom,0px));
+  z-index:40;pointer-events:none;
+  font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-soft);
+  display:flex;align-items:center;gap:.5rem;
+  animation:dica-ir 2.6s var(--ease-in-out) infinite
+}
+.dica-swipe i{
+  width:16px;height:1px;background:currentColor;display:block;position:relative
+}
+.dica-swipe i::after{
+  content:'';position:absolute;right:0;top:-2.5px;
+  width:5px;height:5px;border-top:1px solid currentColor;
+  border-right:1px solid currentColor;transform:rotate(45deg)
+}
+@keyframes dica-ir{
+  0%,100%{opacity:.35;transform:translateX(-50%)}
+  50%    {opacity:1;transform:translateX(calc(-50% + 7px))}
+}
+.dica-swipe.foi{opacity:0;transition:opacity .4s var(--ease-out)}
+
+/* setas, só onde há mouse */
+.folhear{display:none}
+/* a seta é para quem tem mouse E espaço; no telefone o dedo basta */
+@media (hover:hover) and (pointer:fine) and (min-width:620px){
+  .folhear{
+    display:grid;place-items:center;
+    position:fixed;top:50%;transform:translateY(-50%);z-index:40;
+    width:44px;height:44px;border-radius:50%;border:1px solid var(--accent-2);
+    background:color-mix(in srgb, var(--paper) 86%, transparent);
+    color:var(--ink);cursor:pointer;
+    transition:opacity .2s var(--ease-out),border-color .2s var(--ease-out)
+  }
+  .folhear:hover{border-color:var(--accent)}
+  .folhear[disabled]{opacity:0;pointer-events:none}
+  .folhear.ant{left:1.4rem}
+  .folhear.pro{right:1.4rem}
+  .folhear svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .wrap.livro > *{transform:none!important}
+  .wrap.livro > *::after{opacity:0!important}
+  .dica-swipe{animation:none}
+}
+
+/* =============================================================
+   14. ROSTOS NA ILUSTRAÇÃO
+   A referência encaixa a foto do rosto dentro do desenho do casal.
+   O recorte vem pronto do estúdio; aqui só a posição e um assentamento
+   leve, para a foto não flutuar por cima do traço como adesivo.
+   ============================================================= */
+.rostos{position:absolute;inset:0;z-index:3;pointer-events:none}
+.rosto{
+  position:absolute;
+  left:var(--r-x,50%);top:var(--r-y,30%);
+  width:var(--r-t,16%);height:auto;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 1px 2px var(--sombra));
+}
+.capa-hero.com-rostos .coroa{display:none}

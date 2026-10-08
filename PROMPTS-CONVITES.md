@@ -46,7 +46,7 @@ Cartão de convite de casamento em papel algodão creme, com a borda recortada e
 **Animação**
 
 ```
-A luz corre devagar pela superfície do papel e cada onda da borda acende uma depois da outra. A chama das velas desenhadas treme de leve. O cartão se aproxima lentamente. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+O cartão entra pela direita girando sobre a borda esquerda, como uma página de livro virando, e assenta reto no centro do quadro. Quando para, a luz corre pela superfície do papel e cada onda da borda acende uma depois da outra, e a chama das velas desenhadas treme de leve. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
@@ -71,21 +71,21 @@ O laço de chiffon se afrouxa, as pontas deslizam para os lados e o papel vegeta
 
 ## 3 · Traço
 
-Cartão creme com o noivo carregando a noiva no colo, desenhado em linha verde, e o rosto de foto recortada encaixado no desenho.
+Cartão creme com o casal desenhado em linha verde e o rosto de foto recortada encaixado no desenho. Na animação ela está ao lado dele e ele a levanta no colo.
 
 **Imagem**
 
 ```
-Cartão de convite de casamento em papel algodão creme, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Na parte de cima, ilustração em traço fino verde oliva do noivo carregando a noiva no colo: ele de terno claro, ela de vestido longo com a saia caindo em cascata e um buquê pequeno na mão. Os dois rostos ficam completamente vazios, sem olhos, sem boca e sem feições, em branco de propósito. O resto do cartão é liso e vazio, reservado para texto. Luz suave e quente, sombra curta, papel com textura leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Cartão de convite de casamento em papel algodão creme, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Na parte de cima, ilustração em traço fino verde oliva do casal de pé lado a lado: ele de terno claro, ela de vestido longo com a saia caindo até o chão e um buquê pequeno na mão. Os dois rostos ficam completamente vazios, sem olhos, sem boca e sem feições, em branco de propósito. O resto do cartão é liso e vazio, reservado para texto. Luz suave e quente, sombra curta, papel com textura leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-O traço verde da ilustração se desenha sozinho, linha por linha, começando pelo vestido e subindo até fechar a figura do casal. Quando o desenho fecha, uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+A noiva está de pé ao lado do noivo. Ele se vira para ela, passa um braço atrás das costas dela e o outro sob os joelhos, e a levanta no colo num movimento único e suave. A saia do vestido cai em cascata e balança ao parar. Os dois rostos continuam vazios, sem feições, o tempo todo. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
-> Os rostos entram depois, no estúdio, pelo campo **Foto do casal** — é assim que a referência faz. Por isso o prompt pede os rostos em branco.
+> Gere a imagem com os dois **de pé, lado a lado** — é desse quadro que a animação parte para ele levantá-la no colo. Os rostos entram depois, no estúdio: você sobe só a foto do rosto de cada um e o recorte do fundo é automático.
 
 ---
 
@@ -102,7 +102,7 @@ Cartão de convite de casamento em papel algodão marfim de gramatura alta, pree
 **Animação**
 
 ```
-A aquarela da fachada ganha profundidade devagar, as folhas dos ciprestes se movem muito de leve ao vento e a luz atravessa o jardim da esquerda para a direita. O brasão dourado acende por último. Uma luz quente cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+O cartão entra pela direita girando sobre a borda esquerda, como uma página de livro virando, e assenta reto no centro do quadro. Quando para, a aquarela da fachada ganha profundidade, as folhas dos ciprestes se movem muito de leve ao vento e a luz atravessa o jardim da esquerda para a direita. O brasão dourado acende por último. Uma luz quente cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
