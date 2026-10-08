@@ -73,8 +73,8 @@ convite de referência real, não de gosto.
 | Hortênsia | lilás azulado sobre vegetal | capa vegetal e fita de cetim |
 | Trigo | creme palha e ouro fosco | três cartões em fita de chiffon |
 
-Os nove últimos saíram dos convites de referência; o caminho de cada um
-(prompt de imagem, prompt de animação e dados do template) está em
+Os nove últimos saíram dos convites de referência. Como animar a foto de
+cada um — o método validado no Marfim, um passo só — está em
 [`PROMPTS-CONVITES.md`](PROMPTS-CONVITES.md).
 
 Cada template troca também o par tipográfico. Mesma serifada em tudo faz
