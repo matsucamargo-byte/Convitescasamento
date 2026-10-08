@@ -126,13 +126,22 @@ def main():
         c['envelopeImagem'] = uri(ARTE / 'cheio' / (id_ + '.jpg'))
         c['geo'] = GEO_CHEIO
         # vídeo de abertura quando existe: substitui a abertura em CSS
-        # a vitrine publica leva só o H.264 reduzido: o WebM é para o
-        # navegador de teste, e embutir os dois estoura o teto de 16 MB
+        # Dois formatos, ambos reduzidos para 540x960. O H.264 é o que o
+        # iPhone toca; o VP9 é o que torna a página verificável num
+        # Chromium sem codec proprietário. Só com o MP4 o vídeo falhava
+        # em silêncio no teste e a abertura caía no fallback de erro.
         mp4 = VIDEO / 'leve' / (id_ + '.mp4')
         if not mp4.exists():
             mp4 = VIDEO / (id_ + '.mp4')
         if mp4.exists():
             c['cortinaVideo'] = uri_mp4(mp4)
+            webm = VIDEO / 'leve' / (id_ + '.webm')
+            if not webm.exists():
+                webm = VIDEO / (id_ + '.webm')
+            if webm.exists():
+                import base64 as b64
+                c['cortinaVideoWebm'] = ('data:video/webm;base64,'
+                                         + b64.b64encode(webm.read_bytes()).decode())
             pst = VIDEO / (id_ + '-poster.jpg')
             if pst.exists():
                 c['cortinaPoster'] = uri(pst)
