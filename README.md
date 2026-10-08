@@ -11,7 +11,7 @@ está escrito; cada convite é só dado preenchido num formulário.
 ## Como usar
 
 1. Abra `estudio.html` com dois cliques (qualquer navegador, funciona offline).
-2. Escolha um dos 6 templates.
+2. Escolha um dos 21 templates.
 3. Preencha os campos. A prévia atualiza sozinha no celular da direita.
 4. Clique no envelope da prévia para testar a abertura.
 5. **Gerar site do convite** → baixa um `index.html`.
@@ -46,7 +46,8 @@ Cada bloco só aparece se você preencher. Deixou vazio, some.
 
 ## Cartela de templates
 
-Doze paletas. Cada uma sai de um tema com demanda medida, não de gosto.
+Vinte e uma paletas. Cada uma sai de um tema com demanda medida ou de um
+convite de referência real, não de gosto.
 
 | Template | Família | Vem de |
 |---|---|---|
@@ -62,12 +63,26 @@ Doze paletas. Cada uma sai de um tema com demanda medida, não de gosto.
 | Serenity | azul sereno, lacre branco | a paleta que mais viralizou no nicho |
 | Toscana | terracota, cipreste, sol | destination wedding |
 | Linho | preto real e tan | urbano, à noite, sem bege |
+| Vinha | creme, traço oliva, lacre vinho | cartão ondulado com velas e uvas |
+| Bruma | azul empoeirado, lacre dourado | papel vegetal com fita e flor seca |
+| Traço | creme e verde profundo | ilustração do casal em linha |
+| Château | marfim, ardósia e ouro | aquarela de fachada, caligrafia formal |
+| Rute | off-white e verde seco | versículo e nomes dos pais |
+| Campo | rosé queimado e ouro | borda rasgada à mão, flor do campo |
+| Lírio | azul toile e ouro | conjunto com forro estampado |
+| Hortênsia | lilás azulado sobre vegetal | capa vegetal e fita de cetim |
+| Trigo | creme palha e ouro fosco | três cartões em fita de chiffon |
+
+Os nove últimos saíram dos convites de referência; o caminho de cada um
+(prompt de imagem, prompt de animação e dados do template) está em
+[`PROMPTS-CONVITES.md`](PROMPTS-CONVITES.md).
 
 Cada template troca também o par tipográfico. Mesma serifada em tudo faz
-doze convites virarem um.
+vinte e um convites virarem um.
 
 ![Templates 1 a 6](exemplos/cartela-01-06.jpg)
 ![Templates 7 a 12](exemplos/cartela-07-12.jpg)
+![Templates 13 a 21](exemplos/cartela-13-21.jpg)
 
 ## Acabamento
 
@@ -148,7 +163,8 @@ Mexeu em `engine/` ou `estudio.src.html`? Rode `./build.sh`.
 ### Adicionar um template
 
 Copie um objeto em `engine/templates.js`, troque as cores e rode `./build.sh`.
-São 12 linhas e nenhum código novo.
+São 12 linhas e nenhum código novo. O ornamento sai de `window.MOTIVOS`, no
+mesmo arquivo — há quinze, em dois acabamentos (relevo seco e hot stamping).
 
 ---
 
@@ -170,10 +186,14 @@ comum de convidado é não saber por onde confirmar.
 
 ## Só quero ver os convites
 
-Abra **`vitrine.html`**. Arquivo único, 1,5 MB, funciona no celular e sem
-internet depois de carregado. Os doze modelos estão dentro dele: toca num,
-abre o convite inteiro; o botão Modelos volta, e o botão voltar do aparelho
-também.
+Abra **`vitrine-artifact.html`** (ou o link publicado). Arquivo único,
+funciona no celular: toca num modelo, abre o convite inteiro; o botão
+Modelos volta, e o botão voltar do aparelho também.
+
+Só entram os modelos que já têm fotografia de envelope em
+`arte/cheio/<id>.jpg`. Cinco bons misturados com dezesseis desenhados em CSS
+lê como dezesseis ruins. Chegou a foto na pasta, o modelo aparece sozinho na
+próxima build — não se mexe em código.
 
 Era aqui que estava o bug: a versão anterior era um índice com links para
 `marfim.html`, `oliva.html` e assim por diante. Baixado sozinho no celular,
@@ -200,6 +220,6 @@ formulário e não precisa de servidor nenhum.
 ## Gerar os arquivos
 
 ```
-./build.sh              # estudio.html
-python3 build-vitrine.py # vitrine.html
+./build.sh                 # estudio.html
+python3 build-artifact.py  # vitrine-artifact.html
 ```

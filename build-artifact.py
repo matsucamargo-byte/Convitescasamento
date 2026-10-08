@@ -14,14 +14,34 @@ import base64, json, pathlib, re, subprocess
 RAIZ = pathlib.Path(__file__).parent
 ARTE = RAIZ / 'arte'
 
-# só os que têm fotografia de envelope
-MODELOS = [
-    ('marfim', 'Marfim',       'Marfim e ouro',       'Clássico de papelaria fina'),
-    ('cloud',  'Cloud Dancer', 'Off-white e renda',   'Cor do ano 2026'),
-    ('salvia', 'Sálvia',       'Sálvia e champanhe',  'Paleta dominante para 2027'),
-    ('oliva',  'Oliva',        'Verde oliva e linho', 'Casamento ao ar livre'),
-    ('mocha',  'Mocha',        'Mocha e nude',        'Terroso, sem bege chapado'),
+# Ordem de cartela. Entram só os que já têm fotografia de envelope em
+# arte/cheio/<id>.jpg — cinco bons misturados com dezesseis desenhados em
+# CSS lê como dezesseis ruins. Chegou a foto, o modelo aparece sozinho.
+ORDEM = [
+    ('marfim',    'Marfim',       'Marfim e ouro',          'Clássico de papelaria fina'),
+    ('cloud',     'Cloud Dancer', 'Off-white e renda',      'Cor do ano 2026'),
+    ('salvia',    'Sálvia',       'Sálvia e champanhe',     'Paleta dominante para 2027'),
+    ('oliva',     'Oliva',        'Verde oliva e linho',    'Casamento ao ar livre'),
+    ('mocha',     'Mocha',        'Mocha e nude',           'Terroso, sem bege chapado'),
+    ('lirio',     'Lírio',        'Azul toile e ouro',      'Conjunto de cartões'),
+    ('hortensia', 'Hortênsia',    'Lilás sobre vegetal',    'Traço de hortênsia e fita'),
+    ('bruma',     'Bruma',        'Azul empoeirado',        'Flor seca e lacre dourado'),
+    ('trigo',     'Trigo',        'Creme palha e ouro',     'Chiffon e mosquitinho'),
+    ('campo',     'Campo',        'Rosé e flor do campo',   'Borda rasgada à mão'),
+    ('chateau',   'Château',      'Marfim e azul ardósia',  'Aquarela de fachada'),
+    ('rute',      'Rute',         'Off-white e verde seco', 'Versículo e nomes dos pais'),
+    ('vinha',     'Vinha',        'Oliva e lacre vinho',    'Cerimônia religiosa'),
+    ('traco',     'Traço',        'Creme e verde profundo', 'Ilustração do casal'),
+    ('serenity',  'Serenity',     'Azul sereno',            'A paleta dos reels'),
+    ('blush',     'Blush',        'Rosé e laço',            'Coquette'),
+    ('ameixa',    'Ameixa',       'Ameixa e rosé',          'Saturação de 2027'),
+    ('borgonha',  'Borgonha',     'Borgonha e dourado',     'Inverno e catedral'),
+    ('esmeralda', 'Esmeralda',    'Esmeralda e prata',      'Salão à noite'),
+    ('toscana',   'Toscana',      'Terracota e cipreste',   'Destination'),
+    ('linho',     'Linho',        'Preto real e tan',       'Urbano, à noite'),
 ]
+MODELOS = [m for m in ORDEM if (ARTE / 'cheio' / (m[0] + '.jpg')).exists()
+           and (ARTE / 'mini' / (m[0] + '.jpg')).exists()]
 
 BASE = {
     'noiva': 'Rebeca', 'noivo': 'Newley',
@@ -80,7 +100,9 @@ def main():
     for t in usados:
         for n in (t['fonts']['display'], t['fonts']['body'], t['fonts']['script']):
             q = n.replace(' ', '+')
-            if re.search(r'Cormorant Garamond|Jost|Karla|Outfit|Lora|Libre Baskerville|Marcellus', n):
+            if re.search(r'Cormorant Garamond|Jost|Karla|Outfit|Lora|Libre Baskerville|Marcellus'
+                        r'|Spectral|EB Garamond|Commissioner|Playfair Display|Mulish'
+                        r'|Work Sans|Crimson Pro', n):
                 q += ':wght@300;400;500'
             if q not in fams:
                 fams.append(q)

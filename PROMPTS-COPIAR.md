@@ -8,6 +8,12 @@ Prompt negativo, o mesmo para todos:
 texto, letras, números, marca d'água, logotipo, mãos, pessoas, rosto, movimento de câmera, distorção, baixa resolução
 ```
 
+
+> Os nove templates tirados dos convites de referência (Vinha, Bruma,
+> Traço, Château, Rute, Campo, Lírio, Hortênsia e Trigo) têm prompt
+> próprio em [`PROMPTS-CONVITES.md`](PROMPTS-CONVITES.md), com o
+> movimento certo para cada formato.
+
 ---
 
 ## 1. Marfim

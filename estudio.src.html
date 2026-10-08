@@ -453,7 +453,7 @@ function urlFontes(ts){
     [t.fonts.display, t.fonts.body, t.fonts.script].forEach(function(n){
       var q = n.replace(/ /g,'+');
       // só as famílias com peso variável pedem eixo
-      if (/Cormorant Garamond|Spectral|EB Garamond|Jost|Karla|Outfit|Commissioner|Playfair Display/.test(n)) q += ':wght@300;400;500';
+      if (/Cormorant Garamond|Spectral|EB Garamond|Jost|Karla|Outfit|Commissioner|Playfair Display|Mulish|Work Sans|Crimson Pro|Lora/.test(n)) q += ':wght@300;400;500';
       if (fams.indexOf(q) < 0) fams.push(q);
     });
   });

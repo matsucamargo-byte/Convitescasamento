@@ -4,6 +4,12 @@ A abertura dos concorrentes premium é vídeo gerado por IA, não CSS. Os nomes
 dos arquivos deles entregam: `kling_20260807_video_faca_uma_a_5964_0.mp4`.
 Este arquivo é para você produzir o equivalente.
 
+
+> Os nove templates tirados dos convites de referência (Vinha, Bruma,
+> Traço, Château, Rute, Campo, Lírio, Hortênsia e Trigo) têm prompt
+> próprio em [`PROMPTS-CONVITES.md`](PROMPTS-CONVITES.md), com o
+> movimento certo para cada formato.
+
 ---
 
 ## Como o Flow funciona, e por que isso muda o prompt
