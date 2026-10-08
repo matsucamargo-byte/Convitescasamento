@@ -53,39 +53,39 @@ A luz corre devagar pela superfície do papel e cada onda da borda acende uma de
 
 ## 2 · Bruma
 
-Convite embrulhado em papel vegetal, fita, flor seca azul e lacre dourado de louros.
+Convite embrulhado em papel vegetal com fita de chiffon creme, buquê de flor seca escura e lacre redondo dourado.
 
 **Imagem**
 
 ```
-Convite de casamento embrulhado em papel vegetal translúcido, amarrado com uma fita fina azul empoeirado que dá a volta na peça, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Pequenos ramos de flores secas azuis e brancas presos sob a fita. Lacre de cera dourada sobre o nó, com uma coroa de louros gravada, textura fosca e borda irregular. O cartão claro por baixo aparece suavemente através do papel vegetal, sem nenhum texto. Luz difusa de janela, sombra leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Convite de casamento embrulhado em papel vegetal translúcido, amarrado com uma fita larga de chiffon creme que dá a volta na peça e termina em laço solto, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Um buquê pequeno de flores secas escuras, lavanda e mosquitinho, preso sob a fita e apontando para cima. Lacre de cera dourada redondo e grande sobre o nó, com uma coroa de louros gravada em relevo, textura fosca e borda irregular. O cartão claro por baixo aparece suavemente através do papel vegetal, sem nenhum texto. Luz difusa de janela, sombra leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-As pontas da fita deslizam para os lados, o nó se desfaz e o papel vegetal se abre devagar para fora do quadro, revelando o cartão claro embaixo. Uma luz quente e dourada cresce de dentro até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+O laço de chiffon se afrouxa, as pontas deslizam para os lados e o papel vegetal se abre devagar para fora do quadro, revelando o cartão claro embaixo. As flores secas tremem de leve ao sair a fita. Uma luz quente e dourada cresce de dentro até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
 
 ## 3 · Traço
 
-Casal desenhado em linha verde sobre creme, com o rosto reservado para a foto.
+Cartão creme com o noivo carregando a noiva no colo, desenhado em linha verde, e o rosto de foto recortada encaixado no desenho.
 
 **Imagem**
 
 ```
-Cartão de convite de casamento em papel algodão creme, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Ilustração de linha contínua, traço fino verde escuro, de um casal de noivos de corpo inteiro lado a lado, ela de vestido longo e ele de terno. Os rostos ficam vazios, sem olhos, sem boca e sem feições, deixados em branco de propósito. Folhagem fina em traço verde nos cantos inferiores. O rodapé do cartão é liso e vazio, reservado para texto. Luz clara de manhã, sombra curta e nítida, papel com textura leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Cartão de convite de casamento em papel algodão creme, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Na parte de cima, ilustração em traço fino verde oliva do noivo carregando a noiva no colo: ele de terno claro, ela de vestido longo com a saia caindo em cascata e um buquê pequeno na mão. Os dois rostos ficam completamente vazios, sem olhos, sem boca e sem feições, em branco de propósito. O resto do cartão é liso e vazio, reservado para texto. Luz suave e quente, sombra curta, papel com textura leve. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-O traço verde da ilustração se desenha sozinho, linha por linha, começando pelos pés do casal e subindo até o topo. Quando o desenho fecha, uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+O traço verde da ilustração se desenha sozinho, linha por linha, começando pelo vestido e subindo até fechar a figura do casal. Quando o desenho fecha, uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
-> O rosto de verdade não é gerado: entra depois, no estúdio, pelo campo **Foto do casal**. Por isso o prompt pede os rostos em branco.
+> Os rostos entram depois, no estúdio, pelo campo **Foto do casal** — é assim que a referência faz. Por isso o prompt pede os rostos em branco.
 
 ---
 
@@ -127,36 +127,36 @@ As folhas de eucalipto dos cantos balançam muito de leve, como se houvesse um v
 
 ## 6 · Campo
 
-Envelope rosé de borda rasgada à mão e lacre dourado, com o cartão de moldura de flor do campo.
+Envelope marfim de borda rasgada com fio de pérolas na aba, lacre dourado de monograma, e cartão com moldura de flores do campo coloridas.
 
 **Imagem**
 
 ```
-Envelope de convite de casamento fechado, em papel artesanal rosé queimado com a borda rasgada à mão (deckle), preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. A aba triangular cobre a metade superior e a fibra rasgada do papel aparece em toda a volta. Lacre de cera dourada ao centro, com duas iniciais entrelaçadas gravadas, textura fosca e borda irregular. Pequenas flores do campo pintadas em aquarela delicada nos cantos inferiores do envelope. Luz natural de meio da tarde, sombra suave e quente. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Envelope de convite de casamento fechado, em papel artesanal marfim de gramatura alta com a borda rasgada à mão (deckle), preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. A aba triangular cobre a metade superior, e a dobra da aba é debruada com um fio de pérolas miúdas costurado na borda. A fibra rasgada do papel aparece em toda a volta. Lacre de cera dourada ao centro, com duas iniciais entrelaçadas gravadas, textura fosca e borda irregular. Luz natural de meio da tarde, sombra suave e quente. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-O canto inferior direito do envelope se levanta devagar, a fibra rasgada da borda se destaca contra a luz, e a frente desliza para fora do quadro revelando o cartão com moldura de flores do campo. Uma luz quente e dourada cresce de dentro até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+O canto inferior direito do envelope se levanta devagar, o fio de pérolas da aba brilha um a um e a fibra rasgada da borda se destaca contra a luz. A frente desliza para fora do quadro, revelando um cartão com moldura de flores do campo miúdas e coloridas. Uma luz quente e dourada cresce de dentro até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
 
 ## 7 · Lírio
 
-Envelope azul de aba festonada, forro toile por dentro, lírio em relevo e lacre dourado.
+Envelope azul de aba festonada com forro toile floral por dentro, lacre dourado de monograma, conjunto de cartões.
 
 **Imagem**
 
 ```
-Envelope de convite de casamento fechado, em papel azul acinzentado profundo, com a aba superior recortada em festão (ondas arredondadas), preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Um lírio gravado em relevo seco acima e abaixo do lacre. Lacre de cera dourada ao centro, com duas iniciais gravadas, textura fosca e borda irregular. Uma fresta na lateral da aba deixa ver o forro interno estampado em toile azul e branco, com cena de jardim miúda. Luz lateral suave de fim de tarde, sombra longa. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Envelope de convite de casamento fechado, em papel azul acinzentado empoeirado, com a aba superior recortada em festão (ondas arredondadas), preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Lacre de cera dourada ao centro da aba, com duas iniciais entrelaçadas dentro de um oval gravado, textura fosca e borda irregular. A aba está levemente levantada numa das pontas e deixa ver o forro interno estampado em toile floral azul e branco, de desenho miúdo. Um raminho de mosquitinho seco repousa junto da borda. Luz lateral suave de fim de tarde, sombra longa. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-A aba festonada abre lentamente para trás, girando sobre a dobra, e o forro estampado em toile azul e branco aparece por inteiro. Três cartões sobem juntos de dentro do envelope, levemente escalonados. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+A aba festonada abre lentamente para trás, girando sobre a dobra, e o forro estampado em toile floral azul e branco aparece por inteiro. Os cartões sobem juntos de dentro do envelope, levemente escalonados. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
@@ -181,18 +181,18 @@ A fita de cetim desliza para fora e cai, e a capa de papel vegetal escorrega dev
 
 ## 9 · Trigo
 
-Três cartões em papel vegetal, fita de chiffon creme, lacres de espiga e alecrim, mosquitinho.
+Cartões em papel vegetal com fita de chiffon de borda desfiada, dois lacres dourados de ramo e mosquitinho seco por baixo.
 
 **Imagem**
 
 ```
-Três cartões de convite de casamento em papel creme palha, empilhados levemente escalonados de modo que se vê a borda dos três, envoltos por uma folha de papel vegetal e amarrados por uma fita larga de chiffon creme, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Dois lacres de cera dourada sobre a fita, um com uma espiga de trigo gravada e outro com um ramo de alecrim. Pequenos ramos de mosquitinho seco presos sob a fita. Os cartões estão em branco, sem nenhum texto. Luz dourada de fim de tarde, sombra longa e macia. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
+Dois cartões de convite de casamento em papel creme, envoltos cada um por uma folha de papel vegetal e atravessados por uma fita larga de chiffon creme de borda desfiada, preenchendo todo o quadro vertical de borda a borda, sem mesa, sem superfície e sem adereços ao redor. Sobre cada fita, um lacre de cera dourada com um ramo de alecrim gravado em relevo, textura fosca e borda irregular. Ramos de mosquitinho seco saindo por baixo da fita, para os dois lados. Os cartões estão em branco, sem nenhum texto, e o papel vegetal deixa ver só o contorno. Luz lateral quente e baixa, sombra funda, fundo escuro. Proporção 9:16. Sem texto, sem letras, sem números, sem marca d'água.
 ```
 
 **Animação**
 
 ```
-A fita de chiffon se afrouxa e desliza para os lados, o papel vegetal se abre e os três cartões se espalham em leque, deslizando um sobre o outro até o de cima ficar sozinho no centro. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
+A fita de chiffon se afrouxa e desliza para os lados, o papel vegetal se abre e os cartões deslizam um sobre o outro até o de cima ficar sozinho no centro. O mosquitinho seco treme de leve. Uma luz quente e dourada cresce até preencher o quadro. Câmera totalmente fixa. Movimento lento e contínuo. Nada mais se move.
 ```
 
 ---
