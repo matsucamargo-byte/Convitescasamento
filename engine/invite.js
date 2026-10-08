@@ -98,6 +98,10 @@ window.renderConvite = function (C, raiz) {
     ? '<img src="' + esc(C.ornamentoUrl) + '" alt="">'
     : '<svg viewBox="0 0 200 110" aria-hidden="true">' + motivo.svg + '</svg>';
   var classeOrn = 'relevo' + (motivo.tipo === 'foil' && !tem(C.ornamentoUrl) ? ' foil' : '');
+  // o mesmo relevo do envelope, reaproveitado na capa parada sem foto
+  function ornaParada(pos) {
+    return '<div class="' + classeOrn + ' parada-orn ' + pos + '">' + ornamento + '</div>';
+  }
 
   var carta =
     '<div class="carta">' +
@@ -123,10 +127,20 @@ window.renderConvite = function (C, raiz) {
 
   // Toda foto de envelope abre em fenda. O que a fenda revela é a cena
   // ilustrada, quando existe, ou a própria capa do convite.
-  var temFoto = tem(C.envelopeImagem) && !tem(C.cortinaVideo);
-  var temIlustra = tem(C.cenaIlustracao) && !tem(C.cortinaVideo);
+  /* A regra do produto: a abertura é o VÍDEO. O recorte animado em CSS
+     foi recusado como amador e não volta a ser o padrão — fica atrás de
+     aberturaCss:'sim', para quem pedir de propósito.
+     Sem vídeo, a abertura é a capa parada que dissolve no toque: um
+     beat limpo é melhor que uma imitação de envelope. */
   var temCortina = tem(C.cortinaVideo);
+  var querCss = String(C.aberturaCss || '') === 'sim';
+  var temFoto = tem(C.envelopeImagem) && !temCortina && querCss;
+  var temIlustra = tem(C.cenaIlustracao) && !temCortina && querCss;
   var abreEmFenda = temFoto || temIlustra;
+  var capaParada = !temCortina && !abreEmFenda
+    ? (C.cortinaPoster || C.envelopeImagem || C.cenaIlustracao || C.heroMidia || '')
+    : '';
+  var aberturaSimples = !temCortina && !abreEmFenda;
 
   var revelado = temIlustra
     ? '<img src="' + esc(C.cenaIlustracao) + '" alt="">'
@@ -190,6 +204,20 @@ window.renderConvite = function (C, raiz) {
         '</div>' +
         '<div class="cortina-fim"></div>' +
         '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : aberturaSimples
+    ? '<div id="cena" class="parada' + (capaParada ? ' com-capa' : '') + '">' +
+        (capaParada
+          ? '<div class="parada-midia"><img src="' + esc(capaParada) + '" alt="Capa do convite"></div>'
+          : '<div class="parada-conteudo">' +
+              ornaParada('topo') +
+              '<p class="parada-mono">' + mono + '</p>' +
+              '<p class="parada-par">' + esc(C.noiva) + '<span>&amp;</span>' + esc(C.noivo) + '</p>' +
+              ornaParada('base') +
+            '</div>') +
+        '<div class="parada-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
       '</div>'
@@ -531,6 +559,14 @@ window.renderConvite = function (C, raiz) {
       var pv = vid.play();
       if (pv && pv.catch) pv.catch(revela);
       setTimeout(revela, 14000);
+      return;
+    }
+
+    if (aberturaSimples) {
+      // um beat só: a capa clareia e sai. Sem aba, sem lacre, sem fingir
+      // envelope — é a imitação em CSS que ficava amadora.
+      cenaEl.classList.add('saindo');
+      setTimeout(revelar, 900);
       return;
     }
 

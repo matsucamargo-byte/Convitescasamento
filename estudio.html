@@ -252,7 +252,19 @@ input[type=file]{padding:.4rem;font-size:.72rem}
     <p class="dica">Preenchida, o envelope vira uma abertura que cresce e revela a ilustração, com a câmera entrando nela. As camadas de topo e base entram depois e dão profundidade. É o nível de cima: o concorrente cobra projeto sob medida por isso.</p>
     <label><span>Vídeo de abertura (cortina)</span><input id="cortinaVideo" placeholder="https://.../envelope-abrindo.mp4"></label>
     <label><span>Poster do vídeo (primeiro quadro)</span><input id="cortinaPoster" placeholder="https://.../poster.jpg"></label>
-    <p class="dica">Preenchido, o vídeo vira a abertura e o envelope em CSS sai de cena. É assim que os concorrentes premium fazem — ver README.</p>
+    <p class="dica guia-sec"><b>A abertura é o vídeo.</b> Preenchido este campo, ele
+    é a animação de abertura. Sem ele, o convite abre com a capa parada: a foto
+    aparece, o convidado toca, ela clareia e sai. Um beat limpo, sem fingir envelope.</p>
+
+    <label><span>Abertura animada em CSS (recorte do envelope)</span>
+      <select id="aberturaCss">
+        <option value="">Não — capa parada quando não houver vídeo</option>
+        <option value="sim">Sim — recortar e animar a foto do envelope</option>
+      </select>
+    </label>
+    <p class="dica">Fica desligado de propósito. O recorte em CSS imita o vídeo e
+    não chega perto; só ligue se for para um convite específico em que não dê
+    para gerar o vídeo.</p>
     <label><span>Imagem ou vídeo de fundo da capa</span><input id="heroMidia" placeholder="https://.../capa.jpg"></label>
     <label><span>Moldura ilustrada da capa (PNG transparente)</span><input id="heroMoldura" placeholder="https://.../moldura-arco.png"></label>
     <p class="dica">Entra por cima da capa e os nomes ficam dentro dela. É o recurso que dá ao convite o ar ilustrado das referências. Precisa ser PNG vertical 9:16 com o miolo vazado.</p>
@@ -1900,6 +1912,86 @@ body.tem-textura .faixa-escura{
   filter:drop-shadow(0 1px 2px var(--sombra));
 }
 .capa-hero.com-rostos .coroa{display:none}
+
+/* =============================================================
+   15. ABERTURA PARADA
+   Quando não há vídeo não se finge envelope. A capa fica parada,
+   o convidado toca e ela clareia e sai. Um beat limpo vale mais
+   que uma encenação em CSS, que é o que soava amador.
+   ============================================================= */
+.parada{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,var(--paper),var(--paper-2));
+  overflow:hidden;
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)
+}
+.parada-midia{position:absolute;inset:0;z-index:0}
+.parada-midia img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.02);
+  transition:transform 1s var(--ease-out),filter .9s var(--ease-out)
+}
+.parada.com-capa::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--paper) 30%,transparent) 0%,
+    color-mix(in srgb,var(--paper) 8%,transparent) 42%,
+    color-mix(in srgb,var(--paper) 62%,transparent) 100%)
+}
+.parada-conteudo{
+  position:relative;z-index:2;text-align:center;
+  padding-inline:1.9rem;
+  transition:opacity .6s var(--ease-out),transform .9s var(--ease-out)
+}
+.parada-mono{
+  font-family:var(--f-display),Georgia,serif;font-weight:300;
+  font-size:clamp(2.2rem,13vw,3.4rem);letter-spacing:.04em;
+  color:var(--accent);margin:0 0 .9rem
+}
+.parada-par{
+  font-family:var(--f-script),cursive;
+  font-size:clamp(1.9rem,9vw,2.6rem);line-height:1.2;
+  color:var(--ink);margin:0;text-wrap:balance
+}
+.parada-par span{
+  display:block;font-family:var(--f-display),Georgia,serif;
+  font-size:.5em;color:var(--ink-soft);margin:.1em 0
+}
+.parada-toque{
+  position:absolute;inset:0;z-index:3;cursor:pointer;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px));
+  -webkit-tap-highlight-color:transparent
+}
+.parada-toque p{
+  margin:0;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--ink-soft);
+  animation:pulsa-toque 2.6s var(--ease-in-out) infinite
+}
+.parada-toque:focus-visible{outline:2px solid var(--accent);outline-offset:-6px}
+@keyframes pulsa-toque{0%,100%{opacity:.45}50%{opacity:1}}
+
+/* o toque: clareia e sai */
+.parada.saindo{opacity:0;transform:scale(1.04)}
+.parada.saindo .parada-midia img{transform:scale(1.1);filter:brightness(1.5)}
+.parada.saindo .parada-conteudo{opacity:0;transform:translateY(-10px)}
+.parada.saindo .parada-toque p{opacity:0;transition:opacity .25s linear}
+.parada.foi{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  .parada,.parada-midia img,.parada-conteudo{transition-duration:.01ms}
+  .parada-toque p{animation:none}
+}
+
+/* a foto é a capa: texto por cima dela briga com o lacre e some */
+.parada.com-capa .parada-conteudo{display:none}
+/* sem foto, o relevo do template dá corpo ao vazio */
+.parada-orn{
+  position:static;transform:none;width:min(46vw,190px);margin:0 auto;opacity:.9
+}
+.parada-orn.topo{margin-bottom:1.6rem}
+.parada-orn.base{margin-top:1.6rem;transform:rotate(180deg)}
 </script>
 <script type="text/template" id="src-js">/* =============================================================
    Renderizador.
@@ -2001,6 +2093,10 @@ window.renderConvite = function (C, raiz) {
     ? '<img src="' + esc(C.ornamentoUrl) + '" alt="">'
     : '<svg viewBox="0 0 200 110" aria-hidden="true">' + motivo.svg + '</svg>';
   var classeOrn = 'relevo' + (motivo.tipo === 'foil' && !tem(C.ornamentoUrl) ? ' foil' : '');
+  // o mesmo relevo do envelope, reaproveitado na capa parada sem foto
+  function ornaParada(pos) {
+    return '<div class="' + classeOrn + ' parada-orn ' + pos + '">' + ornamento + '</div>';
+  }
 
   var carta =
     '<div class="carta">' +
@@ -2026,10 +2122,20 @@ window.renderConvite = function (C, raiz) {
 
   // Toda foto de envelope abre em fenda. O que a fenda revela é a cena
   // ilustrada, quando existe, ou a própria capa do convite.
-  var temFoto = tem(C.envelopeImagem) && !tem(C.cortinaVideo);
-  var temIlustra = tem(C.cenaIlustracao) && !tem(C.cortinaVideo);
+  /* A regra do produto: a abertura é o VÍDEO. O recorte animado em CSS
+     foi recusado como amador e não volta a ser o padrão — fica atrás de
+     aberturaCss:'sim', para quem pedir de propósito.
+     Sem vídeo, a abertura é a capa parada que dissolve no toque: um
+     beat limpo é melhor que uma imitação de envelope. */
   var temCortina = tem(C.cortinaVideo);
+  var querCss = String(C.aberturaCss || '') === 'sim';
+  var temFoto = tem(C.envelopeImagem) && !temCortina && querCss;
+  var temIlustra = tem(C.cenaIlustracao) && !temCortina && querCss;
   var abreEmFenda = temFoto || temIlustra;
+  var capaParada = !temCortina && !abreEmFenda
+    ? (C.cortinaPoster || C.envelopeImagem || C.cenaIlustracao || C.heroMidia || '')
+    : '';
+  var aberturaSimples = !temCortina && !abreEmFenda;
 
   var revelado = temIlustra
     ? '<img src="' + esc(C.cenaIlustracao) + '" alt="">'
@@ -2093,6 +2199,20 @@ window.renderConvite = function (C, raiz) {
         '</div>' +
         '<div class="cortina-fim"></div>' +
         '<div class="cortina-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
+          '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
+        '</div>' +
+      '</div>'
+    : aberturaSimples
+    ? '<div id="cena" class="parada' + (capaParada ? ' com-capa' : '') + '">' +
+        (capaParada
+          ? '<div class="parada-midia"><img src="' + esc(capaParada) + '" alt="Capa do convite"></div>'
+          : '<div class="parada-conteudo">' +
+              ornaParada('topo') +
+              '<p class="parada-mono">' + mono + '</p>' +
+              '<p class="parada-par">' + esc(C.noiva) + '<span>&amp;</span>' + esc(C.noivo) + '</p>' +
+              ornaParada('base') +
+            '</div>') +
+        '<div class="parada-toque" id="env" role="button" tabindex="0" aria-label="Abrir convite">' +
           '<p>' + esc(C.textoAbrir || 'Toque para abrir') + '</p>' +
         '</div>' +
       '</div>'
@@ -2434,6 +2554,14 @@ window.renderConvite = function (C, raiz) {
       var pv = vid.play();
       if (pv && pv.catch) pv.catch(revela);
       setTimeout(revela, 14000);
+      return;
+    }
+
+    if (aberturaSimples) {
+      // um beat só: a capa clareia e sai. Sem aba, sem lacre, sem fingir
+      // envelope — é a imitação em CSS que ficava amadora.
+      cenaEl.classList.add('saindo');
+      setTimeout(revelar, 900);
       return;
     }
 
@@ -3081,7 +3209,7 @@ var ARTE_MINI = {"cloud": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAAAAAAD/2w
 
 var estado = { tpl: 'marfim', fotoHistoria: '', galeria: [], arteManual: false };
 
-var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura','navegacao',
+var CAMPOS = ['noiva','noivo','dataISO','cidade','versiculo','textoAbrir','sobretitulo','paisNoiva','paisNoivo','rotuloPaisNoiva','rotuloPaisNoivo','ornamentoUrl','cenaIlustracao','cenaTopo','cenaBase','rotuloCena','envelopeImagem','cortinaVideo','cortinaPoster','heroMidia','heroMoldura','heroVeu','textura','navegacao','aberturaCss',
   'rostoNoivaX','rostoNoivaY','rostoNoivaT','rostoNoivoX','rostoNoivoY','rostoNoivoT',
   'tituloConvite','textoConvite','tituloHistoria','historia','localCerimonia',
   'enderecoCerimonia','horaCerimonia','mapaCerimonia','localFesta','enderecoFesta',

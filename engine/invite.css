@@ -1415,3 +1415,83 @@ body.tem-textura .faixa-escura{
   filter:drop-shadow(0 1px 2px var(--sombra));
 }
 .capa-hero.com-rostos .coroa{display:none}
+
+/* =============================================================
+   15. ABERTURA PARADA
+   Quando não há vídeo não se finge envelope. A capa fica parada,
+   o convidado toca e ela clareia e sai. Um beat limpo vale mais
+   que uma encenação em CSS, que é o que soava amador.
+   ============================================================= */
+.parada{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,var(--paper),var(--paper-2));
+  overflow:hidden;
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)
+}
+.parada-midia{position:absolute;inset:0;z-index:0}
+.parada-midia img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.02);
+  transition:transform 1s var(--ease-out),filter .9s var(--ease-out)
+}
+.parada.com-capa::after{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,
+    color-mix(in srgb,var(--paper) 30%,transparent) 0%,
+    color-mix(in srgb,var(--paper) 8%,transparent) 42%,
+    color-mix(in srgb,var(--paper) 62%,transparent) 100%)
+}
+.parada-conteudo{
+  position:relative;z-index:2;text-align:center;
+  padding-inline:1.9rem;
+  transition:opacity .6s var(--ease-out),transform .9s var(--ease-out)
+}
+.parada-mono{
+  font-family:var(--f-display),Georgia,serif;font-weight:300;
+  font-size:clamp(2.2rem,13vw,3.4rem);letter-spacing:.04em;
+  color:var(--accent);margin:0 0 .9rem
+}
+.parada-par{
+  font-family:var(--f-script),cursive;
+  font-size:clamp(1.9rem,9vw,2.6rem);line-height:1.2;
+  color:var(--ink);margin:0;text-wrap:balance
+}
+.parada-par span{
+  display:block;font-family:var(--f-display),Georgia,serif;
+  font-size:.5em;color:var(--ink-soft);margin:.1em 0
+}
+.parada-toque{
+  position:absolute;inset:0;z-index:3;cursor:pointer;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:calc(3rem + env(safe-area-inset-bottom,0px));
+  -webkit-tap-highlight-color:transparent
+}
+.parada-toque p{
+  margin:0;font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--ink-soft);
+  animation:pulsa-toque 2.6s var(--ease-in-out) infinite
+}
+.parada-toque:focus-visible{outline:2px solid var(--accent);outline-offset:-6px}
+@keyframes pulsa-toque{0%,100%{opacity:.45}50%{opacity:1}}
+
+/* o toque: clareia e sai */
+.parada.saindo{opacity:0;transform:scale(1.04)}
+.parada.saindo .parada-midia img{transform:scale(1.1);filter:brightness(1.5)}
+.parada.saindo .parada-conteudo{opacity:0;transform:translateY(-10px)}
+.parada.saindo .parada-toque p{opacity:0;transition:opacity .25s linear}
+.parada.foi{display:none}
+
+@media (prefers-reduced-motion:reduce){
+  .parada,.parada-midia img,.parada-conteudo{transition-duration:.01ms}
+  .parada-toque p{animation:none}
+}
+
+/* a foto é a capa: texto por cima dela briga com o lacre e some */
+.parada.com-capa .parada-conteudo{display:none}
+/* sem foto, o relevo do template dá corpo ao vazio */
+.parada-orn{
+  position:static;transform:none;width:min(46vw,190px);margin:0 auto;opacity:.9
+}
+.parada-orn.topo{margin-bottom:1.6rem}
+.parada-orn.base{margin-top:1.6rem;transform:rotate(180deg)}

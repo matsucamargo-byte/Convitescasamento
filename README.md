@@ -236,16 +236,24 @@ sobrou, para o % de tamanho significar o rosto e não a moldura vazia.
 Depois é posição: horizontal, vertical e tamanho em porcentagem, por rosto,
 olhando a prévia.
 
-## Três formas de abrir
+## Como o convite abre
 
-O motor escolhe sozinho, pela ordem:
+**A abertura é o vídeo.** Essa é a regra, e vem da análise do concorrente
+premium: os nomes dos arquivos deles começam com `kling_`. A abertura deles é
+vídeo gerado por IA, não código, e é por isso que parece cinema.
 
 | Campo preenchido | O que acontece |
 |---|---|
-| Vídeo de abertura (cortina) | O vídeo é a abertura; revela quando termina |
-| Cena ilustrada | O envelope vira uma fenda que cresce e revela a ilustração |
-| Foto do envelope | A mesma fenda, revelando a capa do convite |
-| Nenhum | Envelope desenhado em CSS, com aba, lacre e relevo |
+| Vídeo de abertura (cortina) | O vídeo **é** a abertura; revela quando termina |
+| Nenhum | Capa parada: a foto aparece, o convidado toca, ela clareia e sai |
+
+Sem foto, a capa parada mostra o ornamento em relevo do template, o monograma
+e os nomes. Com foto, a foto é a capa e nada se escreve por cima — texto sobre
+o lacre fica ilegível e foi o que o teste mostrou.
+
+O recorte animado em CSS — aba, lacre, seis tempos — continua no motor, atrás
+do campo **Abertura animada em CSS**, desligado por padrão. Ele imita o vídeo
+e não chega perto; foi recusado como amador e não volta a ser o padrão.
 
 ## Confirmação de presença
 
