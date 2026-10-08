@@ -126,14 +126,13 @@ def main():
         c['envelopeImagem'] = uri(ARTE / 'cheio' / (id_ + '.jpg'))
         c['geo'] = GEO_CHEIO
         # vídeo de abertura quando existe: substitui a abertura em CSS
-        mp4 = VIDEO / (id_ + '.mp4')
+        # a vitrine publica leva só o H.264 reduzido: o WebM é para o
+        # navegador de teste, e embutir os dois estoura o teto de 16 MB
+        mp4 = VIDEO / 'leve' / (id_ + '.mp4')
+        if not mp4.exists():
+            mp4 = VIDEO / (id_ + '.mp4')
         if mp4.exists():
             c['cortinaVideo'] = uri_mp4(mp4)
-            webm = VIDEO / (id_ + '.webm')
-            if webm.exists():
-                import base64 as b64
-                c['cortinaVideoWebm'] = ('data:video/webm;base64,'
-                                         + b64.b64encode(webm.read_bytes()).decode())
             pst = VIDEO / (id_ + '-poster.jpg')
             if pst.exists():
                 c['cortinaPoster'] = uri(pst)
@@ -252,7 +251,7 @@ body.vendo .v-volta{display:flex}
 <div class="v-wrap" id="galeria">
   <div class="v-topo">
     <p class="v-marca">Convites de casamento</p>
-    <h1>Cinco modelos para abrir no celular</h1>
+    <h1>Modelos para abrir no celular</h1>
     <p>Toque em um para ver o convite inteiro, do envelope lacrado até a confirmação de presença.</p>
   </div>
   <div class="v-g">
